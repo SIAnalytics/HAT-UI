@@ -17,5 +17,5 @@ COPY requirements.txt .
 RUN pip install -r requirements.txt
 
 COPY supervisord.conf /etc/supervisor/conf.d/supervisor.conf
-EXPOSE 8000 3000
+EXPOSE 8000 3000 22
 CMD ["/usr/bin/supervisord"] 
