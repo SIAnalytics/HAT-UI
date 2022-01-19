@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: django-r-hat20a
+  namespace: data
+  labels:
+    app: django-r-hat20a
+ 
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: django-r-hat20a
+  template:
+    metadata:
+      labels:
+        app: django-r-hat20a
+    spec:
+      volumes:
+        - name: nfs-volume
+          nfs:
+            server: idc-nas.siadev.kr
+            path: /ifs/data/SIA
+      containers:
+        - name: django-r-hat20a
+          image: 'docker.siadev.kr/data/django:hat-v01'
+          ports:
+            - containerPort: 8000
+              protocol: TCP
+          resources: {}
+          volumeMounts:
+            - name: nfs-volume
+              mountPath: /nas
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: django-r-hat20a
+  namespace: data
+  labels:
+    app: django-r-hat20a
+spec:
+  ports:
+    - name: django-port
+      protocol: TCP
+      port: 8000
+      targetPort: 8000
+      nodePort: 31001
+    - name: ssh-port
+      protocol: TCP
+      port: 22
+      targetPort: 22
+      nodePort: 31002
+    - name: frontend-port
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
+      nodePort: 31003
+  selector:
+    app: django-r-hat20a
+  type: NodePort
