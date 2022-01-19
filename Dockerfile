@@ -16,6 +16,12 @@ RUN mkdir -p /var/log/supervisor
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 
+# Install REACT
+RUN curl -fsSL https://deb.nodesource.com/setup_current.x | bash -
+RUN apt-get install -y nodejs
+RUN npx -y create-react-app dummy_app
+RUN rm -r dummy_app
+
 COPY supervisord.conf /etc/supervisor/conf.d/supervisor.conf
 EXPOSE 8000 3000 22
 CMD ["/usr/bin/supervisord"] 
