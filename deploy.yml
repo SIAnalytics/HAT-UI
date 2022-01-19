@@ -23,7 +23,7 @@ spec:
             path: /ifs/data/SIA
       containers:
         - name: django-r-hat20a
-          image: 'docker.siadev.kr/data/django:hat-v01'
+          image: 'docker.siadev.kr/data/django:hat-v02'
           ports:
             - containerPort: 8000
               protocol: TCP
