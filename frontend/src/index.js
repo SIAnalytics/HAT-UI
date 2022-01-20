@@ -1,13 +1,26 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
+import "bootstrap/dist/css/bootstrap.css"
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import {
+  Navigation,
+  Footer,
+  TrainerHelper,
+  DatasetViewer,
+} from "./components"
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+  <Router>
+    <Navigation />
+    <Routes>
+      <Route path="/trainer_helper" element={<TrainerHelper />}/>
+      <Route path="/dataset_viewer" element={<DatasetViewer />}/>
+    </Routes>
+    <Footer />
+  </Router>,
+
   document.getElementById('root')
 );
 
