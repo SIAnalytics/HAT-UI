@@ -26,7 +26,7 @@ spec:
             claimName: django-r-hat20a
       containers:
         - name: django-r-hat20a
-          image: 'docker.siadev.kr/data/django:hat-v04'
+          image: 'docker.siadev.kr/data/django:hat-v05'
           ports:
             - containerPort: 8000
               protocol: TCP
