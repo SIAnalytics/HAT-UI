@@ -21,6 +21,9 @@ spec:
           nfs:
             server: idc-nas.siadev.kr
             path: /ifs/data/SIA
+        - name: hat-storage
+          persistentVolumeClaim:
+            claimName: django-r-hat20a
       containers:
         - name: django-r-hat20a
           image: 'docker.siadev.kr/data/django:hat-v02'
@@ -31,6 +34,8 @@ spec:
           volumeMounts:
             - name: nfs-volume
               mountPath: /nas
+            - name: hat-storage
+              mountPath: /project
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
           imagePullPolicy: Always
@@ -62,3 +67,15 @@ spec:
   selector:
     app: django-r-hat20a
   type: NodePort
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: django-r-hat20a
+  namespace: data
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 128Gi
