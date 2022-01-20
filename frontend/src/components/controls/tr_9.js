@@ -8,7 +8,7 @@ class TR_9 extends React.Component{
     render() {
         return (
             <>
-                <h5>파라미터 저장</h5>
+                <h5><b>파라미터 저장</b></h5>
             </>
         );
     }
