@@ -8,7 +8,7 @@ class TR_67 extends React.Component{
     render() {
         return (
             <>
-                <h1>TR 67 CONTENT</h1>
+                <button className="btn btn-primary btn-sm">학습 개시</button>
             </>
         );
     }

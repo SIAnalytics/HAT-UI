@@ -8,7 +8,7 @@ class TR_8 extends React.Component{
     render() {
         return (
             <>
-                <h1>TR 8 CONTENT</h1>
+                <h5>검증 성능 확인</h5>
             </>
         );
     }

@@ -8,7 +8,7 @@ class TR_5 extends React.Component{
     render() {
         return (
             <>
-                <h1>TR 5 CONTENT</h1>
+                <h5>하이퍼 파라미터 설정</h5>
             </>
         );
     }
