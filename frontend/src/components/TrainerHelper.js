@@ -7,11 +7,15 @@ import {
     TR_67,
     TR_234,
 } from "./controls";
+import {
+    Container,
+    Row,
+} from "react-bootstrap"
 
 function TrainerHelper() {
     return(
-        <div className="container">
-            <div className="row">
+        <Container>
+            <Row>
                 <div className="col-md-6">
                     <div className="options-content">
                         <TR_1 />
@@ -20,20 +24,20 @@ function TrainerHelper() {
                 <div className="col-md-6">
 
                 </div>
-            </div>
-            <div className="row">
+            </Row>
+            <Row>
                 <div className="col-md-6">
-                    <div className="options-content">
+                    <div className="options-content" style={{height:270}}>
                         <TR_234 />
                     </div>
                 </div>
                 <div className="col-md-6">
-                    <div className="options-content">
+                    <div className="options-content" style={{height:270}}>
                         <TR_5 />
                     </div>
                 </div>
-            </div>
-            <div className="row">
+            </Row>
+            <Row>
                 <div className="col-md-1"></div>
                 <div className="col-md-8">
                     <div className="options-content">
@@ -41,8 +45,8 @@ function TrainerHelper() {
                     </div>
                 </div>
                 <div className="col-md-1"></div>
-            </div>
-            <div className="row">
+            </Row>
+            <Row>
                 <div className="col-md-6">
                     <div className="options-content">
                         <TR_8 />
@@ -53,8 +57,8 @@ function TrainerHelper() {
                         <TR_9 />
                     </div>
                 </div>
-            </div>
-        </div>
+            </Row>
+        </Container>
     );
 }
 

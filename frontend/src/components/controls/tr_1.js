@@ -1,4 +1,9 @@
 import React from "react";
+import { 
+    InputGroup, 
+    Button, 
+    Form 
+} from 'react-bootstrap';
 
 class TR_1 extends React.Component{
     constructor(props) {
@@ -12,10 +17,10 @@ class TR_1 extends React.Component{
     render() {
         return (
             <>
-                <div className="input-group">
-                    <button className="btn btn-primary btn-sm" onClick={this.OpenDirectoryPicker}>데이터셋 열기</button>
-                    <input type="text" className="input-lg"></input>
-                </div>
+                <InputGroup>
+                    <Button className="btn btn-primary btn-sm w-25" onClick={this.OpenDirectoryPicker}>데이터셋 열기</Button>
+                    <Form.Control type="text"  />
+                </InputGroup>
             </>
         );
     }
