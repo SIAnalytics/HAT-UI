@@ -3,6 +3,7 @@ import {
     InputGroup,
     Form,
     ProgressBar,
+    Button, 
 } from "react-bootstrap";
 
 class TextInput extends React.Component{
@@ -42,7 +43,30 @@ class TrainingProgress extends React.Component{
     }
 }
 
+class DirectoryPicker extends React.Component{
+    constructor(props) {
+        super(props);
+        this.name = props["name"];
+    }
+
+    OpenDirectoryPicker() {
+        console.log("Open modal dialog");
+    }
+
+    render() {
+        return (
+            <>
+                <InputGroup>
+                    <Button className="btn btn-primary btn-sm w-25" onClick={this.OpenDirectoryPicker}>{this.name}</Button>
+                    <Form.Control type="text"  />
+                </InputGroup>
+            </>
+        )
+    }
+}
+
 export default TextInput;
 export {
     TrainingProgress,
+    DirectoryPicker,
 };

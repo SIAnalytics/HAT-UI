@@ -5,6 +5,10 @@ import {
     Form 
 } from 'react-bootstrap';
 
+import {
+    DirectoryPicker,
+} from './common';
+
 class TR_1 extends React.Component{
     constructor(props) {
         super(props);
@@ -17,10 +21,7 @@ class TR_1 extends React.Component{
     render() {
         return (
             <>
-                <InputGroup>
-                    <Button className="btn btn-primary btn-sm w-25" onClick={this.OpenDirectoryPicker}>데이터셋 열기</Button>
-                    <Form.Control type="text"  />
-                </InputGroup>
+                <DirectoryPicker name="데이터셋 열기" />
             </>
         );
     }
