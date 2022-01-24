@@ -1,9 +1,4 @@
 import React from "react";
-import { 
-    InputGroup, 
-    Button, 
-    Form 
-} from 'react-bootstrap';
 
 import {
     DirectoryPicker,
@@ -12,10 +7,6 @@ import {
 class TR_1 extends React.Component{
     constructor(props) {
         super(props);
-    }
-
-    OpenDirectoryPicker() {
-        console.log("Open modal dialog");
     }
 
     render() {

@@ -4,3 +4,7 @@ export { default as TR_8 } from "./tr_8";
 export { default as TR_9 } from "./tr_9";
 export { default as TR_67 } from "./tr_67";
 export { default as TR_234 } from "./tr_234";
+export { default as DV_123456 } from "./dv_123456";
+export { default as DV_78910 } from "./dv_78910";
+export { default as DV_1112 } from "./dv_1112";
+export { default as DV_13 } from "./dv_13";

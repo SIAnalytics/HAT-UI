@@ -4,6 +4,10 @@ import {
     Button, 
     InputGroup } from 'react-bootstrap';
 
+import {
+    DirectoryPicker,
+} from './common';
+
 class TR_234 extends React.Component{
     constructor(props) {
         super(props);
@@ -24,10 +28,7 @@ class TR_234 extends React.Component{
                         </Form.Select>
                     </Form.Group>
                 </InputGroup>
-                <InputGroup style={{marginTop: 10}}>
-                    <Button className="btn btn-primary btn-sm w-25">모델 불러오기</Button>
-                    <Form.Control type="text"  />
-                </InputGroup>
+                <DirectoryPicker style={{marginTop: 10}} name="모델 불러오기" />
                 <InputGroup style={{marginTop: 10}}>
                    <Form>
                         <Form.Check 

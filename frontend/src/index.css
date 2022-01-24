@@ -47,3 +47,17 @@ code {
   height: 160px;
   box-shadow: 5px 5px 5px rgb(97, 97, 97);
 }
+
+.ratio-settings {
+  background-color:rgb(170, 170, 170);
+}
+
+.table-striped>tbody>tr {
+    background-color: white; /* Choose your own color here */
+    border: solid 2px grey;
+}
+
+.table-striped>thead>tr {
+  background-color: rgb(170, 170, 170); 
+  border: solid 2px grey;
+}
