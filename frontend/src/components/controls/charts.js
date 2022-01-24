@@ -1,5 +1,10 @@
 import React from "react";
-import { Bar, Line } from "react-chartjs-2";
+import { 
+  Bar, 
+  Line,
+  Pie 
+} from "react-chartjs-2";
+
 import Chart from 'chart.js/auto'
 
 class LineChart extends React.Component {
@@ -70,7 +75,63 @@ class BarChart extends React.Component {
   }
 }
 
+class PieChart extends React.Component {
+  constructor(props) {
+    super(props);
+    this.data = {
+      labels: ["Cat1", "Cat2", "Cat3", "Cat4", "Cat5"],
+      datasets: [
+        {
+          data: [45, 30, 18, 15, 9],
+          backgroundColor: [
+            "#F7464A",
+            "#46BFBD",
+            "#FDB45C",
+            "#949FB1",
+            "#4D5360",
+            "#AC64AD"
+          ],
+          hoverBackgroundColor: [
+            "#FF5A5E",
+            "#5AD3D1",
+            "#FFC870",
+            "#A8B3C5",
+            "#616774",
+            "#DA92DB"
+          ],
+          label: props["label"],
+        }
+      ]
+    }
+
+    this.className = props["className"];
+
+    this.options = {
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+            display: true,
+            position: 'right',
+        }
+      }
+    }
+  }
+
+  render() {
+    return (
+      <>
+        <div className={this.className}>
+          <div className="chart-style">
+            <Pie data={this.data} options={this.options} />
+          </div>
+        </div>
+      </>
+    );
+  }
+}
+
 export {
   LineChart,
   BarChart,
+  PieChart,
 };

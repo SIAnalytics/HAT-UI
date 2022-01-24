@@ -4,7 +4,8 @@ import {
 } from "react-bootstrap";
 import {
     LineChart,
-    BarChart
+    BarChart,
+    PieChart
 } from "./charts"
 
 class DV_13 extends React.Component{
@@ -16,9 +17,11 @@ class DV_13 extends React.Component{
         return (
             <>
                 <h5><b>데이터셋 통계</b></h5>
-                <Form className='d-flex'>                    
+                <Form className='d-flex'>
+                    <PieChart label="클래스 분포" className="col-md-3"/>
+                    <PieChart label="클래스 분포" className="col-md-3"/>
                     <LineChart  label="정답률" className="col-md-3"/>
-                    <BarChart label="정확도" className="col-md-3"/>                    
+                    <BarChart label="정확도" className="col-md-3"/>
                 </Form>
             </>
         );

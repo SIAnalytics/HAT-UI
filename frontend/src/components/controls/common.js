@@ -5,7 +5,12 @@ import {
     Form,
     ProgressBar,
     Button, 
+    Modal
 } from "react-bootstrap";
+
+import {
+    DirectoryPickerDialog
+} from "./DirectoryPickerDialog"
 
 import BootstrapTable from 'react-bootstrap-table-next';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -106,6 +111,7 @@ class TableComponent extends React.Component{
     }
 }
 
+
 class ConversionComponent extends React.Component{
     constructor(props) {
         super(props);
@@ -113,14 +119,43 @@ class ConversionComponent extends React.Component{
         this.style = props["style"];
     }
 
+    state = {
+        isOpen: false
+    };
+
+    openModal = () => this.setState({ isOpen: true });
+
+    closeModal = () => this.setState({ isOpen: false });
+
     render() {
         return (
             <>
                 <InputGroup style={this.style}>
-                    <Button className="btn btn-primary btn-sm w-15"><FontAwesomeIcon icon={faFolder} /> {this.buttonName}</Button>
+                    <Button className="btn btn-primary btn-sm w-15" onClick={this.openModal}><FontAwesomeIcon icon={faFolder} /> {this.buttonName}</Button>                    
                     <Form.Control type="text" style={{marginLeft: 5}} />
                     <Button className="btn-sm w-13" variant="outline-primary" style={{marginLeft: 5}}>저장</Button>
-                </InputGroup>
+                </InputGroup>                
+
+                <Modal 
+                    show={this.state.isOpen} 
+                    onHide={this.closeModal}
+                    aria-labelledby="contained-modal-title-vcenter"
+                    size="lg"
+                    centered>
+                    
+                    <Modal.Header closeButton>
+                        <Modal.Title>Pick the directory</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>Body chould be defined in other container</Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="primary">
+                            Save
+                        </Button>
+                        <Button variant="secondary" onClick={this.closeModal}>
+                            Close
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
             </>
         );
     }
