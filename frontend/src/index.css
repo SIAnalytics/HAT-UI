@@ -61,3 +61,8 @@ code {
   background-color: rgb(163, 163, 163); 
   border: solid 2px grey;
 }
+
+.directory-picker {
+  height: 400px;
+  overflow-y: auto;
+}

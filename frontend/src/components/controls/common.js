@@ -146,7 +146,9 @@ class ConversionComponent extends React.Component{
                     <Modal.Header closeButton>
                         <Modal.Title>Pick the directory</Modal.Title>
                     </Modal.Header>
-                    <Modal.Body>Body chould be defined in other container</Modal.Body>
+                    <Modal.Body>
+                        <DirectoryPickerDialog />
+                    </Modal.Body>
                     <Modal.Footer>
                         <Button variant="primary">
                             Save

@@ -52,7 +52,7 @@ class DV_78910 extends React.Component{
             <>
                 <h5><b>데이터셋 분리</b></h5>
                 <InputGroup className="ratio-settings w-50 p-2">
-                    <Form.Label>학습 : 검즞 : 테스트</Form.Label>
+                    <Form.Label>학습 : 검증 : 테스트</Form.Label>
                     <Form.Control style={{marginRight: 5, marginLeft: 5}} size="sm" type="text"  />: 
                     <Form.Control style={{marginLeft: 5, marginRight: 5}} size="sm" type="text"  />: 
                     <Form.Control style={{marginLeft: 5}} size="sm" type="text"  />
