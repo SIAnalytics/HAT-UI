@@ -11,6 +11,11 @@ import {
   DatasetViewer,
 } from "./components"
 
+import config from 'react-global-configuration';
+import configuration from './config';
+
+config.set(configuration);
+
 ReactDOM.render(
   <Router>
     <Navigation />

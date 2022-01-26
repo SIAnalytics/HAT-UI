@@ -21,4 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('training_helper/', include('training_helper.urls')),
     path('dataset_viewer/', include('dataset_viewer.urls')),
+    path('common/', include('common.urls')),
 ]

@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'training_helper',
     'dataset_viewer',
+    'common',
 ]
 
 MIDDLEWARE = [
@@ -68,7 +69,7 @@ LOGGING = {
         'default': {
             'level':'DEBUG',
             'class':'logging.handlers.RotatingFileHandler',
-            'filename': '/home/hat/DjangoLog/django-log.log',
+            'filename': '/project/DjangoLog/django-log.log',
             'maxBytes': 1024*1024*5, # 5 MB
             'backupCount': 5,
             'formatter':'standard',
@@ -76,7 +77,7 @@ LOGGING = {
         'request_handler': {
             'level':'DEBUG',
             'class':'logging.handlers.RotatingFileHandler',
-            'filename': '/home/hat/DjangoLog/django-log.log',
+            'filename': '/project/DjangoLog/django-log.log',
             'maxBytes': 1024*1024*5, # 5 MB
             'backupCount': 5,
             'formatter':'standard',
@@ -144,6 +145,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+ROOT_STORAGE_PATH = "/nas"
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
@@ -168,5 +171,6 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ORIGIN_WHITELIST = [
-     'http://localhost:3000'
+     'http://localhost:3000',
+     'http://di.siadev.kr:31003'
 ]
