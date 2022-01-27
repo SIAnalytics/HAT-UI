@@ -25,30 +25,34 @@ class DirectoryPickerDialog extends React.Component{
         if (selectedNode[0] > 0) {
             // Check if it's directory or file
             if (Number.isInteger(selectedNode[0])) {
-                // Process directory update
-                var full_path = this.state.data[selectedNode[0]]["path"];
-                var next_id = this.state.data.length + 1;
-                
-                var url = config.get("django_url") + "/common/rest";
-                
-                axios
-                    .get(url, { params: { req: "GET_DIRECTORY_CONTENT", path: full_path, parent: selectedNode[0], next_id: next_id } })
-                    .then((res) => {
-                        var files = res.data.files;
-                        var dirs = res.data.dirs;
-                        let curr_data = JSON.parse(JSON.stringify(this.state.data));
+                if (this.state.data[selectedNode[0]]["loaded"] == 0)
+                {
+                    // Process directory update
+                    var full_path = this.state.data[selectedNode[0]]["path"];
+                    var next_id = this.state.data.length;
                     
-                        for (var i = 0; i < files.length; i++) {
-                            curr_data[selectedNode[0]].items.push(files[i]);
-                        }
+                    var url = config.get("django_url") + "/common/rest";
+                    
+                    axios
+                        .get(url, { params: { req: "GET_DIRECTORY_CONTENT", path: full_path, parent: selectedNode[0], next_id: next_id } })
+                        .then((res) => {
+                            var files = res.data.files;
+                            var dirs = res.data.dirs;
+                            let curr_data = JSON.parse(JSON.stringify(this.state.data));
+                        
+                            for (var i = 0; i < files.length; i++) {
+                                curr_data[selectedNode[0]].items.push(files[i]);
+                            }
 
-                        for (var i = 0; i < dirs.length; i++) {
-                            curr_data.push(dirs[i]);
-                        }
+                            for (var i = 0; i < dirs.length; i++) {
+                                curr_data.push(dirs[i]);
+                            }
+                            curr_data[selectedNode[0]]["loaded"] = 1;
 
-                        this.setState({data: curr_data});
-                    })
-                    .catch((err) => alert(err));
+                            this.setState({data: curr_data});
+                        })
+                        .catch((err) => alert(err));
+                }
             } else {
                 // Selected node is file
                 // No extra actions required

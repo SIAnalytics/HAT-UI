@@ -16,11 +16,12 @@ class CommonUtils:
         ret_json.append({
             "id": 0,
             "parentId": None,
-            "label": "root",
+            "label": "NAS",
             "path": settings.ROOT_STORAGE_PATH,
             "items": [
 
-            ]
+            ],
+            "loaded": 1
         })
 
         for entry in files_list:
@@ -35,7 +36,8 @@ class CommonUtils:
                     "path": full_path,
                     "items": [
 
-                    ]
+                    ],
+                    "loaded": 0
                 })
                 current_id += 1
             else:
@@ -70,7 +72,8 @@ class CommonUtils:
                     "path": full_path,
                     "items": [
 
-                    ]
+                    ],
+                    "loaded": 0
                 })
                 current_id += 1
             else:
