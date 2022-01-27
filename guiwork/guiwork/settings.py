@@ -145,7 +145,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-ROOT_STORAGE_PATH = "/nas"
+ROOT_STORAGE_PATH = "/nas/workspace/igor"
 
 
 # Internationalization

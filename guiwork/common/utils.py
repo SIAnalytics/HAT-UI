@@ -16,7 +16,7 @@ class CommonUtils:
         ret_json.append({
             "id": 0,
             "parentId": None,
-            "label": "ROOT",
+            "label": "root",
             "path": settings.ROOT_STORAGE_PATH,
             "items": [
 

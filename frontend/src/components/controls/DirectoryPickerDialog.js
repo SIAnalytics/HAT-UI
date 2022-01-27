@@ -46,16 +46,6 @@ class DirectoryPickerDialog extends React.Component{
                             curr_data.push(dirs[i]);
                         }
 
-                        curr_data.push({
-                            "id": 123456,
-                            "parentId": 0,
-                            "label": "AAA",
-                            "path": "/aaa/bbb",
-                            "items": [
-        
-                            ]
-                        });
-
                         this.setState({data: curr_data});
                     })
                     .catch((err) => alert(err));
