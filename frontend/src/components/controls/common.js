@@ -122,19 +122,27 @@ class ConversionComponent extends React.Component{
 
     state = {
         isOpen: false,
-        val: "BBB"
+        val: "",
+        to_save: false
     };
 
     openModal = () => this.setState({ isOpen: true });
 
-    closeModal = () => this.setState({ isOpen: false });
+    closeModal = () => {
+        this.setState({ to_save: false });
+        this.setState({ isOpen: false });
+    }
+
+    saveAndClose = () => {
+        this.setState({ to_save: true });
+        this.setState({ isOpen: false });
+    }
 
     // Function is called from DirectoryPickerDialog
     setPath = (new_path) => {
-        console.log(new_path);
-        console.log("MY PATH");
-        this.setState({val: new_path});
-       // this.path = new_path;
+        if (this.state.to_save == true) {
+            this.setState({val: new_path});
+        }
     }
 
     render() {
@@ -163,7 +171,7 @@ class ConversionComponent extends React.Component{
                         <DirectoryPickerDialog setPath={this.setPath}/>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button variant="primary" onClick={this.closeModal}>
+                        <Button variant="primary" onClick={this.saveAndClose}>
                             Save
                         </Button>
                         <Button variant="secondary" onClick={this.closeModal}>

@@ -80,7 +80,6 @@ class DirectoryPickerDialog extends React.Component{
     }
     
     componentWillUnmount() {
-        console.log("SETTING " + this.selectedNodePath);
         this.props.setPath(this.selectedNodePath);
     }
 
