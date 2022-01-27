@@ -117,22 +117,35 @@ class ConversionComponent extends React.Component{
         super(props);
         this.buttonName = props["buttonName"];
         this.style = props["style"];
+        this.path = "AAA";
     }
 
     state = {
-        isOpen: false
+        isOpen: false,
+        val: "BBB"
     };
 
     openModal = () => this.setState({ isOpen: true });
 
     closeModal = () => this.setState({ isOpen: false });
 
+    // Function is called from DirectoryPickerDialog
+    setPath = (new_path) => {
+        console.log(new_path);
+        console.log("MY PATH");
+        this.setState({val: new_path});
+       // this.path = new_path;
+    }
+
     render() {
         return (
             <>
                 <InputGroup style={this.style}>
                     <Button className="btn btn-primary btn-sm w-15" onClick={this.openModal}><FontAwesomeIcon icon={faFolder} /> {this.buttonName}</Button>                    
-                    <Form.Control type="text" style={{marginLeft: 5}} />
+                    <Form.Control type="text" 
+                        style={{marginLeft: 5}} 
+                        value={this.state.val}
+                        onChange={e => this.setState({ val: e.target.value })}/>
                     <Button className="btn-sm w-13" variant="outline-primary" style={{marginLeft: 5}}>저장</Button>
                 </InputGroup>                
 
@@ -147,10 +160,10 @@ class ConversionComponent extends React.Component{
                         <Modal.Title>Pick the directory</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <DirectoryPickerDialog />
+                        <DirectoryPickerDialog setPath={this.setPath}/>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button variant="primary">
+                        <Button variant="primary" onClick={this.closeModal}>
                             Save
                         </Button>
                         <Button variant="secondary" onClick={this.closeModal}>
