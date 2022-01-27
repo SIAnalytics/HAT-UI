@@ -51,7 +51,9 @@ class CommonUtils:
 
     @staticmethod
     def GetDirectoryContent(path, parent_id, current_id):
+        print(path)
         directory_content = [x for x in os.listdir(path)]
+        directory_content = sorted(directory_content, key=str.casefold)
         ret_content = {
             "files": [],
             "dirs": []

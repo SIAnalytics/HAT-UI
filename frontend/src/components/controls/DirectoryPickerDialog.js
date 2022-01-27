@@ -36,7 +36,7 @@ class DirectoryPickerDialog extends React.Component{
                     .then((res) => {
                         var files = res.data.files;
                         var dirs = res.data.dirs;
-                        var curr_data = this.state.data;
+                        let curr_data = JSON.parse(JSON.stringify(this.state.data));
                     
                         for (var i = 0; i < files.length; i++) {
                             curr_data[selectedNode[0]].items.push(files[i]);
