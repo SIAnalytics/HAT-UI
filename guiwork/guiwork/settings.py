@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-=wnaf35=wp*lnj++e4&8=+%zpw$zb1*9k#gx-b*zlo7+nitt&k
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['di.siadev.kr']
+ALLOWED_HOSTS = ['di.siadev.kr', 'dev-cluster.sia-service.kr']
 
 
 # Application definition
@@ -172,5 +172,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ORIGIN_WHITELIST = [
      'http://localhost:3000',
-     'http://di.siadev.kr:31003'
+     'http://dev-cluster.sia-service.kr:31003',
 ]

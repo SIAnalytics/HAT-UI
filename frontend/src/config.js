@@ -1,5 +1,5 @@
 const configuration = {
-    django_url: 'http://di.siadev.kr:31001',
+    django_url: 'http://dev-cluster.sia-service.kr/:31001',
 }
 
 export default configuration

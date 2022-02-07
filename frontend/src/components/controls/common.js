@@ -117,7 +117,6 @@ class ConversionComponent extends React.Component{
         super(props);
         this.buttonName = props["buttonName"];
         this.style = props["style"];
-        this.path = "AAA";
     }
 
     state = {
@@ -153,7 +152,8 @@ class ConversionComponent extends React.Component{
                     <Form.Control type="text" 
                         style={{marginLeft: 5}} 
                         value={this.state.val}
-                        onChange={e => this.setState({ val: e.target.value })}/>
+                        onChange={e => this.setState({ val: e.target.value })}
+                        />
                     <Button className="btn-sm w-13" variant="outline-primary" style={{marginLeft: 5}}>저장</Button>
                 </InputGroup>                
 
