@@ -16,13 +16,27 @@ import BootstrapTable from 'react-bootstrap-table-next';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFolder } from "@fortawesome/free-regular-svg-icons";
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
-import cellEditFactory from 'react-bootstrap-table2-editor';
 
 class TextInput extends React.Component{
     constructor(props) {
         super(props);
-        this.name = props.props["name"];
+        this.name = props.parameter.name;
+        this.value = props.parameter.value;
         this.mt = props.props["mt"];
+    }
+
+    state = {
+        value: this.props.parameter.value
+    }
+
+    InputChangedHandler = (event) => {
+        const new_value = event.target.value;
+        
+        var state = {
+            value: new_value
+        }
+        
+        this.setState(state);
     }
 
     render() {
@@ -30,8 +44,12 @@ class TextInput extends React.Component{
             <>
                 <InputGroup style={{marginTop: this.mt}}>
                     <Form.Label className="w-25">{this.name}</Form.Label>
-                    <Form.Control  type="text" />
-                    <Form.Control className="invisible w-50" type="text" />
+                    <Form.Control  
+                        type="number" 
+                        value={this.state.value} 
+                        onChange={(event)=>this.InputChangedHandler(event)}
+                    />
+                    <Form.Control className="invisible w-25" type="text" />
                 </InputGroup>
             </>
         );

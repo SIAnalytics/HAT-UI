@@ -18,7 +18,7 @@ class DirectoryPickerDialog extends React.Component{
     };
 
     // Directory IDs: 0, 1, 2,...
-    // File IDs: strinf (full path)
+    // File IDs: string (full path)
     onSelect = selectedNode => {
         var url = config.get("django_url" + "/common/rest");
 

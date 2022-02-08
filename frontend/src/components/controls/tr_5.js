@@ -8,6 +8,12 @@ import {
 class TR_5 extends React.Component{
     constructor(props) {
         super(props);
+
+        SetHyperParameters = SetHyperParameters.bind(this);
+    }
+
+    state = {
+        hyper_params: []
     }
 
     render() {
@@ -24,13 +30,24 @@ class TR_5 extends React.Component{
                     </Form>
                 </InputGroup>
 
-                <TextInput props={{name: "Minibatch", mt: 0}} />
-                <TextInput props={{name: "Epochs", mt: 10}} />
-                <TextInput props={{name: "Learning rates", mt: 10}} />
-                <TextInput props={{name: "검증 주기", mt: 10}} />
+                <div style={{height: 200, overflowY: "scroll", marginTop: 10, padding: 5}} className="block-example border border-light">
+                    {this.state.hyper_params}
+                </div>
             </>
         );
     }
 }
 
+function SetHyperParameters(param_names) {
+    var params_set = param_names.map((parameter) => (<TextInput key={parameter.name} parameter={parameter} props={{mt: 10}} />));
+
+    var state = {
+        hyper_params: params_set
+    }
+    this.setState(state);
+}
+
 export default TR_5;
+export {
+    SetHyperParameters,
+}
