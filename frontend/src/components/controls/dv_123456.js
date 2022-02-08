@@ -4,6 +4,10 @@ import {
     TableComponent
 } from "./common";
 
+import {
+    Form,
+} from 'react-bootstrap';
+
 class DV_123456 extends React.Component {
     constructor (props) {
         super(props);
@@ -52,9 +56,18 @@ class DV_123456 extends React.Component {
             <>
                 <h5><b>영상 파일</b></h5>
                 <DirectoryPicker name="열기" />
-                <DirectoryPicker style={{marginTop: 10}} name="타입" />
+                
+                <Form.Group style={{marginTop: 10}} className="w-100 d-flex">
+                    <Form.Select className="w-100">
+                        <option>타입 선텍</option>
+                        <option value="1">TOI</option>
+                        <option value="2">SHP</option>
+                        <option value="3">OPT3</option>
+                        <option value="4">OPT4</option>
+                    </Form.Select>
+                </Form.Group>
 
-                <div style={{height: 400, overflowY: "scroll", marginTop: 10}}>
+                <div style={{height: 444, overflowY: "scroll", marginTop: 10}}>
                     <TableComponent content={content} columns={columns} key_name = {key_name}/>
                 </div>
             </>

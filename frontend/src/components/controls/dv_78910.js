@@ -2,6 +2,7 @@ import React from "react";
 import {
     InputGroup,
     Form,
+    Button,
 } from "react-bootstrap";
 
 import {
@@ -71,6 +72,9 @@ class DV_78910 extends React.Component{
                 <h6>증강함수 적용</h6>
                 <div style={{height: 213, overflowY: "scroll"}}>
                     <TableComponent content={content} columns={columns} key_name = {key_name}/>
+                </div>
+                <div style={{textAlign: "right"}}>
+                    <Button style={{marginTop: 5}} variant="primary">실행</Button>
                 </div>
             </>
         );

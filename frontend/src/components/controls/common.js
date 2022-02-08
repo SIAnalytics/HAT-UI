@@ -63,25 +63,72 @@ class DirectoryPicker extends React.Component{
         this.addIcon = props["addIcon"];
     }
 
-    OpenDirectoryPicker() {
-        console.log("Open modal dialog");
+    state = {
+        isOpen: false,
+        val: "",
+        to_save: false
+    };
+
+    openModal = () => this.setState({ isOpen: true });
+
+    closeModal = () => {
+        this.setState({ to_save: false });
+        this.setState({ isOpen: false });
+    }
+
+    saveAndClose = () => {
+        this.setState({ to_save: true });
+        this.setState({ isOpen: false });
+    }
+
+    // Function is called from DirectoryPickerDialog
+    setPath = (new_path) => {
+        if (this.state.to_save == true) {
+            this.setState({val: new_path});
+        }
     }
 
     render() {
         let button;
 
         if (this.addIcon == "true") {
-            button = <Button className="btn btn-primary btn-sm w-25" onClick={this.OpenDirectoryPicker}><FontAwesomeIcon icon={faFolder} /> {this.name}</Button>     
+            button = <Button className="btn btn-primary btn-sm w-25" onClick={this.openModal}><FontAwesomeIcon icon={faFolder} /> {this.name}</Button>     
         } else {
-            button = <Button className="btn btn-primary btn-sm w-25" onClick={this.OpenDirectoryPicker}>{this.name}</Button>     
+            button = <Button className="btn btn-primary btn-sm w-25" onClick={this.openModal}>{this.name}</Button>     
         }
     
         return (
             <>
                 <InputGroup style={this.style}>
                     {button}
-                    <Form.Control type="text"  />
+                    <Form.Control type="text"  
+                        value={this.state.val}
+                        onChange={e => this.setState({ val: e.target.value })}
+                    />
                 </InputGroup>
+
+                <Modal 
+                    show={this.state.isOpen} 
+                    onHide={this.closeModal}
+                    aria-labelledby="contained-modal-title-vcenter"
+                    size="lg"
+                    centered>
+                    
+                    <Modal.Header closeButton>
+                        <Modal.Title>경로를 선택</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <DirectoryPickerDialog setPath={this.setPath}/>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="primary" onClick={this.saveAndClose}>
+                            Save
+                        </Button>
+                        <Button variant="secondary" onClick={this.closeModal}>
+                            Close
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
             </>
         )
     }
