@@ -13,6 +13,8 @@ class TrainingHelper(views.APIView):
             return Response(utils.GetModelsList())
         elif req == "GET_MODEL_HYPERPARAMS":
             return Response(utils.GetModelHyperparams(request.GET.get("model_name")))
+        elif req == "GET_TRAINING_PROGRESS":
+            return Response(utils.GetTrainingProgress())
         else:
             print("[ERROR] Unsupported request content {}".format(req))
 
@@ -20,10 +22,13 @@ class TrainingHelper(views.APIView):
 
     #POST
     def post(self, request):
-        content = {
-            "type": "POST",
-            "purpose": "REST API POST"
-        }
 
-        return Response(content)
+        req = request.POST.get("req")
+
+        if req == "RUN_MODEL_TRAINING":
+            return Response(utils.RunModelTraining())
+        else:
+            print("[ERROR] Unsupported request content {}".format(req))
+
+        return Response("Unsupported request content")
 

@@ -1,5 +1,6 @@
 import os
 import json
+import random
 
 from django.conf import settings
 
@@ -83,4 +84,18 @@ class TrainingHelperUtils:
             ]
 
         return ret_list
+
+    @staticmethod
+    def RunModelTraining():
+
+        return "SUCCESS"
+
+    @staticmethod
+    def GetTrainingProgress():
+        progress = random.randint(0, 100)
+        ret = {
+            "progress": progress
+        }
+
+        return ret
         

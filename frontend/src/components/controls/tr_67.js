@@ -19,22 +19,77 @@ class TR_67 extends React.Component{
         progress: 10
     }
 
+    GetTrainingParameters() {
+        console.log("ADSDS");
+    }
+
+    timeout(delay) {
+        return new Promise( res => setTimeout(res, delay) );
+    }
+
+    UpdateTrainingProgress(data) {
+        console.log("UPDATE PROGRESS");
+        // Set progress bar
+        var state = {
+            progress: data.progress
+        }
+
+        this.setState(state);
+    }
+
+    async MonitorTrainingProcess() {
+        var do_continue = true;
+        while (do_continue) {
+            // Get monitoring data from server
+            var url = config.get("django_url") + "/training_helper/rest";
+            axios
+                .get(url, {
+                    params: {
+                        req: "GET_TRAINING_PROGRESS"
+                    }
+                })
+                .then((res) => {
+                    var progress = res.data.progress;
+                    
+                    this.UpdateTrainingProgress(res.data);
+
+                    if (progress >= 100) {
+                        // Finish monitoring when training is completed
+                        do_continue = false;
+                    }
+                })
+                .catch((err) => {
+                    alert(err);
+                    return;
+                });
+            
+            await this.timeout(1000);
+        }
+    }
+
     RunTrainingProcess() {
         console.log("Run training");
 
-        /*var url = config.get("django_url") + "/training_helper/rest";
+        var url = config.get("django_url") + "/training_helper/rest";
+        let data = new FormData();
+
+        this.GetTrainingParameters();
+        data.append("req", "RUN_MODEL_TRAINING");
+        data.append("path", "/nas/blablab");
+
+
 
         axios
-            .post(url, {
-                params: {
-                    req: "RUN_MODEL_TRAINING",
-                    path: "/nas/blablab"
+            .post(url, data)
+            .then((res) => {
+                if (res.data == "SUCCESS") {
+                    // Start training monitoring
+                    this.MonitorTrainingProcess();
+                } else {
+                    alert("[ERROR] " + res.data);
                 }
             })
-            .then((res) => {
-                console.log(res)
-            })
-            .catch((err) => alert(err));*/
+            .catch((err) => alert(err));
     }
 
     render() {

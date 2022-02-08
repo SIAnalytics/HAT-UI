@@ -64,10 +64,20 @@ class TrainingProgress extends React.Component{
         this.style = props.style;
     }
 
+    componentDidUpdate(props) {
+        var progress = props.props.now;
+
+        this.state.progress = progress;
+    }
+
+    state = {
+        progress: 0
+    }
+
     render() {
         return (
             <>
-                <ProgressBar variant="success" className={this.className} style={this.style} animated now={this.progress} label={`${this.progress}%`} />
+                <ProgressBar variant="success" className={this.className} style={this.style} animated now={this.state.progress} label={`${this.state.progress}%`} />
             </>
         );
     }
@@ -104,6 +114,10 @@ class DirectoryPicker extends React.Component{
         if (this.state.to_save == true) {
             this.setState({val: new_path});
         }
+    }
+
+    getPath = () => {
+        return this.state.val;
     }
 
     render() {
