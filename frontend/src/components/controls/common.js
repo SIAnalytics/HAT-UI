@@ -17,7 +17,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFolder } from "@fortawesome/free-regular-svg-icons";
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 
+import { TrainerContext } from '../TrainerContext';
+
 class TextInput extends React.Component{
+    static contextType = TrainerContext;
+
     constructor(props) {
         super(props);
         this.name = props.parameter.name;
@@ -37,6 +41,14 @@ class TextInput extends React.Component{
         }
         
         this.setState(state);
+
+        for (var i = 0; i < this.context.TrainerState.hyper_parameters.length; i++) {
+            
+            if (this.context.TrainerState.hyper_parameters[i].name == this.name) {
+                this.context.TrainerState.hyper_parameters[i].value = new_value;
+                break;
+            }
+        }
     }
 
     render() {
@@ -64,10 +76,11 @@ class TrainingProgress extends React.Component{
         this.style = props.style;
     }
 
-    componentDidUpdate(props) {
+    shouldComponentUpdate(props) {
         var progress = props.props.now;
 
         this.state.progress = progress;
+        return true;
     }
 
     state = {
@@ -113,6 +126,7 @@ class DirectoryPicker extends React.Component{
     setPath = (new_path) => {
         if (this.state.to_save == true) {
             this.setState({val: new_path});
+            this.props.onChange(new_path);
         }
     }
 
@@ -135,6 +149,7 @@ class DirectoryPicker extends React.Component{
                     {button}
                     <Form.Control type="text"  
                         value={this.state.val}
+                        disabled
                         onChange={e => this.setState({ val: e.target.value })}
                     />
                 </InputGroup>

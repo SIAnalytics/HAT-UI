@@ -10,17 +10,43 @@ import {
 import config from 'react-global-configuration';
 import axios from "axios";
 
+import { TrainerContext } from '../TrainerContext';
+
 class TR_67 extends React.Component{
+    static contextType = TrainerContext;
+
     constructor(props) {
         super(props);
     }
 
     state = {
-        progress: 10
+        progress: 0
     }
 
-    GetTrainingParameters() {
-        console.log("ADSDS");
+    SetTrainingParameters(data) {
+        if (this.context.TrainerState.dataset_path == "") {
+            alert("Dataset path must be specified");
+            return false;
+        }
+        data.append("dataset_path", this.context.TrainerState.dataset_path);
+
+        if (this.context.TrainerState.model_name == "") {
+            alert("Model must be selected");
+            return false;
+        }
+        data.append("model_name", this.context.TrainerState.model_name);
+
+        if (this.context.TrainerState.model_path == "") {
+            alert("Model path must be specified");
+            return false;
+        }
+        data.append("model_path", this.context.TrainerState.model_path)
+
+        data.append("hyper_patrameters", JSON.stringify(this.context.TrainerState.hyper_parameters));
+        data.append("random_flag", this.context.TrainerState.random_flag);
+        data.append("hyper_default_flag", this.context.TrainerState.hyper_default_flag);
+
+        return true;
     }
 
     timeout(delay) {
@@ -28,7 +54,6 @@ class TR_67 extends React.Component{
     }
 
     UpdateTrainingProgress(data) {
-        console.log("UPDATE PROGRESS");
         // Set progress bar
         var state = {
             progress: data.progress
@@ -38,10 +63,13 @@ class TR_67 extends React.Component{
     }
 
     async MonitorTrainingProcess() {
+
         var do_continue = true;
         while (do_continue) {
+            await this.timeout(3000);
             // Get monitoring data from server
             var url = config.get("django_url") + "/training_helper/rest";
+            
             axios
                 .get(url, {
                     params: {
@@ -62,8 +90,6 @@ class TR_67 extends React.Component{
                     alert(err);
                     return;
                 });
-            
-            await this.timeout(1000);
         }
     }
 
@@ -73,11 +99,13 @@ class TR_67 extends React.Component{
         var url = config.get("django_url") + "/training_helper/rest";
         let data = new FormData();
 
-        this.GetTrainingParameters();
+        var ret = this.SetTrainingParameters(data);
+
+        if (ret == false) {
+            return;
+        }
+
         data.append("req", "RUN_MODEL_TRAINING");
-        data.append("path", "/nas/blablab");
-
-
 
         axios
             .post(url, data)

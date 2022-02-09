@@ -14,8 +14,11 @@ import {
 } from './tr_5';
 
 import config from 'react-global-configuration';
+import { TrainerContext } from '../TrainerContext';
 
 class TR_234 extends React.Component{
+    static contextType = TrainerContext;
+
     constructor(props) {
         super(props);
     }
@@ -60,11 +63,21 @@ class TR_234 extends React.Component{
                 }
             })
             .then((res) => {
-                var param_names = res.data;
+                var params_list = res.data;
 
-                SetHyperParameters(param_names);
+                SetHyperParameters(params_list);
+                this.context.TrainerState.model_name = model_name;
+                this.context.TrainerState.hyper_parameters = params_list;
             })
             .catch((err) => alert(err));
+    }
+
+    onModelPathChange = (val) => {
+        this.context.TrainerState.model_path = val;
+    }
+
+    HandleSwitchChange = (e) => {
+        this.context.TrainerState.random_flag = !(this.context.TrainerState.random_flag);
     }
 
     render() {
@@ -78,13 +91,14 @@ class TR_234 extends React.Component{
                         </Form.Select>
                     </Form.Group>
                 </InputGroup>
-                <DirectoryPicker style={{marginTop: 10}} name="모델 불러오기" />
+                <DirectoryPicker onChange={this.onModelPathChange.bind(this)} style={{marginTop: 10}} name="모델 불러오기" />
                 <InputGroup style={{marginTop: 10}}>
                    <Form>
                         <Form.Check 
                             type="switch"
                             id="custom-switch"
                             label="랜덤 초기화"
+                            onChange={this.HandleSwitchChange}
                         />
                     </Form>
                 </InputGroup>

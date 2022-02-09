@@ -5,7 +5,11 @@ import {
     Form,
 } from "react-bootstrap";
 
+import { TrainerContext } from '../TrainerContext';
+
 class TR_5 extends React.Component{
+    static contextType = TrainerContext;
+
     constructor(props) {
         super(props);
 
@@ -14,6 +18,10 @@ class TR_5 extends React.Component{
 
     state = {
         hyper_params: []
+    }
+
+    HandleSwitchChange = (e) => {
+        this.context.TrainerState.hyper_default_flag = !(this.context.TrainerState.hyper_default_flag);
     }
 
     render() {
@@ -26,6 +34,7 @@ class TR_5 extends React.Component{
                         <Form.Check 
                             type="switch"
                             id="custom-switch"
+                            onChange={this.HandleSwitchChange}
                         />
                     </Form>
                 </InputGroup>
