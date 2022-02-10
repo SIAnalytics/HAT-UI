@@ -1,0 +1,72 @@
+{
+	"FairMOT" : [
+		{
+			"name": "Minibatch",
+			"value": 10
+		}, 
+		{
+			"name": "Epochs",
+			"value": 100000
+		},
+		{
+			"name": "Learning rates",
+			"value": 0.1234
+		},
+		{
+			"name": "검증 주기",
+			"value": 5
+		}
+	],
+	"EfficientDet" : [
+		{
+			"name": "Param 1",
+			"value": 10
+		},
+		{
+			"name": "Param 2",
+			"value": 0.1
+		},
+		{
+			"name": "Param 3",
+			"value": 0.2
+		},
+		{
+			"name": "Param 4",
+			"value": 13
+		},
+		{
+			"name": "Param 5",
+			"value": 10000
+		},
+		{
+			"name": "Param 6",
+			"value": 0.123
+		}
+	],
+	"YOLOX" : [
+		{
+			"name": "Param 1",
+			"value": 10
+		},
+		{
+			"name": "Param 2",
+			"value": 0.1
+		},
+		{
+			"name": "Param 3",
+			"value": 0.2
+		},
+		{
+			"name": "Param 4",
+			"value": 13
+		},
+		{
+			"name": "Param 5",
+			"value": 10000
+		},
+		{
+			"name": "Param 6",
+			"value": 0.123
+		}
+	]
+}

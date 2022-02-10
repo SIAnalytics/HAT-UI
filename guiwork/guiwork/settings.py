@@ -170,5 +170,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+MODELS_CONFIG_FILE_PATH = "/project/HAT-UI/guiwork/models_config.json"
+
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = False
