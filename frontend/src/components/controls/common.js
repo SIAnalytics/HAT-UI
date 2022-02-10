@@ -55,13 +55,13 @@ class TextInput extends React.Component{
         return (
             <>
                 <InputGroup style={{marginTop: this.mt}}>
-                    <Form.Label className="w-25">{this.name}</Form.Label>
+                    <Form.Label className="w-50">{this.name}</Form.Label>
                     <Form.Control  
                         type="number" 
                         value={this.state.value} 
                         onChange={(event)=>this.InputChangedHandler(event)}
                     />
-                    <Form.Control className="invisible w-25" type="text" />
+                    <Form.Control className="invisible w-15" type="text" />
                 </InputGroup>
             </>
         );
@@ -248,7 +248,7 @@ class ConversionComponent extends React.Component{
                         value={this.state.val}
                         onChange={e => this.setState({ val: e.target.value })}
                         />
-                    <Button className="btn-sm w-13" variant="outline-primary" style={{marginLeft: 5}}>저장</Button>
+                    <Button className="btn-sm w-13" variant="outline-primary" onClick={() => { this.props.ProcessSave(this.state.val) }} style={{marginLeft: 5}}>저장</Button>
                 </InputGroup>                
 
                 <Modal 

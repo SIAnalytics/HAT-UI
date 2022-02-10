@@ -1,21 +1,33 @@
 {
 	"FairMOT" : [
 		{
-			"name": "Minibatch",
-			"value": 10
+			"name": "Learning rate",
+			"value": 0.0001
 		}, 
 		{
+			"name": "Drop",
+			"value": 230
+		},
+		{
 			"name": "Epochs",
-			"value": 100000
+			"value": 250
 		},
 		{
-			"name": "Learning rates",
-			"value": 0.1234
+			"name": "Batch size",
+			"value": 12
 		},
-		{
-			"name": "검증 주기",
-			"value": 5
-		}
+        {
+            "name": "Master batch",
+            "value": 1
+        },
+        {
+            "name": "Iterations",
+            "value": -1
+        },
+        {
+            "name": "Validation intervals",
+            "value": 5
+        }
 	],
 	"EfficientDet" : [
 		{

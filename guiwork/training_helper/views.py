@@ -1,4 +1,5 @@
 from rest_framework import views
+from rest_framework import status
 from rest_framework.response import Response
 import json
 from .utils import TrainingHelperUtils as utils
@@ -18,7 +19,8 @@ class TrainingHelper(views.APIView):
         else:
             print("[ERROR] Unsupported request content {}".format(req))
 
-        return Response("Unsupported request content")
+        res = {"code": 400, "message": "Unsupported request content"}
+        return Response(data=json.dumps(res), status=status.HTTP_400_BAD_REQUEST)
 
     #POST
     def post(self, request):
@@ -30,8 +32,11 @@ class TrainingHelper(views.APIView):
                 print(f"{key}: {request.POST.get(key)}")
 
             return Response(utils.RunModelTraining())
+        elif req == "SAVE_MODEL_PARAMETERS":
+            return Response(utils.SaveModelParameters(request.POST.get("path")))
         else:
             print("[ERROR] Unsupported request content {}".format(req))
 
-        return Response("Unsupported request content")
+        res = {"code": 400, "message": "Unsupported request content"}
+        return Response(data=json.dumps(res), status=status.HTTP_400_BAD_REQUEST)
 

@@ -49,3 +49,7 @@ class TrainingHelperUtils:
 
         return ret
         
+    @staticmethod
+    def SaveModelParameters(path):
+        print("SAVING TO PATH {}. Require backend implementation".format(path))
+        return "SUCCESS"
