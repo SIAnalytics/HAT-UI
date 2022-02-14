@@ -36,7 +36,17 @@ class TrainingHelperUtils:
         return params
 
     @staticmethod
-    def RunModelTraining():
+    def RunModelTraining(params):
+        model_name = params.get("model_name")
+
+        if model_name == "FairMOT":
+            dataset_peth = params.get("dataset_path")
+            model_path = params.get("model_path")
+            hyper_parameters = json.loads(params.get("hyper_parameters"))
+            random_flag = json.loads(params.get("random_flag").lower())
+            hyper_default_flag = json.loads(params.get("hyper_default_flag").lower())
+        else:
+            return "Unsupported model name"
 
         return "SUCCESS"
 

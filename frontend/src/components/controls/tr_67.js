@@ -42,7 +42,7 @@ class TR_67 extends React.Component{
         }
         data.append("model_path", this.context.TrainerState.model_path)
 
-        data.append("hyper_patrameters", JSON.stringify(this.context.TrainerState.hyper_parameters));
+        data.append("hyper_parameters", JSON.stringify(this.context.TrainerState.hyper_parameters));
         data.append("random_flag", this.context.TrainerState.random_flag);
         data.append("hyper_default_flag", this.context.TrainerState.hyper_default_flag);
 
@@ -68,7 +68,7 @@ class TR_67 extends React.Component{
         while (do_continue) {
             await this.timeout(3000);
             // Get monitoring data from server
-            var url = config.get("django_url") + "/training_helper/rest";
+            var url = config.get("django_url") + config.get("training_helper_rest");
             
             axios
                 .get(url, {
@@ -94,9 +94,7 @@ class TR_67 extends React.Component{
     }
 
     RunTrainingProcess() {
-        console.log("Run training");
-
-        var url = config.get("django_url") + "/training_helper/rest";
+        var url = config.get("django_url") + config.get("training_helper_rest");
         let data = new FormData();
 
         var ret = this.SetTrainingParameters(data);

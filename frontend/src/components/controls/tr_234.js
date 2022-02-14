@@ -29,7 +29,7 @@ class TR_234 extends React.Component{
 
     componentDidMount() {
         // Set models list
-        var url = config.get("django_url") + "/training_helper/rest";
+        var url = config.get("django_url") + config.get("training_helper_rest");
 
         axios
             .get(url, {
@@ -53,7 +53,7 @@ class TR_234 extends React.Component{
         var model_name = e.target.value;
 
         // Get Model hyperparameters
-        var url = config.get("django_url") + "/training_helper/rest";
+        var url = config.get("django_url") + config.get("training_helper_rest");
 
         axios
             .get(url, {

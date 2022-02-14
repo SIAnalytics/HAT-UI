@@ -28,10 +28,7 @@ class TrainingHelper(views.APIView):
         req = request.POST.get("req")
 
         if req == "RUN_MODEL_TRAINING":
-            for key in request.POST.keys():
-                print(f"{key}: {request.POST.get(key)}")
-
-            return Response(utils.RunModelTraining())
+            return Response(utils.RunModelTraining(request.POST))
         elif req == "SAVE_MODEL_PARAMETERS":
             return Response(utils.SaveModelParameters(request.POST.get("path")))
         else:

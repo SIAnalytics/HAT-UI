@@ -1,9 +1,4 @@
 import React from "react";
-import { 
-    Button, 
-    Form, 
-    InputGroup 
-} from 'react-bootstrap';
 
 import config from 'react-global-configuration';
 import axios from "axios";
@@ -20,10 +15,10 @@ class TR_9 extends React.Component{
     ProcessSave = (val) => {
         // Check the directory
         if (val == "") {
-            alert("Output directory must be specified");
+            alert("[ERROR] Output directory must be specified");
             return;
         }
-        var url = config.get("django_url") + "/training_helper/rest";
+        var url = config.get("django_url") + config.get("training_helper_rest");
 
         let data = new FormData();
         data.append("req", "SAVE_MODEL_PARAMETERS");
@@ -35,8 +30,7 @@ class TR_9 extends React.Component{
                 alert("Request successfully processed");
             })
             .catch((err) => {
-                alert(err);
-                console.log(err);
+                alert([ERROR] + err);
             });
     }
 
