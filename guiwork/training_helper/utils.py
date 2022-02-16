@@ -1,6 +1,9 @@
 import os
+import sys
 import json
 import random
+import subprocess
+import shutil
 
 from django.conf import settings
 
@@ -38,24 +41,99 @@ class TrainingHelperUtils:
     @staticmethod
     def RunModelTraining(params):
         model_name = params.get("model_name")
+        experiment_id = "FairMOT-mot16"
+
+        ret_info = {}
+
+        # Default value
+        epoch_count = 250
 
         if model_name == "FairMOT":
-            dataset_peth = params.get("dataset_path")
+            # Remove tensorboard log file if exists (For progress testing ONLY)
+            log_file_path = os.path.join(settings.MODELS_LOG_PATH[model_name], experiment_id)
+            if os.path.exists(log_file_path):
+                shutil.rmtree(log_file_path)
+            #------------------------------------------------------------
+            dataset_path = params.get("dataset_path")
             model_path = params.get("model_path")
             hyper_parameters = json.loads(params.get("hyper_parameters"))
+
             random_flag = json.loads(params.get("random_flag").lower())
             hyper_default_flag = json.loads(params.get("hyper_default_flag").lower())
+
+            train_file_path = settings.MODELS_TRAIN_FILES["FairMOT"]
+            
+            args = [settings.ANACONDA_PYTHON_EXE, train_file_path]
+            args.append("mot")
+
+            args.append("--exp_id")
+            args.append(experiment_id)
+
+            args.append("--load_model")
+            args.append(model_path)
+
+            args.append("--data_cfg")
+            args.append("/nas/workspace/igor/HAT/Tracker_FairMOT/src/lib/cfg/mot16.json")
+
+            args.append("--dataset")
+            args.append(dataset_path)
+
+            if hyper_default_flag == False:
+                # Learning rate
+                for parameter in hyper_parameters:
+                    args.append(parameter["prop"])
+                    args.append(str(parameter["value"]))
+
+                    if parameter["prop"] == "--num_epochs":
+                        epoch_count = parameter["value"]
+
+            # Run the training process
+            p = None
+
+            try:
+                p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            except subprocess.CalledProcessError as e:
+                print("CAUGHT EXCEPTION")
+                print(e.output)
+
+            # Get path of logfile
+            log_path = os.path.join(settings.MODELS_LOG_PATH[model_name], experiment_id, settings.LOGS_PATH_NAME)
+
+            ret_info["log_path"] = log_path
+            ret_info["experiment_id"] = experiment_id
+            ret_info["pid"] = p.pid
+            ret_info["epoch_count"] = epoch_count
+            print(p.pid)
+
         else:
             return "Unsupported model name"
 
-        return "SUCCESS"
+        return ret_info
 
     @staticmethod
-    def GetTrainingProgress():
-        progress = random.randint(0, 100)
-        ret = {
-            "progress": progress
-        }
+    def GetTrainingProgress(experiment_id, pid, last_epoch, model_name, epoch_count, log_path):
+        # Get progress using subprocess
+        monitoring_script = settings.SUBPROCESS_EXE["training_monitoring"]
+        progress_args = [settings.ANACONDA_PYTHON_EXE, monitoring_script]
+
+        progress_args.append("--experiment_id")
+        progress_args.append(str(experiment_id))
+        progress_args.append("--pid")
+        progress_args.append(str(pid))
+        progress_args.append("--last_epoch")
+        progress_args.append(str(last_epoch))
+        progress_args.append("--log_path")
+        progress_args.append(log_path)
+        progress_args.append("--epoch_count")
+        progress_args.append(str(epoch_count))
+
+        p = subprocess.Popen(progress_args, stdout=subprocess.PIPE)
+        out, err = p.communicate()
+
+        print("OUT {}".format(out))
+        print("ERR {}".format(err))
+
+        ret = json.loads(out)
 
         return ret
         

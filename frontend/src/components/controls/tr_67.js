@@ -17,6 +17,8 @@ class TR_67 extends React.Component{
 
     constructor(props) {
         super(props);
+        this.model_name = "";
+        this.epoch_count = 0;
     }
 
     state = {
@@ -62,7 +64,8 @@ class TR_67 extends React.Component{
         this.setState(state);
     }
 
-    async MonitorTrainingProcess() {
+    async MonitorTrainingProcess(experiment_id, pid, log_path, epoch_count) {
+        var last_epoch = 0;
 
         var do_continue = true;
         while (do_continue) {
@@ -73,13 +76,23 @@ class TR_67 extends React.Component{
             axios
                 .get(url, {
                     params: {
-                        req: "GET_TRAINING_PROGRESS"
+                        req: "GET_TRAINING_PROGRESS",
+                        experiment_id: experiment_id,
+                        pid: pid,
+                        last_epoch: last_epoch,
+                        log_path: log_path,
+                        epoch_count: epoch_count,
+                        model_name: this.model_name
                     }
                 })
                 .then((res) => {
                     var progress = res.data.progress;
-                    
+                    console.log(res.data);
+
                     this.UpdateTrainingProgress(res.data);
+
+                    last_epoch = res.data.last_epoch;
+                    console.log(last_epoch);
 
                     if (progress >= 100) {
                         // Finish monitoring when training is completed
@@ -108,12 +121,35 @@ class TR_67 extends React.Component{
         axios
             .post(url, data)
             .then((res) => {
-                if (res.data == "SUCCESS") {
-                    // Start training monitoring
-                    this.MonitorTrainingProcess();
-                } else {
-                    alert("[ERROR] " + res.data);
+                var data = res.data;
+                this.model_name = this.context.TrainerState.model_name;
+
+                if (Object.keys(data).length == 0) {
+                    alert("[ERROR] Failed to run trainig on server.");
+                    return;
                 }
+
+                if (!("experiment_id" in data)) {
+                    alert("[ERROR] Missing experiment_id from server");
+                    return;
+                }
+
+                if (!("pid" in data)) {
+                    alert("[ERROR] Missing pid from server");
+                    return;
+                }
+
+                if (!("log_path" in data)) {
+                    alert("[ERROR] Missing tensorboard log path from server");
+                    return;
+                }
+
+                if (!("log_path" in data)) {
+                    alert("[ERROR] Missing epoch_count from server");
+                    return;
+                }
+
+                this.MonitorTrainingProcess(data.experiment_id, data.pid, data.log_path, data.epoch_count);
             })
             .catch((err) => alert(err));
     }

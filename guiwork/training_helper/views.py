@@ -15,7 +15,13 @@ class TrainingHelper(views.APIView):
         elif req == "GET_MODEL_HYPERPARAMS":
             return Response(utils.GetModelHyperparams(request.GET.get("model_name")))
         elif req == "GET_TRAINING_PROGRESS":
-            return Response(utils.GetTrainingProgress())
+            experiment_id = str(request.GET.get("experiment_id"))
+            pid = int(request.GET.get("pid"))
+            last_epoch = int(request.GET.get("last_epoch"))
+            model_name = str(request.GET.get("model_name"))
+            log_path = str(request.GET.get("log_path"))
+            epoch_count = request.GET.get("epoch_count")
+            return Response(utils.GetTrainingProgress(experiment_id, pid, last_epoch, model_name, epoch_count, log_path))
         else:
             print("[ERROR] Unsupported request content {}".format(req))
 

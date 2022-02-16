@@ -145,7 +145,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-ROOT_STORAGE_PATH = "/nas"
+ROOT_STORAGE_PATH = "/nas/workspace/igor/HAT"
 
 
 # Internationalization
@@ -171,6 +171,21 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MODELS_CONFIG_FILE_PATH = "/project/HAT-UI/guiwork/models_config.json"
+MODELS_TRAIN_FILES = {
+    "FairMOT": "/nas/workspace/igor/HAT/Tracker_FairMOT/src/train.py"
+}
+
+MODELS_LOG_PATH = {
+    "FairMOT": "/nas/workspace/igor/HAT/Tracker_FairMOT/exp/mot/"
+}
+
+SUBPROCESS_EXE = {
+    "training_monitoring": "/project/HAT-UI/guiwork/training_helper/training_monitoring.py"
+}
+
+LOGS_PATH_NAME = "logs_test"
+
+ANACONDA_PYTHON_EXE = "/root/anaconda3/bin/python3"
 
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = False
