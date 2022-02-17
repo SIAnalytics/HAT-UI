@@ -6,34 +6,28 @@ import {
 } from "react-chartjs-2";
 
 import Chart from 'chart.js/auto'
+import { ThemeProvider } from "react-bootstrap";
 
 class LineChart extends React.Component {
   constructor(props) {
     super(props);
 
-    this.data = {
-        labels: ["1", "2", "3",
-          "4", "5", "6"],
-        datasets: [
-          {
-            label: props["label"],
-            data: [0.9, 0.7, 0.6, 0.6, 0.5, 0.3, 0.1],
-            fill: true,
-            backgroundColor: "rgba(6, 156, 51, 0.3)",
-            borderColor: "#02b844",
-          }
-        ]
-    };
-
-    this.className = props["className"]
+    this.className = props["className"];
   }
+
+  state = {
+    data: this.props.graph_data
+  };
 
   render() {
     return (
         <>
           <div className={this.className}>
             <div className="chart-style">
-              <Line data={this.data} options={{ maintainAspectRatio: true }}/>
+              <Line 
+                data={this.props.graph_data} 
+                options={{ maintainAspectRatio: true }}
+              />
             </div>
           </div>
         </>

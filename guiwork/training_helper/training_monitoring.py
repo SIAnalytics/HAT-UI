@@ -59,10 +59,7 @@ def main(args):
 
                 ret["scalars"][tag] = scalar_info
 
-    with open("/nas/workspace/igor/test_monitoring", "a") as f:
-        f.write(json.dumps(ret["scalars"]))
-
-    ret["progress"] = curr_epoch * 100 / epoch_count
+    ret["progress"] = int(curr_epoch * 100 / epoch_count)
     ret["last_epoch"] = curr_epoch
     ret["log_file"] = log_file
 

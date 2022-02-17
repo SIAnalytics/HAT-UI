@@ -130,8 +130,10 @@ class TrainingHelperUtils:
         p = subprocess.Popen(progress_args, stdout=subprocess.PIPE)
         out, err = p.communicate()
 
+        '''
         print("OUT {}".format(out))
         print("ERR {}".format(err))
+        '''
 
         ret = json.loads(out)
 

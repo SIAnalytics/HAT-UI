@@ -12,6 +12,10 @@ import axios from "axios";
 
 import { TrainerContext } from '../TrainerContext';
 
+import {
+    SetGraphData
+} from './tr_8';
+
 class TR_67 extends React.Component{
     static contextType = TrainerContext;
 
@@ -19,6 +23,7 @@ class TR_67 extends React.Component{
         super(props);
         this.model_name = "";
         this.epoch_count = 0;
+        this.training_parameters = {};
     }
 
     state = {
@@ -61,6 +66,10 @@ class TR_67 extends React.Component{
             progress: data.progress
         }
 
+        if (Object.keys(data.scalars).length != 0) {
+            SetGraphData(data.scalars);
+        }
+
         this.setState(state);
     }
 
@@ -70,6 +79,10 @@ class TR_67 extends React.Component{
         var do_continue = true;
         while (do_continue) {
             await this.timeout(3000);
+            if (do_continue == false) {
+                // Training already completed
+                break;
+            }
             // Get monitoring data from server
             var url = config.get("django_url") + config.get("training_helper_rest");
             
@@ -98,6 +111,11 @@ class TR_67 extends React.Component{
                         // Finish monitoring when training is completed
                         do_continue = false;
                     }
+
+                    if (progress < 100 && res.data.alive == false) {
+                        do_continue = false;
+                        alert("[ERROR] Training completed abnormally. Monitoring will be stopped.");
+                    }
                 })
                 .catch((err) => {
                     alert(err);
@@ -111,6 +129,7 @@ class TR_67 extends React.Component{
         let data = new FormData();
 
         var ret = this.SetTrainingParameters(data);
+        this.training_parameters = {};
 
         if (ret == false) {
             return;

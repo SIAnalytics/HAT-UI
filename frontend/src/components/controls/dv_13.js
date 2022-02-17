@@ -20,7 +20,7 @@ class DV_13 extends React.Component{
                 <Form className='d-flex'>
                     <PieChart label="클래스 분포" className="col-md-3"/>
                     <PieChart label="객체 수 분포" className="col-md-3"/>
-                    <LineChart  label="영상 별 객체수" className="col-md-3"/>
+                    <BarChart  label="영상 별 객체수" className="col-md-3"/>
                     <BarChart label="클래스 분포" className="col-md-3"/>
                 </Form>
             </>
