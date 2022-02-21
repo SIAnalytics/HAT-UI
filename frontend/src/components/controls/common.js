@@ -16,6 +16,7 @@ import BootstrapTable from 'react-bootstrap-table-next';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFolder } from "@fortawesome/free-regular-svg-icons";
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
+import cellEditFactory from 'react-bootstrap-table2-editor';
 
 import { TrainerContext } from '../TrainerContext';
 
@@ -169,10 +170,10 @@ class DirectoryPicker extends React.Component{
                     </Modal.Body>
                     <Modal.Footer>
                         <Button variant="primary" onClick={this.saveAndClose}>
-                            Save
+                            선택
                         </Button>
                         <Button variant="secondary" onClick={this.closeModal}>
-                            Close
+                            취소
                         </Button>
                     </Modal.Footer>
                 </Modal>
@@ -187,21 +188,40 @@ class TableComponent extends React.Component{
         this.columns = props["columns"];
         this.content = props["content"];
         this.key_name = props["key_name"];
+        this.editable = props["editable"];
     }
 
     render() {
-        return (
-            <>
-                <BootstrapTable 
-                    keyField={this.key_name} 
-                    data={this.content} 
-                    columns={this.columns} 
-                    hover
-                    striped
-                    condensed
-                    className="table-component"/>
-            </>
-        );
+        if (this.editable == true) {
+            return (
+                <>
+                    <BootstrapTable 
+                        keyField={this.key_name} 
+                        data={this.content} 
+                        columns={this.columns} 
+                        hover
+                        striped
+                        condensed
+                        className="table-component"
+                        cellEdit={ cellEditFactory({ mode: 'click' }) }
+                    />
+                </>
+            );
+        } else {
+            return (
+                <>
+                    <BootstrapTable 
+                        keyField={this.key_name} 
+                        data={this.props.content} 
+                        columns={this.columns} 
+                        hover
+                        striped
+                        condensed
+                        className="table-component"
+                    />
+                </>
+            );
+        }
     }
 }
 
@@ -266,10 +286,10 @@ class ConversionComponent extends React.Component{
                     </Modal.Body>
                     <Modal.Footer>
                         <Button variant="primary" onClick={this.saveAndClose}>
-                            Save
+                            선택
                         </Button>
                         <Button variant="secondary" onClick={this.closeModal}>
-                            Close
+                            취소
                         </Button>
                     </Modal.Footer>
                 </Modal>

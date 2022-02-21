@@ -6,6 +6,8 @@ import subprocess
 import shutil
 
 from django.conf import settings
+from django.core.files import File
+from django.http import HttpResponse
 
 class TrainingHelperUtils:
     @staticmethod
@@ -140,6 +142,15 @@ class TrainingHelperUtils:
         return ret
         
     @staticmethod
-    def SaveModelParameters(path):
-        print("SAVING TO PATH {}. Require backend implementation".format(path))
-        return "SUCCESS"
+    def SaveModelWeights(path):
+        # Check if file exists
+        print(path)
+        if os.path.isdir(path):
+            return "[ERROR] Cannot download directory. Choose file"
+
+        f = open(path, 'rb')
+        file_to_download = File(f)
+        response = HttpResponse(file_to_download.read())
+        response['Content-Disposition'] = 'attachment'
+        
+        return response

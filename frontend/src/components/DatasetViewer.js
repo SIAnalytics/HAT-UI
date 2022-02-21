@@ -11,32 +11,50 @@ import {
     DV_13,
 } from "./controls";
 
+import {
+    DatasetContext,
+    DatasetProvider
+} from "./DatasetContext";
+
 function DatasetViewer() {
+    const DatasetState = {
+        video_path: "",
+        type: "",
+        train_rate: 0,
+        validation_rate: 0,
+        test_rate: 0,
+        shuffle: false,
+        output_path: "",
+        convert_path: ""
+    };
+
     return(
         <Container>
-            <Row>
-                <div className="col-md-6">
-                    <div className="options-content">
-                        <DV_123456 />
+            <DatasetProvider value={{ DatasetState }}>
+                <Row>
+                    <div className="col-md-6">
+                        <div className="options-content">
+                            <DV_123456 />
+                        </div>
                     </div>
-                </div>
-                <div className="col-md-6">
-                    <div className="options-content">
-                        <DV_78910 />
+                    <div className="col-md-6">
+                        <div className="options-content">
+                            <DV_78910 />
+                        </div>
+                        <br></br>
+                        <div className="options-content">
+                            <DV_1112 />
+                        </div>
                     </div>
-                    <br></br>
-                    <div className="options-content">
-                        <DV_1112 />
+                </Row>
+                <Row>
+                    <div className="col-md-12">
+                        <div className="options-content">
+                            <DV_13 />
+                        </div>
                     </div>
-                </div>
-            </Row>
-            <Row>
-                <div className="col-md-12">
-                    <div className="options-content">
-                        <DV_13 />
-                    </div>
-                </div>
-            </Row>
+                </Row>
+            </DatasetProvider>
         </Container>
     );
 }

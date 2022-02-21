@@ -22,6 +22,8 @@ class TrainingHelper(views.APIView):
             log_path = str(request.GET.get("log_path"))
             epoch_count = request.GET.get("epoch_count")
             return Response(utils.GetTrainingProgress(experiment_id, pid, last_epoch, model_name, epoch_count, log_path))
+        elif req == "SAVE_MODEL_WEIGHTS":
+            return utils.SaveModelWeights(request.GET.get("path"))
         else:
             print("[ERROR] Unsupported request content {}".format(req))
 
@@ -30,13 +32,10 @@ class TrainingHelper(views.APIView):
 
     #POST
     def post(self, request):
-
         req = request.POST.get("req")
 
         if req == "RUN_MODEL_TRAINING":
             return Response(utils.RunModelTraining(request.POST))
-        elif req == "SAVE_MODEL_PARAMETERS":
-            return Response(utils.SaveModelParameters(request.POST.get("path")))
         else:
             print("[ERROR] Unsupported request content {}".format(req))
 

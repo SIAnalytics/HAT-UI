@@ -17,18 +17,6 @@ import {
     TrainerProvider
 } from "./TrainerContext";
 
-/*
-function reducer(state, action) {
-    switch (action.type) {
-        case 'UPDATE_DATSET_PATH':
-            return {
-                dataset_path: action.data
-            };
-        default:
-            return TrainerState;
-    }
-}*/
-
 function TrainerHelper() {
     //const [state, dispatch] = useReducer(reducer, TrainerState);
     const TrainerState = {

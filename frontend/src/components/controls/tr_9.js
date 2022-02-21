@@ -21,16 +21,24 @@ class TR_9 extends React.Component{
         var url = config.get("django_url") + config.get("training_helper_rest");
 
         let data = new FormData();
-        data.append("req", "SAVE_MODEL_PARAMETERS");
+        data.append("req", "SAVE_MODEL_WEIGHTS");
         data.append("path", val);
 
+        var fileDownload = require('js-file-download');
+
         axios
-            .post(url, data)
+            .get(url, {
+                params: {
+                    "req": "SAVE_MODEL_WEIGHTS",
+                    "path": val
+                }
+            })
             .then((res) => {
+                fileDownload(res.data, 'weights.pth');
                 alert("Request successfully processed");
             })
             .catch((err) => {
-                alert([ERROR] + err);
+                alert("[ERROR]" + err);
             });
     }
 
