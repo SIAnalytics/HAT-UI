@@ -48,10 +48,12 @@ class DatasetViewerUtils:
         return res
     
     @staticmethod
-    def RunDatasetSeparation():
+    def RunDatasetSeparation(params):
         res = {
             "status": "SUCCESS"
         }
+
+
 
         return res
 
