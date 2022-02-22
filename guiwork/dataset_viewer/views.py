@@ -20,6 +20,8 @@ class DatasetViewer(views.APIView):
         req = request.POST.get("req")
 
         if req == "RUN_DATASET_SEPARATION":
+            for key in request.POST.keys():
+                print("{} {}".format(key, request.POST.get(key)))
             return Response(utils.RunDatasetSeparation())
         
         res = {"code": 400, "message": "Unsupported POST request content"}

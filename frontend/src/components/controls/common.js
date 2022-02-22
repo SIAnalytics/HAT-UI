@@ -197,13 +197,18 @@ class TableComponent extends React.Component{
                 <>
                     <BootstrapTable 
                         keyField={this.key_name} 
-                        data={this.content} 
-                        columns={this.columns} 
+                        data={this.props.content} 
+                        columns={this.props.columns} 
                         hover
                         striped
                         condensed
                         className="table-component"
-                        cellEdit={ cellEditFactory({ mode: 'click' }) }
+                        cellEdit={ 
+                            cellEditFactory({ 
+                                mode: 'click',
+                                blurToSave: true,
+                            })
+                        }
                     />
                 </>
             );

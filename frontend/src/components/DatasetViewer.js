@@ -27,7 +27,14 @@ function DatasetViewer() {
         output_path: "",
         convert_path: "",
         convert_from: "",
-        convert_to: ""
+        convert_to: "",
+        augmentation: {
+            horizontal_flipping: 0,
+            vertical_flipping: 0,
+            brightness: 0,
+            contrast: 0,
+            resize: 0
+        }
     };
 
     return(
