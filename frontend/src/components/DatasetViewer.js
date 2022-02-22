@@ -25,7 +25,9 @@ function DatasetViewer() {
         test_rate: 0,
         shuffle: false,
         output_path: "",
-        convert_path: ""
+        convert_path: "",
+        convert_from: "",
+        convert_to: ""
     };
 
     return(

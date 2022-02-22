@@ -12,14 +12,15 @@ class DatasetViewer(views.APIView):
         if req == "GET_VIDEOS_FROM_PATH":
             return Response(utils.GetVideosFromPath(request.GET.get("path")))        
 
-        res = {"code": 400, "message": "Unsupported request content"}
+        res = {"code": 400, "message": "Unsupported GET request content"}
         return Response(data=json.dumps(res), status=status.HTTP_400_BAD_REQUEST)
 
     #POST handler
     def post(self, request):
-        content = {
-            "type": "POST",
-            "purpose": "REST API POST"
-        }
+        req = request.POST.get("req")
 
-        return Response(content)
+        if req == "RUN_DATASET_SEPARATION":
+            return Response(utils.RunDatasetSeparation())
+        
+        res = {"code": 400, "message": "Unsupported POST request content"}
+        return Response(data=json.dumps(res), status=status.HTTP_400_BAD_REQUEST)

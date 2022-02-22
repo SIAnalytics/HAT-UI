@@ -46,3 +46,13 @@ class DatasetViewerUtils:
                 video.release()
 
         return res
+    
+    @staticmethod
+    def RunDatasetSeparation():
+        res = {
+            "status": "SUCCESS"
+        }
+
+        return res
+
+        

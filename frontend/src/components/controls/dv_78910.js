@@ -10,14 +10,51 @@ import {
     TableComponent,
 } from "./common";
 
+import config from 'react-global-configuration';
+import axios from "axios";
+
+import {
+    DatasetContext
+} from "../DatasetContext";
+
 import { Type } from 'react-bootstrap-table2-editor';
 
 class DV_78910 extends React.Component{
+    static contextType = DatasetContext;
+
     constructor(props) {
         super(props);
     }
 
+    SetDatasetSeparationParameters(data) {
+        if (this.context.DatasetState.video_path == "") {
+            alert("Video path must be specified");
+            return false;
+        }
+        data.append("video_path", this.context.DatasetState.video_path);
+        console.log(this.context.DatasetState.video_path);
 
+        return true;
+    }
+
+    RunDatasetSeparation() {
+        var url = config.get("django_url") + config.get("dataset_viewer_rest");
+        let data = new FormData();
+
+        var ret = this.SetDatasetSeparationParameters(data);
+        if (ret == false) {
+            return;
+        }
+
+        data.append("req", "RUN_DATASET_SEPARATION");
+
+        axios
+            .post(url, data)
+            .then((res) => {
+                console.log(res)
+            })
+            .catch((err) => alert(err));
+    }
 
     render() {
         let content = [
@@ -48,7 +85,7 @@ class DV_78910 extends React.Component{
                 text: '함수'
             }, {
                 dataField: '적용률',
-                text: '적용률',
+                text: '적용률, %',
             }
         ];
 
@@ -78,7 +115,7 @@ class DV_78910 extends React.Component{
                     <TableComponent content={content} columns={columns} key_name = {key_name} editable={true}/>
                 </div>
                 <div style={{textAlign: "right"}}>
-                    <Button style={{marginTop: 5}} variant="primary">실행</Button>
+                    <Button style={{marginTop: 5}} variant="primary" onClick={() => { this.RunDatasetSeparation() }}>실행</Button>
                 </div>
             </>
         );
