@@ -94,7 +94,7 @@ class DV_123456 extends React.Component {
                     </Form.Select>
                 </Form.Group>
 
-                <div style={{height: 494, overflowY: "scroll", marginTop: 10}}>
+                <div style={{height: 509, overflowY: "scroll", marginTop: 10}}>
                     <TableComponent content={this.state.content} columns={columns} key_name = {key_name}/>
                 </div>
             </>

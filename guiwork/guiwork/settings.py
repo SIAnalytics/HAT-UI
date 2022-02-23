@@ -180,7 +180,8 @@ MODELS_LOG_PATH = {
 }
 
 SUBPROCESS_EXE = {
-    "training_monitoring": "/project/HAT-UI/guiwork/training_helper/training_monitoring.py"
+    "training_monitoring": "/project/HAT-UI/guiwork/training_helper/training_monitoring.py",
+    "dataset_building": "/project/HAT-UI/guiwork/dataset_viewer/dataset_builder.py"
 }
 
 LOGS_PATH_NAME = "logs_test"

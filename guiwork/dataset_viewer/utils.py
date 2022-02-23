@@ -3,6 +3,7 @@ import sys
 import json
 import cv2
 import csv
+import subprocess
 
 from django.conf import settings
 
@@ -53,7 +54,45 @@ class DatasetViewerUtils:
             "status": "SUCCESS"
         }
 
+        args = [settings.ANACONDA_PYTHON_EXE, settings.SUBPROCESS_EXE["dataset_building"]]
 
+        args.append("--video_path")
+        args.append(str(params.get("video_path")))
+
+        args.append("--train_rate")
+        args.append(str(params.get("train_rate")))
+
+        args.append("--validation_rate")
+        args.append(str(params.get("validation_rate")))
+
+        args.append("--test_rate")
+        args.append(str(params.get("test_rate")))
+
+        args.append("--shuffle")
+        args.append(str(params.get("shuffle")))
+
+        args.append("--output_path")
+        args.append(str(params.get("output_path")))
+
+        args.append("--augmentation")
+        args.append(str(params.get("augmentation")))
+
+        p = None
+
+        try:
+            with open("/nas/workspace/igor/out_dataset", "wb") as out:
+                #p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                p = subprocess.Popen(args, stdout=out, stderr=out)
+            print("PID = {}".format(p.pid))
+
+            '''
+            out, err = p.communicate()
+            print("OUT {}".format(out))
+            print("ERR {}".format(err))
+            '''
+        except subproccess.CalledProcessError as e:
+            print("CAUGHT SUBPROCESS EXCEPTION")
+            print(e.output)
 
         return res
 
