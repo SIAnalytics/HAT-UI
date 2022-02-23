@@ -173,20 +173,6 @@ class DatasetBuilder:
             # Close video
             video.release()
 
-            '''
-            frames_list = labels["Frame"].unique()
-            print("TYPE = {} SHAPE = {}".format(type(frames_list), frames_list.shape))
-            
-            shuffle = json.loads(self.args.shuffle.lower())
-
-            if shuffle == True:
-                print(frames_list)
-                np.random.shuffle(frames_list)
-                print(frames_list)
-            else:
-                print("DONT SHUFFLE")
-            '''
-
             # Remove to process all files in the set
             break
 
