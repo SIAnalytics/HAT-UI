@@ -118,36 +118,36 @@ class DatasetBuilder:
 
             frame_no = 0
 
-            frame_base_path = os.path.join(self.args.output_path, "train", "imgs", f"{VIDEO_PREFIX + str(video_n)}")
-            label_path = os.path.join(self.args.output_path, "train", "labels", f"Video_file_{video_n}.TXT")
-            patch_switch_threshold = train_count
+            # Open label files for train/val/test
+            train_label_path = os.path.join(self.args.output_path, "train", "labels", f"Video_file_{video_n}.TXT")
+            val_label_path = os.path.join(self.args.output_path, "val", "labels", f"Video_file_{video_n}.TXT")
+            test_label_path = os.path.join(self.args.output_path, "test", "labels", f"Video_file_{video_n}.TXT")
 
-            label_file = open(label_path, "w")
+            train_label_file = open(train_label_path, "w")
+            val_label_file = open(val_label_path, "w")
+            test_label_file = open(test_label_path, "w")
 
+            label_file = None
             while video.isOpened():
                 ret, frame = video.read()
                 if not ret:
                     break
 
-                if frame_no == patch_switch_threshold:
-                    if frame_no == train_count:
-                        frame_base_path = os.path.join(self.args.output_path, "val", "imgs", f"{VIDEO_PREFIX + str(video_n)}")
-                        label_path = os.path.join(self.args.output_path, "val", "labels", f"{VIDEO_PREFIX + str(video_n)}.TXT")
-                        patch_switch_threshold += validation_count
+                # Check where the frame should be written
+                dst_frame_no = frames[frame_no]
+                if dst_frame_no < train_count:
+                    # write to training dirs
+                    label_file = train_label_file
+                    frame_out_path = os.path.join(self.args.output_path, "train", "imgs", f"{VIDEO_PREFIX + str(video_n)}", "{0:07d}.PNG".format(frame_no))
+                elif dst_frame_no >= train_count and dst_frame_no < (train_count + validation_count):
+                    # write to validation dirs
+                    label_file = val_label_file
+                    frame_out_path = os.path.join(self.args.output_path, "val", "imgs", f"{VIDEO_PREFIX + str(video_n)}", "{0:07d}.PNG".format(frame_no))
+                else:
+                    # write to test dirs
+                    label_file = test_label_file
+                    frame_out_path = os.path.join(self.args.output_path, "test", "imgs", f"{VIDEO_PREFIX + str(video_n)}", "{0:07d}.PNG".format(frame_no))
 
-                        # Open new label file
-                        label_file.close()
-                        label_file = open(label_path, "w")
-                    else:
-                        frame_base_path = os.path.join(self.args.output_path, "test", "imgs", f"{VIDEO_PREFIX + str(video_n)}")
-                        label_path = os.path.join(self.args.output_path, "test", "labels", f"{VIDEO_PREFIX + str(video_n)}.TXT")
-
-                        # Open new label file
-                        label_file.close()
-                        label_file = open(label_path, "w")
-
-                frame_out_path = os.path.join(frame_base_path, "{0:07d}.PNG".format(frame_no))
-                
                 # Write labels information
                 label_data = labels[labels['Frame'] == frame_no]
 
@@ -168,7 +168,9 @@ class DatasetBuilder:
                 frame_no += 1
             
             # Close label file
-            label_file.close()
+            train_label_file.close()
+            val_label_file.close()
+            test_label_file.close()
 
             # Close video
             video.release()
@@ -186,3 +188,4 @@ def main(args):
 if __name__ == "__main__":
     args = parser.parse_args()
     main(args)
+

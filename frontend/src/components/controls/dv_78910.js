@@ -49,6 +49,12 @@ class DV_78910 extends React.Component{
             alert("[ERROR] train + validation + test must be 100. Currently " + (train_rate + val_rate + test_rate));
             return false;
         }
+
+        if (train_rate == 0) {
+            alert("[ERROR] Train rate must be more than 0");
+            return false;
+        }
+
         data.append("train_rate", train_rate);
         data.append("validation_rate", val_rate);
         data.append("test_rate", test_rate);
