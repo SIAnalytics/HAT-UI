@@ -1,5 +1,6 @@
 from rest_framework import views
 from rest_framework.response import Response
+from rest_framework import status
 import json
 from .utils import DatasetViewerUtils as utils
 
@@ -11,6 +12,8 @@ class DatasetViewer(views.APIView):
 
         if req == "GET_VIDEOS_FROM_PATH":
             return Response(utils.GetVideosFromPath(request.GET.get("path")))        
+        elif req == "CONVERT_DATASET":
+            return Response(utils.ProcessConvertDataset(request.GET.get("path"), request.GET.get("convert_from"), request.GET.get("convert_to")))
 
         res = {"code": 400, "message": "Unsupported GET request content"}
         return Response(data=json.dumps(res), status=status.HTTP_400_BAD_REQUEST)
@@ -18,6 +21,8 @@ class DatasetViewer(views.APIView):
     #POST handler
     def post(self, request):
         req = request.POST.get("req")
+
+        print(req)
 
         if req == "RUN_DATASET_SEPARATION":
             for key in request.POST.keys():

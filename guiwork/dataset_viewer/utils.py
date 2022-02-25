@@ -96,4 +96,9 @@ class DatasetViewerUtils:
 
         return res
 
+    @staticmethod
+    def ProcessConvertDataset(path, convert_from, convert_to):
+        print("{} {} {}".format(path, convert_from, convert_to))
+        return "SUCCESS"
+
         
