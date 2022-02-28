@@ -207,17 +207,6 @@ function SetGraphData(training_data) {
                 break;
         }
     }
-    //-----------------------------------------------------------
-
-    /*var label = Object.keys(training_data)[0];
-    var graph_data_0 = training_data[label];    
-    graph_setting_0.datasets[0].label = label;
-    
-
-    for (var key of Object.keys(graph_data_0)) {
-        graph_setting_0.labels.push(key);
-        graph_setting_0.datasets[0].data.push(graph_data_0[key]);
-    }*/
 
     this.setState(state);
 }

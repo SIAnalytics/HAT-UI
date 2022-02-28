@@ -72,16 +72,8 @@ class TextInput extends React.Component{
 class TrainingProgress extends React.Component{
     constructor(props) {
         super(props);
-        this.progress = props.props["now"];
         this.className = props.className;
         this.style = props.style;
-    }
-
-    shouldComponentUpdate(props) {
-        var progress = props.props.now;
-
-        this.state.progress = progress;
-        return true;
     }
 
     state = {
@@ -91,7 +83,13 @@ class TrainingProgress extends React.Component{
     render() {
         return (
             <>
-                <ProgressBar variant="success" className={this.className} style={this.style} animated now={this.state.progress} label={`${this.state.progress}%`} />
+                <ProgressBar 
+                    variant={this.props.variant} 
+                    className={this.className} 
+                    style={this.style} 
+                    animated={this.props.animated} 
+                    now={this.props.now} 
+                    label={`${this.props.now}%`} />
             </>
         );
     }

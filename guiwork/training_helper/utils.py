@@ -153,4 +153,5 @@ class TrainingHelperUtils:
         response = HttpResponse(file_to_download.read())
         response['Content-Disposition'] = 'attachment'
         
+        print("RETURNING!!!")
         return response

@@ -15,6 +15,10 @@ import {
 } from "../DatasetContext";
 import config from 'react-global-configuration';
 
+import {
+    SetGraphData
+} from "./dv_13"
+
 class DV_123456 extends React.Component {
     static contextType = DatasetContext;
     
@@ -40,10 +44,12 @@ class DV_123456 extends React.Component {
             })
             .then((res) => {
                 var state = {
-                    content: res.data
+                    content: res.data.video_info
                 }
 
                 this.setState(state);
+
+                SetGraphData(res.data.class_info, res.data.frame_info);
             })
             .catch((err) => alert(err));
     }

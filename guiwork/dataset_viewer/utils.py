@@ -10,10 +10,28 @@ from django.conf import settings
 class DatasetViewerUtils:
     @staticmethod
     def GetVideosFromPath(path):
-        res = []
+        res = {}
+        res["video_info"] = []
+        res["frame_info"] = {}
+        class_ids = {}
 
         files_list = sorted([f for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))])
-        
+
+        # Get total frame count for each videl
+        '''
+        max_frame_count = 0
+        for f in files_list:
+            fn, ext = os.path.splitext(f)
+            # Process video files
+            if ext.lower() == ".mpg": 
+                video = cv2.VideoCapture(os.path.join(path, f))
+                frame_count = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
+                max_frame_count = max(max_frame_count, frame_count)
+                video.release()
+        max_frame_count += 1
+        '''
+
+        # Process frames for each video
         for f in files_list:
             fn, ext = os.path.splitext(f)
 
@@ -27,24 +45,49 @@ class DatasetViewerUtils:
                 duration = frame_count/fps
 
                 # Get number of objects
+                
                 objects_count = 0
                 object_ids = []
                 csv_file = os.path.join(path, fn + ".csv")
+                '''
+                res["frame_info"][fn] = {}
+                for i in range(max_frame_count):
+                    res["frame_info"][fn][i] = 0
+                '''
+
                 with open(csv_file) as labels:
-                    labels_data = csv.reader(labels)
+                    labels_data = csv.reader(labels) 
+                    next(labels_data)
                     for row in labels_data:
+                        # Count number of objects
                         id = row[7] # ID is in 7th column
                         if id not in object_ids:
                             object_ids.append(id)
+
+                        # Count number of classes
+                        class_id = row[2]
+                        if class_id not in class_ids.keys():
+                            class_ids[class_id] = 1
+                        else:
+                            class_ids[class_id] += 1
+
+                        # Count number of classes in frame
+                        '''
+                        frame_no = row[0]
+                        if int(frame_no) in res["frame_info"][fn].keys():
+                            res["frame_info"][fn][int(frame_no)] += 1
+                        '''
 
                 video_info = {
                     '파일 이름': f,
                     '객체 수': len(object_ids),
                     '비디오 길이': int(duration)
                 }
-                res.append(video_info)
+                res["video_info"].append(video_info)
 
                 video.release()
+        
+        res["class_info"] = class_ids
 
         return res
     

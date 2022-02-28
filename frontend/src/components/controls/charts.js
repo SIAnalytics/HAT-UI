@@ -72,31 +72,6 @@ class BarChart extends React.Component {
 class PieChart extends React.Component {
   constructor(props) {
     super(props);
-    this.data = {
-      labels: ["Cat1", "Cat2", "Cat3", "Cat4", "Cat5"],
-      datasets: [
-        {
-          data: [45, 30, 18, 15, 9],
-          backgroundColor: [
-            "#F7464A",
-            "#46BFBD",
-            "#FDB45C",
-            "#949FB1",
-            "#4D5360",
-            "#AC64AD"
-          ],
-          hoverBackgroundColor: [
-            "#FF5A5E",
-            "#5AD3D1",
-            "#FFC870",
-            "#A8B3C5",
-            "#616774",
-            "#DA92DB"
-          ],
-          label: props["label"],
-        }
-      ]
-    }
 
     this.className = props["className"];
 
@@ -116,7 +91,7 @@ class PieChart extends React.Component {
       <>
         <div className={this.className}>
           <div className="chart-style">
-            <Pie data={this.data} options={this.options} />
+            <Pie data={this.props.graph_data} options={this.options} />
           </div>
         </div>
       </>

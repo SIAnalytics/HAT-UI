@@ -27,7 +27,12 @@ class TR_67 extends React.Component{
     }
 
     state = {
-        progress: 0
+        disabled: false,
+        progress: 0,
+        style: {
+            variant: "success",
+            animated: true
+        }
     }
 
     SetTrainingParameters(data) {
@@ -60,21 +65,57 @@ class TR_67 extends React.Component{
         return new Promise( res => setTimeout(res, delay) );
     }
 
-    UpdateTrainingProgress(data) {
-        // Set progress bar
+    UpdateProgressBar(type, progress) {
         var state = {
-            progress: data.progress
+            style: {
+            }
         }
 
-        if (Object.keys(data.scalars).length != 0) {
-            SetGraphData(data.scalars);
+        switch(type) {
+            case "processing": {
+                state.progress = progress;
+                state.style.variant = "success";
+                state.style.animated = true;
+                state.disabled = true;
+                break;
+            }
+            case "completed": {
+                state.progress = progress;
+                state.style.variant = "";
+                state.style.animated = false;
+                state.disabled = false;
+                break;
+            }
+            case "failed": {
+                state.progress = progress;
+                state.style.variant = "danger";
+                state.style.animated = false;
+                state.disabled = false;
+            }
+            default: {
+                break;
+            }
         }
 
         this.setState(state);
     }
 
+    UpdateTrainingProgress(data) {
+        // Set progress bar
+        this.UpdateProgressBar("processing", data.progress);
+
+        if (Object.keys(data.scalars).length != 0) {
+            SetGraphData(data.scalars);
+        }
+    }
+
     async MonitorTrainingProcess(experiment_id, pid, log_path, epoch_count) {
         var last_epoch = 0;
+
+        var state = {
+            disabled: true
+        }
+        this.setState(state);
 
         var do_continue = true;
         while (do_continue) {
@@ -110,10 +151,12 @@ class TR_67 extends React.Component{
                     if (progress >= 100) {
                         // Finish monitoring when training is completed
                         do_continue = false;
+                        this.UpdateProgressBar("completed", progress);
                     }
 
                     if (progress < 100 && res.data.alive == false) {
                         do_continue = false;
+                        this.UpdateProgressBar("failed", progress);
                         alert("[ERROR] Training completed abnormally. Monitoring will be stopped.");
                     }
                 })
@@ -177,8 +220,8 @@ class TR_67 extends React.Component{
         return (
             <>
                 <Form className='d-flex'>
-                    <Button className="btn btn-primary btn-sm w-15" onClick={() => { this.RunTrainingProcess() }}>학습 개시</Button>
-                    <TrainingProgress className="w-85" style={{height: 30, marginLeft: 5}} props={{now: this.state.progress}} />
+                    <Button disabled={this.state.disabled} className="btn btn-primary btn-sm w-15" onClick={() => { this.RunTrainingProcess() }}>학습 개시</Button>
+                    <TrainingProgress className="w-85" style={{height: 30, marginLeft: 5}} now={this.state.progress} variant={this.state.style.variant} animated={this.state.style.animated} />
                 </Form>
             </>
         );
