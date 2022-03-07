@@ -181,7 +181,8 @@ MODELS_LOG_PATH = {
 
 SUBPROCESS_EXE = {
     "training_monitoring": "/project/HAT-UI/guiwork/training_helper/training_monitoring.py",
-    "dataset_building": "/project/HAT-UI/guiwork/dataset_viewer/dataset_builder.py"
+    "dataset_building": "/project/HAT-UI/guiwork/dataset_viewer/dataset_builder.py",
+    "dataset_monitoring": "/project/HAT-UI/guiwork/dataset_viewer/dataset_monitoring.py"
 }
 
 TRAINING_HELPER_DATA_CONFIG = "/nas/workspace/igor/HAT/Tracker_FairMOT/src/lib/cfg/mot16.json"

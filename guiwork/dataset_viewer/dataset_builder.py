@@ -337,7 +337,11 @@ def main(args):
     builder = DatasetBuilder(args)
 
     start_time = datetime.now()
-    builder.BuildDataset()
+    # ------------------------------------------------------
+    import time
+    time.sleep(10)
+    # ------------------------------------------------------
+    #builder.BuildDataset()
     end_time = datetime.now()
     print("PROCESSED IN {}".format(end_time - start_time))
 

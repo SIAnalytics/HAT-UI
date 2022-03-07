@@ -147,4 +147,20 @@ class DatasetViewerUtils:
         print("{} {} {}".format(path, convert_from, convert_to))
         return "SUCCESS"
 
+    @staticmethod
+    def GetDatasetSeparationStatus(pid):
+        monitoring_script = settings.SUBPROCESS_EXE["dataset_monitoring"]
+        progress_args = [settings.ANACONDA_PYTHON_EXE, monitoring_script]
+
+        progress_args.append("--pid")
+        progress_args.append(str(pid))
+
+        p = subprocess.Popen(progress_args, stdout = subprocess.PIPE)
+        out, err = p.communicate()
+
+        print("OUT = {}".format(out))
+        ret = json.loads(out)
+
+        return ret
+
         

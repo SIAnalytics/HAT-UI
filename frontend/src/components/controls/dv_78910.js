@@ -134,6 +134,76 @@ class DV_78910 extends React.Component{
         return true;
     }
 
+    timeout(delay) {
+        return new Promise( res => setTimeout(res, delay) );
+    }
+
+    UpdateProgressBar = (type) => {
+        var state = {
+        }
+
+        switch(type) {
+            case "processing": {
+                state.progress_variant = "success";
+                state.run_button_disabled = true;
+                state.animated = true;
+                break;
+            }
+            case "completed": {
+                state.progress_variant = "";
+                state.run_button_disabled = false;
+                state.animated = false;
+                break;
+            }
+            case "failed": {
+                state.progress_variant = "danger";
+                state.run_button_disabled = false;
+                state.animated = false;
+                break;
+            }
+            default: {
+                break;
+            }
+        }
+
+        this.setState(state);
+    }
+
+    async MonitoringDatasetSeparation(pid) {
+        var do_continue = true;
+
+        this.UpdateProgressBar("processing");
+        while (do_continue) {
+            await this.timeout(3000);
+
+            if (do_continue == false) {
+                break;
+            }
+
+            var url = config.get("django_url") + config.get("dataset_viewer_rest");
+
+            axios
+                .get(url, {
+                    params: {
+                        req: "GET_DATASET_SEPARATION_STATUS",
+                        pid: pid
+                    }
+                })
+                .then((res) => {
+                    if (res.data.alive == false) {
+                        do_continue = false;
+                        this.UpdateProgressBar("completed");
+                        alert("[INFO]: Dataset separation completed");
+                    }
+                })
+                .catch((err) => {
+                    alert(err);
+                    do_continue = false;
+                    this.UpdateProgressBar("failed");
+                })
+        }
+    }
+
     RunDatasetSeparation() {
         var url = config.get("django_url") + config.get("dataset_viewer_rest");
         let data = new FormData();
@@ -148,7 +218,11 @@ class DV_78910 extends React.Component{
         axios
             .post(url, data)
             .then((res) => {
-                console.log(res)
+                if (res.data.status == "SUCCESS") {
+                    this.MonitoringDatasetSeparation(res.data.pid);
+                } else {
+                    alert("[ERROR] Process failed to run on the server.");
+                }
             })
             .catch((err) => alert(err))
     }
@@ -212,11 +286,13 @@ class DV_78910 extends React.Component{
                 text: '비율',
                 type: 'number'
             }
-        ]
+        ],
+        progress_variant: "light",
+        run_button_disabled: false,
+        animated: false
     }
 
     render() {
-
         let key_name = '함수';
         return (
             <>
@@ -267,12 +343,17 @@ class DV_78910 extends React.Component{
                 <ProgressBar
                     style={{marginTop: 10, height: "25px"}}
                     now={100}
-                    variant="light"
-                    striped
+                    variant={this.state.progress_variant}
+                    animated={this.state.animated}
+                    striped={this.state.animated}
                 />
                 
                 <div style={{textAlign: "right"}}>
-                    <Button style={{marginTop: 10}} variant="primary" onClick={() => { this.RunDatasetSeparation() }}>실행</Button>
+                    <Button 
+                        style={{marginTop: 10}} 
+                        disabled={this.state.run_button_disabled} 
+                        variant="primary" 
+                        onClick={() => { this.RunDatasetSeparation() }}>실행</Button>
                 </div>
             </>
         );
