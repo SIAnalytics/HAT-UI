@@ -139,7 +139,7 @@ class DirectoryPicker extends React.Component{
         if (this.addIcon == "true") {
             button = <Button className="btn btn-primary btn-sm w-25" onClick={this.openModal}><FontAwesomeIcon icon={faFolder} /> {this.name}</Button>     
         } else {
-            button = <Button className="btn btn-primary btn-sm w-25" onClick={this.openModal}>{this.name}</Button>     
+            button = <Button className="btn btn-primary btn-sm w-25" disabled={this.props.input_disabled} onClick={this.openModal}>{this.name}</Button>     
         }
     
         return (
@@ -204,7 +204,7 @@ class TableComponent extends React.Component{
                         cellEdit={ 
                             cellEditFactory({ 
                                 mode: 'click',
-                                blurToSave: true,
+                                blurToSave: true
                             })
                         }
                     />

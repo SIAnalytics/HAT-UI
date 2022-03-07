@@ -24,7 +24,8 @@ class TR_234 extends React.Component{
     }
 
     state = {
-        model_options: []
+        model_options: [],
+        input_disabled: false
     }
 
     componentDidMount() {
@@ -78,6 +79,17 @@ class TR_234 extends React.Component{
 
     HandleSwitchChange = (e) => {
         this.context.TrainerState.random_flag = !(this.context.TrainerState.random_flag);
+
+        var state = {
+
+        };
+        if (this.context.TrainerState.random_flag) {
+            state.input_disabled = true;
+        } else {
+            state.input_disabled = false;
+        }
+
+        this.setState(state);
     }
 
     render() {
@@ -91,7 +103,7 @@ class TR_234 extends React.Component{
                         </Form.Select>
                     </Form.Group>
                 </InputGroup>
-                <DirectoryPicker onChange={this.onModelPathChange.bind(this)} style={{marginTop: 10}} name="모델 불러오기" />
+                <DirectoryPicker onChange={this.onModelPathChange.bind(this)} input_disabled={this.state.input_disabled} style={{marginTop: 10}} name="모델 불러오기" />
                 <InputGroup style={{marginTop: 10}}>
                    <Form>
                         <Form.Check 

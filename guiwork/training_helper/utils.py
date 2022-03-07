@@ -71,11 +71,12 @@ class TrainingHelperUtils:
             args.append("--exp_id")
             args.append(experiment_id)
 
-            args.append("--load_model")
-            args.append(model_path)
+            if random_flag == False:
+                args.append("--load_model")
+                args.append(model_path)
 
             args.append("--data_cfg")
-            args.append("/nas/workspace/igor/HAT/Tracker_FairMOT/src/lib/cfg/mot16.json")
+            args.append(settings.TRAINING_HELPER_DATA_CONFIG)
 
             args.append("--dataset")
             args.append(dataset_path)

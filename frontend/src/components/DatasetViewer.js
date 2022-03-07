@@ -19,7 +19,6 @@ import {
 function DatasetViewer() {
     const DatasetState = {
         video_path: "",
-        type: "",
         train_rate: 0,
         validation_rate: 0,
         test_rate: 0,
@@ -33,7 +32,10 @@ function DatasetViewer() {
             vertical_flipping: 0,
             brightness: 0,
             contrast: 0,
-            resize: 0
+            resize: 0,
+            brightness_factor: 0,
+            contrast_factor: 0,
+            resize_factor: 0
         }
     };
 

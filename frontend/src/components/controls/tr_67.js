@@ -48,14 +48,14 @@ class TR_67 extends React.Component{
         }
         data.append("model_name", this.context.TrainerState.model_name);
 
-        if (this.context.TrainerState.model_path == "") {
+        if (this.context.TrainerState.model_path == "" && this.context.TrainerState.random_flag == false) {
             alert("Model path must be specified");
             return false;
         }
         data.append("model_path", this.context.TrainerState.model_path)
 
         data.append("hyper_parameters", JSON.stringify(this.context.TrainerState.hyper_parameters));
-        data.append("random_flag", this.context.TrainerState.random_flag);
+        data.append("random_flag", this.context.TrainerState.random_flag); 
         data.append("hyper_default_flag", this.context.TrainerState.hyper_default_flag);
 
         return true;

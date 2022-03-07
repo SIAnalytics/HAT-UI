@@ -184,6 +184,8 @@ SUBPROCESS_EXE = {
     "dataset_building": "/project/HAT-UI/guiwork/dataset_viewer/dataset_builder.py"
 }
 
+TRAINING_HELPER_DATA_CONFIG = "/nas/workspace/igor/HAT/Tracker_FairMOT/src/lib/cfg/mot16.json"
+
 LOGS_PATH_NAME = "logs_test"
 
 ANACONDA_PYTHON_EXE = "/root/anaconda3/bin/python3"

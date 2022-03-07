@@ -54,10 +54,6 @@ class DV_123456 extends React.Component {
             .catch((err) => alert(err));
     }
 
-    HandleTypeChange = (e) => {
-        this.context.DatasetState.type = e.target.value;
-    }
-
     render() {
         let columns = [
             {
@@ -89,18 +85,8 @@ class DV_123456 extends React.Component {
                     onChange={this.OnDirectoryChange.bind(this)}
                     name="열기" 
                 />
-                
-                <Form.Group style={{marginTop: 10}} className="w-100 d-flex">
-                    <Form.Select className="w-100" onChange={this.HandleTypeChange.bind(this)}>
-                        <option value="">타입 선텍</option>
-                        <option value="TOI">TOI</option>
-                        <option value="MOT">MOT</option>
-                        <option value="FairMOT">FairMOT</option>
-                        <option value="COCO">COCO</option>
-                    </Form.Select>
-                </Form.Group>
 
-                <div style={{height: 509, overflowY: "scroll", marginTop: 10}}>
+                <div style={{height: 595, overflowY: "scroll", marginTop: 10}}>
                     <TableComponent content={this.state.content} columns={columns} key_name = {key_name}/>
                 </div>
             </>

@@ -22,14 +22,9 @@ class InterpolationMode(Enum):
     HAMMING = "hamming"
     LANCZOS = "lanczos"
 
-def FrameBGRToTensorRGB(frame):
-    transform = transforms.ToTensor()
-    rgb_tensor = transform(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB).astype('float') / 255.0)
-    return rgb_tensor
-
 def TensorRGBToFrameBGR(tensor):
-    bgr_frame = tensor.numpy()
-    bgr_frame = cv2.cvtColor((np.swapaxes(np.swapaxes(bgr_frame, 0, 2), 0, 1) * 255).astype('uint8'), cv2.COLOR_RGB2BGR)
+    bgr_frame = cv2.cvtColor(tensor.permute(1, 2, 0).cpu().numpy(), cv2.COLOR_RGB2BGR)
+
     return bgr_frame
 
 def AdjustBrightness(img: Tensor, brightness_factor: float):

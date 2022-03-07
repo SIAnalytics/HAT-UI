@@ -124,9 +124,9 @@ class DatasetViewerUtils:
 
         try:
             with open("/nas/workspace/igor/out_dataset", "wb") as out:
-                #p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            #p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 p = subprocess.Popen(args, stdout=out, stderr=out)
-            print("PID = {}".format(p.pid))
+                print("PID = {}".format(p.pid))
 
             '''
             out, err = p.communicate()
@@ -136,6 +136,9 @@ class DatasetViewerUtils:
         except subproccess.CalledProcessError as e:
             print("CAUGHT SUBPROCESS EXCEPTION")
             print(e.output)
+            res["status"] = "FAIL"
+
+        res["pid"] = p.pid
 
         return res
 

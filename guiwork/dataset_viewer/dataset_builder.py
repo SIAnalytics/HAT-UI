@@ -8,8 +8,10 @@ import torch
 import pandas as pd
 import numpy as np
 import multiprocessing
+import torchvision
 
 from datetime import datetime
+from torch.multiprocessing import Pool, Process, set_start_method
 import augmentation
 
 parser = argparse.ArgumentParser()
@@ -28,9 +30,9 @@ MAX_PROC_COUNT = 12
 AUGMENTATION_FACTORS = {
     "horizontal_flipping": -1,
     "vertical_flipping": -1,
-    "brightness": 1.5,
-    "contrast": 1.5,
-    "resize": [1000, 1000]
+    "brightness": -1,
+    "contrast": -1,
+    "resize": [-1, -1]
 }
 
 # Class for building dataset
@@ -133,42 +135,32 @@ class DatasetBuilder:
             params["resize"] = int(100 / aug_settings["resize"])
             apply_flag = True
 
+        AUGMENTATION_FACTORS["brightness"] = aug_settings["brightness_factor"]
+        AUGMENTATION_FACTORS["contrast"] = aug_settings["contrast_factor"]
+        AUGMENTATION_FACTORS["resize"] = aug_settings["resize_factor"]
+
+
         return params, apply_flag
 
     def ApplyAugmentationToFrame(self, frame, frame_no, aug_params):
-        # Brightness
-        tensor_rgb = None
-        
         if aug_params["brightness"] > 0 and frame_no % aug_params["brightness"] == 0:
-            tensor_rgb = augmentation.FrameBGRToTensorRGB(frame).to()
-            tensor_rgb = augmentation.AdjustBrightness(tensor_rgb, AUGMENTATION_FACTORS["brightness"])
+            frame = augmentation.AdjustBrightness(frame, AUGMENTATION_FACTORS["brightness"])
 
         if aug_params["contrast"] > 0 and frame_no % aug_params["contrast"] == 0:
-            if tensor_rgb is None:
-                tensor_rgb = augmentation.FrameBGRToTensorRGB(frame)
-            tensor_rgb = augmentation.AdjustContrast(tensor_rgb, AUGMENTATION_FACTORS["contrast"])
+            frame = augmentation.AdjustContrast(frame, AUGMENTATION_FACTORS["contrast"])
 
         if aug_params["horizontal_flipping"] > 0 and frame_no % aug_params["horizontal_flipping"] == 0:
-            if tensor_rgb is None:
-                tensor_rgb = augmentation.FrameBGRToTensorRGB(frame)
-            tensor_rgb = augmentation.HorizontalFlip(tensor_rgb)
+            frame = augmentation.HorizontalFlip(frame)
         
         if aug_params["vertical_flipping"] > 0 and frame_no % aug_params["vertical_flipping"] == 0:
-            print("Apply vertical flipping {} {}".format(frame_no, aug_params["vertical_flipping"]))
-            if tensor_rgb is None:
-                tensor_rgb = augmentation.FrameBGRToTensorRGB(frame)
-            tensor_rgb = augmentation.VerticalFlip(tensor_rgb)
+            frame = augmentation.VerticalFlip(frame)
         
         if aug_params["resize"] > 0 and frame_no % aug_params["resize"] == 0:
-            if tensor_rgb is None:
-                tensor_rgb = augmentation.FrameBGRToTensorRGB(frame)
-            tensor_rgb = augmentation.Resize(tensor_rgb, AUGMENTATION_FACTORS["resize"])
+            new_size = [AUGMENTATION_FACTORS["resize"] * frame.size(dim = 1), AUGMENTATION_FACTORS["resize"] * frame.size(dim = 2)]
+            frame = augmentation.Resize(frame, new_size)
         
-        if tensor_rgb is not None:
-            frame_bgr = augmentation.TensorRGBToFrameBGR(tensor_rgb)
-            return frame_bgr
-
-        return frame         
+        frame_bgr = augmentation.TensorRGBToFrameBGR(frame.cpu())
+        return frame_bgr
 
     def ApplyAugmentationToLabel(self, frame_no, aug_params, obj_x, obj_y, obj_w, obj_h, width, height):
         if aug_params["horizontal_flipping"] > 0 and frame_no % aug_params["horizontal_flipping"] == 0:
@@ -178,12 +170,10 @@ class DatasetBuilder:
             obj_y = height - obj_y
 
         if aug_params["resize"] > 0 and frame_no % aug_params["resize"] == 0:
-            x_factor = AUGMENTATION_FACTORS["resize"][1] / obj_w
-            y_factor = AUGMENTATION_FACTORS["resize"][0] / obj_h
-            obj_x = obj_x * x_factor
-            obj_y = obj_y * y_factor
-            obj_w = obj_w * x_factor
-            obj_h = obj_h * y_factor            
+            obj_x = obj_x * AUGMENTATION_FACTORS["resize"]
+            obj_y = obj_y * AUGMENTATION_FACTORS["resize"]
+            obj_w = obj_w * AUGMENTATION_FACTORS["resize"]
+            obj_h = obj_h * AUGMENTATION_FACTORS["resize"]            
 
         return obj_x, obj_y, obj_w, obj_h
 
@@ -193,6 +183,13 @@ class DatasetBuilder:
         # Count number of frames to get augmentation
         aug_settings = json.loads(self.args.augmentation)
         aug_params, aug_apply_flag = self.GetAugmentationParameters(aug_settings)
+
+        # Get devide for augmentation processing
+        gpu_count = torch.cuda.device_count()
+        if gpu_count > 0:
+            my_device = 'cuda:{}'.format(id % gpu_count)
+        else:
+            my_device = 'cpu'
 
         for num, video_file in enumerate(files_list.keys()):
 
@@ -219,8 +216,6 @@ class DatasetBuilder:
             validation_count = int((frames_no / 100) * int(self.args.validation_rate))
             test_count = int((frames_no / 100) * int(self.args.test_rate))
 
-            frame_no = 0
-
             # Create output directories
             self.CreateVideoOutputDirectories(video_n)
 
@@ -234,51 +229,59 @@ class DatasetBuilder:
             test_label_file = open(test_label_path, "w")
 
             label_file = None
-            while video.isOpened():
-                ret, frame = video.read()
-                if not ret:
-                    break
+            print("[{}] Reading video [{}] by Pytorch...".format(id, video_file))
+            try:
+                video_tensor = torchvision.io.read_video(video_file)[0]
+            except Exception as e:
+                print(e)
+            print("[{}] Reading completed".format(id))
+
+            print("[{}] Loading video to GPU".format(id))
+            gpu_video = video_tensor.to(device = my_device)
+
+            for i in range(gpu_video.shape[0]):
+          
+                frame = gpu_video[i].permute(2, 0, 1)
 
                 # Check where the frame should be written
-                dst_frame_no = frames[frame_no]
+                dst_frame_no = frames[i]
                 if dst_frame_no < train_count:
                     # write to training dirs
                     label_file = train_label_file
-                    frame_out_path = os.path.join(self.args.output_path, "train", "imgs", f"{VIDEO_PREFIX + str(video_n)}", "{0:07d}.PNG".format(frame_no))
+                    frame_out_path = os.path.join(self.args.output_path, "train", "imgs", f"{VIDEO_PREFIX + str(video_n)}", "{0:07d}.PNG".format(i))
                 elif dst_frame_no >= train_count and dst_frame_no < (train_count + validation_count):
                     # write to validation dirs
                     label_file = val_label_file
-                    frame_out_path = os.path.join(self.args.output_path, "val", "imgs", f"{VIDEO_PREFIX + str(video_n)}", "{0:07d}.PNG".format(frame_no))
+                    frame_out_path = os.path.join(self.args.output_path, "val", "imgs", f"{VIDEO_PREFIX + str(video_n)}", "{0:07d}.PNG".format(i))
                 else:
                     # write to test dirs
                     label_file = test_label_file
-                    frame_out_path = os.path.join(self.args.output_path, "test", "imgs", f"{VIDEO_PREFIX + str(video_n)}", "{0:07d}.PNG".format(frame_no))
+                    frame_out_path = os.path.join(self.args.output_path, "test", "imgs", f"{VIDEO_PREFIX + str(video_n)}", "{0:07d}.PNG".format(i))
 
                 # Write labels information
-                label_data = labels[labels['Frame'] == frame_no]
+                label_data = labels[labels['Frame'] == i]
 
                 # Apply augmentation to frame
                 if aug_apply_flag == True:
-                    frame = self.ApplyAugmentationToFrame(frame, frame_no, aug_params)
+                    frame = self.ApplyAugmentationToFrame(frame, i, aug_params)
 
-                for i in label_data.axes[0]:
-                    obj_id = label_data['ID'][i]
-                    obj_outer = re.findall('\(([^)]+)', label_data['객체이미지바운더리영역'][i])
+                for j in label_data.axes[0]:
+                    obj_id = label_data['ID'][j]
+                    obj_outer = re.findall('\(([^)]+)', label_data['객체이미지바운더리영역'][j])
+                    class_id = label_data['분류정보'][j]
                     obj_x = int(round(float(obj_outer[0].split('/')[0])))
                     obj_y = int(round(float(obj_outer[0].split('/')[1])))
                     obj_w = int(round(float(obj_outer[1].split('/')[0]))) - obj_x
                     obj_h = int(round(float(obj_outer[1].split('/')[1]))) - obj_y
 
                     if aug_apply_flag == True:
-                        obj_x, obj_y, obj_w, obj_h = self.ApplyAugmentationToLabel(frame_no, aug_params, obj_x, obj_y, obj_w, obj_h, width, height)
+                        obj_x, obj_y, obj_w, obj_h = self.ApplyAugmentationToLabel(i, aug_params, obj_x, obj_y, obj_w, obj_h, width, height)
 
-                    label_file.write(f"{frame_no}, {obj_id}, {obj_x}, {obj_y}, {obj_w}, {obj_h}, 1, 1, 1, 1\n")
+                    label_file.write(f"{i}, {obj_id}, {obj_x}, {obj_y}, {obj_w}, {obj_h}, 1, {class_id}, 1, 1\n")
 
                 cv2.imwrite(frame_out_path, frame)              
                 
                 cv2.waitKey()
-
-                frame_no += 1
             
             # Close label file
             train_label_file.close()
@@ -291,12 +294,26 @@ class DatasetBuilder:
 
     def BuildDataset(self):
         files_list = self.GetFilesList()
+        print("Creating target directories...")
         self.CreateTargetDirectories()
 
         # Process files using multiple processes
         available_cpu = multiprocessing.cpu_count()
         proc_count = min(min(available_cpu, len(files_list)), MAX_PROC_COUNT)
+        # Get devide for augmentation processing
+        gpu_count = torch.cuda.device_count()
+        proc_count = min(proc_count, gpu_count)
+
         files_per_proc = int(len(files_list) / proc_count)
+
+        print("Process count: {}".format(proc_count))
+
+        # Set start method for torch multiprocessing
+        try:
+            set_start_method('spawn')
+        except RuntimeError:
+            print("[ERROR] Cannot set start method for torch")
+            return
 
         processes = []
         for i in range(proc_count):
@@ -307,12 +324,14 @@ class DatasetBuilder:
 
             i = i + files_per_proc
 
-            p = multiprocessing.Process(target = self.ProcessFilesSet, args = (i, proc_files_list, i * files_per_proc))
+            p = Process(target = self.ProcessFilesSet, args = (i, proc_files_list, i * files_per_proc))
             p.start()
             processes.append(p)
 
         for p in processes:
+            pid = p.pid
             p.join()
+            print("JOINED {}".format(pid))
 
 def main(args):
     builder = DatasetBuilder(args)

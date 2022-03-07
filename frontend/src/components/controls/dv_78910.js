@@ -17,6 +17,10 @@ import {
     DatasetContext
 } from "../DatasetContext";
 
+import {
+    ProgressBar
+} from 'react-bootstrap';
+
 import { Type } from 'react-bootstrap-table2-editor';
 
 class DV_78910 extends React.Component{
@@ -69,40 +73,61 @@ class DV_78910 extends React.Component{
         data.append("output_path", this.context.DatasetState.output_path);
 
         // Check correctness of augmentation parameters
-        var val = parseInt(this.state.content[0]["적용률"]);
+        var val = parseFloat(this.state.content[0]["적용률"]);
         if (val < 0 || val > 100) {
             alert("[ERROR] Horizontal flipping must be in range [0, 100]");
             return false;
         }
         this.context.DatasetState.augmentation.horizontal_flipping = val;
 
-        val = parseInt(this.state.content[1]["적용률"]);
+        val = parseFloat(this.state.content[1]["적용률"]);
         if (val < 0 || val > 100) {
             alert("[ERROR] Vertical flipping must be in range [0, 100]");
             return false;
         }
         this.context.DatasetState.augmentation.vertical_flipping = val;
 
-        val = parseInt(this.state.content[2]["적용률"]);
+        val = parseFloat(this.state.content[2]["적용률"]);
         if (val < 0 || val > 100) {
             alert("[ERROR] Brigtness must be in range [0, 100]");
             return false;
         }
         this.context.DatasetState.augmentation.brightness = val;
 
-        val = parseInt(this.state.content[3]["적용률"]);
+        val = parseFloat(this.state.content[2]["비율"])
+        if (val < 0) {
+            alert("[ERROR] Brightness factor must be more or equal to than zero");
+            return false;
+        }
+        this.context.DatasetState.augmentation.brightness_factor = val;
+
+        val = parseFloat(this.state.content[3]["적용률"]);
         if (val < 0 || val > 100) {
             alert("[ERROR] Contrast must be in range [0, 100]");
             return false;
         }
         this.context.DatasetState.augmentation.contrast = val;
 
-        val = parseInt(this.state.content[4]["적용률"]);
+        val = parseFloat(this.state.content[3]["비율"]);
+        if (val < 0) {
+            alert("[ERROR] Contrast factor must be more or equal to zero");
+            return false;
+        }
+        this.context.DatasetState.augmentation.contrast_factor = val;
+
+        val = parseFloat(this.state.content[4]["적용률"]);
         if (val < 0 || val > 100) {
             alert("[ERROR] Resize must be in range [0, 100]");
             return false;
         }
         this.context.DatasetState.augmentation.resize = val;
+
+        val = parseFloat(this.state.content[4]["비율"]);
+        if (val < 0 || val > 10) {
+            alert("[ERROR] Resize factor must be in range (0, 10]");
+            return false;
+        }
+        this.context.DatasetState.augmentation.resize_factor = val;
 
         data.append("augmentation", JSON.stringify(this.context.DatasetState.augmentation));
 
@@ -150,23 +175,28 @@ class DV_78910 extends React.Component{
         content: [
             {
                 "함수": "Horizontal flipping",
-                "적용률": 0
+                "적용률": 0,
+                "비율": "-"
             },
             {
                 "함수": "Vertical flipping",
-                "적용률": 0
+                "적용률": 0,
+                "비율": "-"
             },
             {
                 "함수": "Brightness",
-                "적용률": 0
+                "적용률": 0,
+                "비율": "1"
             },
             {
                 "함수": "Contrast",
-                "적용률": 0
+                "적용률": 0,
+                "비율": "1"
             },
             {
                 "함수": "Resize",
-                "적용률": 0
+                "적용률": 0,
+                "비율": "1"
             }
         ],
         columns: [
@@ -176,6 +206,11 @@ class DV_78910 extends React.Component{
             }, {
                 dataField: '적용률',
                 text: '적용률, %',
+                type: 'number'
+            }, {
+                dataField: '비율',
+                text: '비율',
+                type: 'number'
             }
         ]
     }
@@ -229,8 +264,15 @@ class DV_78910 extends React.Component{
                 <div style={{height: 213, overflowY: "scroll"}}>
                     <TableComponent content={this.state.content} columns={this.state.columns} key_name = {key_name} editable={true}/>
                 </div>
+                <ProgressBar
+                    style={{marginTop: 10, height: "25px"}}
+                    now={100}
+                    variant="light"
+                    striped
+                />
+                
                 <div style={{textAlign: "right"}}>
-                    <Button style={{marginTop: 5}} variant="primary" onClick={() => { this.RunDatasetSeparation() }}>실행</Button>
+                    <Button style={{marginTop: 10}} variant="primary" onClick={() => { this.RunDatasetSeparation() }}>실행</Button>
                 </div>
             </>
         );
