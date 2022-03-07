@@ -194,6 +194,7 @@ function SetGraphData(data) {
             ]
         };
         state.class_ratio_settings.push(class_ratio_settings);
+        state.show_mask = [true, false, false];
         state.mot_flag = false;
 
         this.setState(state);
