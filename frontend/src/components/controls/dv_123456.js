@@ -49,7 +49,7 @@ class DV_123456 extends React.Component {
 
                 this.setState(state);
 
-                SetGraphData(res.data.class_info, res.data.frame_info);
+                SetGraphData(res.data);
             })
             .catch((err) => alert(err));
     }

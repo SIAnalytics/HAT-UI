@@ -1,7 +1,10 @@
 import { DatasetController } from "chart.js";
 import React from "react";
 import {
-    Form
+    Form,
+    ButtonGroup,
+    Button,
+    InputGroup
 } from "react-bootstrap";
 import {
     LineChart,
@@ -13,8 +16,9 @@ class DV_13 extends React.Component{
     constructor(props) {
         super(props);
 
-        this.state = {
-            class_ratio_settings: {
+        var class_ratio_settings = [];
+        for (var i = 0; i < 3; i++) {
+            var setting = {
                 labels: [],
                 datasets: [
                     {
@@ -24,7 +28,13 @@ class DV_13 extends React.Component{
                         label: ""
                     }
                 ]
-            },
+            }
+
+            class_ratio_settings.push(setting);
+        }
+
+        this.state = {
+            class_ratio_settings: class_ratio_settings,
             frame_class_settings: {
                 labels: [],
                 datasets: [
@@ -36,21 +46,52 @@ class DV_13 extends React.Component{
                         borderColor: "",
                     }
                 ]
-            }
+            },
+            mot_flag: false,
+            show_mask: [true, false, false],
         }
 
         SetGraphData = SetGraphData.bind(this);
     }
 
+    ToggleVisibleCharts = (part) => {
+        var show_mask = [false, false, false];
+        show_mask[part - 1] = true;
+        var state = {
+            show_mask: show_mask
+        };
+
+        this.setState(state);
+    }
+
     render() {
         return (
             <>
-                <h5><b>데이터셋 통계</b></h5>
+                <InputGroup>
+                    <h5 className="col-md-6"><b>데이터셋 통계</b></h5>
+                    <div className="col-md-3"></div>
+                    <ButtonGroup className="col-md-3">
+                        <Button disabled={!this.state.mot_flag} onClick={() => { this.ToggleVisibleCharts(1) }} variant="outline-secondary">TRN</Button>
+                        <Button disabled={!this.state.mot_flag} onClick={() => { this.ToggleVisibleCharts(2) }} variant="outline-secondary">VAL</Button>
+                        <Button disabled={!this.state.mot_flag} onClick={() => { this.ToggleVisibleCharts(3) }} variant="outline-secondary">TST</Button>
+                    </ButtonGroup>
+                </InputGroup>
+                
                 <Form className='d-flex'>
-                    <PieChart label="클래스 분포" graph_data={this.state.class_ratio_settings} className="col-md-3"/>
-                    <LineChart  label="프레임별 클래스" graph_data={this.state.frame_class_settings} className="col-md-3"/> 
-                    <BarChart label="영상 별 객체수" className="col-md-3"/>
-                    <BarChart label="클래스 분포" className="col-md-3"/>
+                    {this.state.show_mask[0] ? <PieChart label="클래스 분포" graph_data={this.state.class_ratio_settings[0]} className="col-md-3"/> : null}
+                    {this.state.show_mask[0] ? <LineChart  label="프레임별 클래스" graph_data={this.state.frame_class_settings} className="col-md-3"/> : null}
+                    {this.state.show_mask[0] ? <BarChart label="영상 별 객체수" className="col-md-3"/> : null}
+                    {this.state.show_mask[0] ? <BarChart label="클래스 분포" className="col-md-3"/> : null}
+
+                    {this.state.show_mask[1] ? <PieChart label="클래스 분포" graph_data={this.state.class_ratio_settings[1]} className="col-md-3"/> : null}
+                    {this.state.show_mask[1] ? <BarChart label="영상 별 객체수" className="col-md-3"/> : null}
+                    {this.state.show_mask[1] ? <BarChart label="영상 별 객체수" className="col-md-3"/> : null}
+                    {this.state.show_mask[1] ? <LineChart  label="프레임별 클래스" graph_data={this.state.frame_class_settings} className="col-md-3"/> : null}
+
+                    {this.state.show_mask[2] ? <PieChart label="클래스 분포" graph_data={this.state.class_ratio_settings[2]} className="col-md-3"/> : null}
+                    {this.state.show_mask[2] ? <BarChart label="영상 별 객체수" className="col-md-3"/> : null}
+                    {this.state.show_mask[2] ? <BarChart label="영상 별 객체수" className="col-md-3"/> : null}
+                    {this.state.show_mask[2] ? <BarChart label="영상 별 객체수" className="col-md-3"/> : null}
                 </Form>
             </>
         );
@@ -119,68 +160,89 @@ function KeyToClassName(key) {
     }
 }
 
-function SetGraphData(dataset_data, frame_data) {
+function SetGraphData(data) {
     var state = {};
 
-    // Set up class ration diargam
-    var class_ratio_settings = {
-        labels: [],
-        datasets: [
-            {
-                data: [],
-                backgroundColor: [],
-                hoverBackgroundColor: [],
-                label: ""
+    var dataset_data = data.class_info;
+
+    if (data.dataset_type == "TOI") {
+        // Set up class ration diargam
+        var class_ratio_settings = {
+            labels: [],
+            datasets: [
+                {
+                    data: [],
+                    backgroundColor: [],
+                    hoverBackgroundColor: [],
+                    label: ""
+                }
+            ]
+        };
+
+        var entry_count = 0;
+        Object.entries(dataset_data).forEach(([key, value]) => {
+            class_ratio_settings.labels.push(KeyToClassName(key));
+            class_ratio_settings.datasets[0].data.push(value);
+            class_ratio_settings.datasets[0].backgroundColor.push(GraphStyles[entry_count % GraphStyles.length].backgroundColor);
+            class_ratio_settings.datasets[0].hoverBackgroundColor.push(GraphStyles[entry_count % GraphStyles.length].hoverBackgroundColor);
+            entry_count += 1;
+        });
+
+        var state = {
+            class_ratio_settings: [
+
+            ]
+        };
+        state.class_ratio_settings.push(class_ratio_settings);
+        state.mot_flag = false;
+
+        this.setState(state);
+    } else {
+        var state = {};
+        state.class_ratio_settings = [];
+        Object.entries(dataset_data).forEach(([subset, subset_data]) => {
+            var setting_no = 0;
+            switch(subset) {
+                case "val": {
+                    setting_no = 1;
+                    break;
+                }
+                case "test": {
+                    setting_no = 2;
+                    break;
+                }
+                default:
+                    {
+                        break;
+                    }
             }
-        ]
-    };
 
-    var entry_count = 0;
-    Object.entries(dataset_data).forEach(([key, value]) => {
-        class_ratio_settings.labels.push(KeyToClassName(key));
-        class_ratio_settings.datasets[0].data.push(value);
-        class_ratio_settings.datasets[0].backgroundColor.push(GraphStyles[entry_count % GraphStyles.length].backgroundColor);
-        class_ratio_settings.datasets[0].hoverBackgroundColor.push(GraphStyles[entry_count % GraphStyles.length].hoverBackgroundColor);
-        entry_count += 1;
-    });
+            var entry_count = 0;
+            var class_ratio_settings = {
+                labels: [],
+                datasets: [
+                    {
+                        data: [],
+                        backgroundColor: [],
+                        hoverBackgroundColor: [],
+                        label: ""
+                    }
+                ]
+            };
+            Object.entries(subset_data).forEach(([key, value]) => {
+                class_ratio_settings.labels.push(KeyToClassName(key));
+                class_ratio_settings.datasets[0].data.push(value);
+                class_ratio_settings.datasets[0].backgroundColor.push(GraphStyles[entry_count % GraphStyles.length].backgroundColor);
+                class_ratio_settings.datasets[0].hoverBackgroundColor.push(GraphStyles[entry_count % GraphStyles.length].hoverBackgroundColor);
+                entry_count += 1;
+            });
 
-    // Setup classes by frame 
-    var frame_class_settings = {
-        labels: [],
-        datasets: [
-/*            {
-                label: "",
-                data: [],
-                fill: true,
-                backgroundColor: "",
-                borderColor: "",
-            }*/
-        ]
-    };
-
-    /*
-    var file_names = Object.keys(frame_data);
-    for (var i = 0; i < file_names.length; i++) {
-        if (i == 0) {
-            // Set labels data only 1 time
-            frame_class_settings.labels = Object.keys(frame_data[file_names[i]]);
-        }
-
-        var dataset = {};
-        dataset.label = file_names[i];
-        dataset.data = Object.values(frame_data[file_names[i]]);
-        dataset.fill = true;
-        dataset.backgroundColor = GraphStyles[i % GraphStyles.length].hoverBackgroundColor
-        dataset.borderColor = GraphStyles[i % GraphStyles.length].backgroundColor
-
-        frame_class_settings.datasets.push(dataset);
-    }*/
-
-    var state = {};
-    state.class_ratio_settings = class_ratio_settings;
-    //state.frame_class_settings = frame_class_settings;
-
-    this.setState(state);
+            state.class_ratio_settings[setting_no] = class_ratio_settings;
+        });
+        
+        state.mot_flag = true;
+        this.setState(state);
+    }
 }
 
 export default DV_13;
