@@ -42,20 +42,18 @@ class DV_78910 extends React.Component{
         let val_rate = parseInt(this.context.DatasetState.validation_rate);
         let test_rate = parseInt(this.context.DatasetState.test_rate);
 
-        if (train_rate < 0 || train_rate > 100 ||
-            val_rate < 0 || val_rate > 100 ||
-            test_rate < 0 || test_rate > 100) {
-                alert("[ERROR] Rates must be in range [0, 100]" + train_rate + " " + val_rate + " " + test_rate);
-                return false;
-        }
-
-        if (train_rate + val_rate + test_rate > 100) {
-            alert("[ERROR] train + validation + test must be 100. Currently " + (train_rate + val_rate + test_rate));
+        if (train_rate <= 0) {
+            alert("[ERROR] Train rate must be more than zero");
             return false;
         }
 
-        if (train_rate == 0) {
-            alert("[ERROR] Train rate must be more than 0");
+        if (val_rate < 0) {
+            alert("ERROR] Validation rate must more or equal to zero");
+            return false;
+        }
+
+        if (test_rate < 0) {
+            alert("[ERROR] Test rate must be more or equal to zero");
             return false;
         }
 
