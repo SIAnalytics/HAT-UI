@@ -29,6 +29,7 @@ class TR_67 extends React.Component{
     state = {
         disabled: false,
         progress: 0,
+        progress_label: 0,
         style: {
             variant: "success",
             animated: true
@@ -74,6 +75,7 @@ class TR_67 extends React.Component{
         switch(type) {
             case "processing": {
                 state.progress = progress;
+                state.progress_label = progress.toString() + " %";
                 state.style.variant = "success";
                 state.style.animated = true;
                 state.disabled = true;
@@ -81,6 +83,7 @@ class TR_67 extends React.Component{
             }
             case "completed": {
                 state.progress = progress;
+                state.progress_label = progress.toString() + " %";
                 state.style.variant = "";
                 state.style.animated = false;
                 state.disabled = false;
@@ -88,9 +91,19 @@ class TR_67 extends React.Component{
             }
             case "failed": {
                 state.progress = progress;
+                state.progress_label = progress.toString() + " %";
                 state.style.variant = "danger";
                 state.style.animated = false;
                 state.disabled = false;
+                break;
+            }
+            case "initializing": {
+                state.progress_label = "Initializing";
+                state.progress = 100;
+                state.style.variant = "warning";
+                state.style.animated = true;
+                state.disabled = false;
+                break;
             }
             default: {
                 break;
@@ -118,6 +131,9 @@ class TR_67 extends React.Component{
         this.setState(state);
 
         var do_continue = true;
+        // Initializa progress bar
+        this.UpdateProgressBar("initializing", 100);
+
         while (do_continue) {
             await this.timeout(3000);
             if (do_continue == false) {
@@ -143,9 +159,11 @@ class TR_67 extends React.Component{
                     var progress = res.data.progress;
                     console.log(res.data);
 
-                    this.UpdateTrainingProgress(res.data);
-
                     last_epoch = res.data.last_epoch;
+
+                    if (last_epoch > 0) {
+                        this.UpdateTrainingProgress(res.data);
+                    }
                     console.log(last_epoch);
 
                     if (progress >= 100) {
@@ -186,6 +204,8 @@ class TR_67 extends React.Component{
                 var data = res.data;
                 this.model_name = this.context.TrainerState.model_name;
 
+                console.log(res);
+                console.log(Object.keys(data));
                 if (Object.keys(data).length == 0) {
                     alert("[ERROR] Failed to run trainig on server.");
                     return;
@@ -221,7 +241,7 @@ class TR_67 extends React.Component{
             <>
                 <Form className='d-flex'>
                     <Button disabled={this.state.disabled} className="btn btn-primary btn-sm w-15" onClick={() => { this.RunTrainingProcess() }}>학습 개시</Button>
-                    <TrainingProgress className="w-85" style={{height: 30, marginLeft: 5}} now={this.state.progress} variant={this.state.style.variant} animated={this.state.style.animated} />
+                    <TrainingProgress className="w-85" style={{height: 30, marginLeft: 5}} now={this.state.progress} progress_label={this.state.progress_label} variant={this.state.style.variant} animated={this.state.style.animated} />
                 </Form>
             </>
         );

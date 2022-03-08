@@ -69,28 +69,34 @@
 	],
 	"YOLOX" : [
 		{
-			"name": "Param 1",
-			"value": 10
+			"name": "Batch size",
+			"value": 64,
+			"prop": "--batch-size"
 		},
 		{
-			"name": "Param 2",
-			"value": 0.1
-		},
+			"name": "Devices",
+			"value": 0,
+			"prop": "--devices"
+		}, 
 		{
-			"name": "Param 3",
-			"value": 0.2
-		},
+			"name": "Local rank",
+			"value": 0,
+			"prop": "--local_rank"
+		}, 
 		{
-			"name": "Param 4",
-			"value": 13
-		},
+			"name": "Start epoch",
+			"value": 0,
+			"prop": "--start-epoch"
+		}, 
 		{
-			"name": "Param 5",
-			"value": 10000
-		},
+			"name": "Num of nodes",
+			"value": 1,
+			"prop": "--num_machines"
+		}, 
 		{
-			"name": "Param 6",
-			"value": 0.123
+			"name": "Node rank",
+			"value": 0,
+			"prop": "--machine_rank"
 		}
 	]
 }

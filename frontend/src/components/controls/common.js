@@ -89,7 +89,7 @@ class TrainingProgress extends React.Component{
                     style={this.style} 
                     animated={this.props.animated} 
                     now={this.props.now} 
-                    label={`${this.props.now}%`} />
+                    label={`${this.props.progress_label}`} />
             </>
         );
     }
