@@ -145,18 +145,21 @@ class DV_78910 extends React.Component{
                 state.progress_variant = "success";
                 state.run_button_disabled = true;
                 state.animated = true;
+                state.progress_label = "Processing";
                 break;
             }
             case "completed": {
                 state.progress_variant = "";
                 state.run_button_disabled = false;
                 state.animated = false;
+                state.progress_label = "Completed";
                 break;
             }
             case "failed": {
                 state.progress_variant = "danger";
                 state.run_button_disabled = false;
                 state.animated = false;
+                state.progress_label = "Failed";
                 break;
             }
             default: {
@@ -287,7 +290,8 @@ class DV_78910 extends React.Component{
         ],
         progress_variant: "light",
         run_button_disabled: false,
-        animated: false
+        animated: false,
+        progress_label: ""
     }
 
     render() {
@@ -344,6 +348,7 @@ class DV_78910 extends React.Component{
                     variant={this.state.progress_variant}
                     animated={this.state.animated}
                     striped={this.state.animated}
+                    label={this.state.progress_label}
                 />
                 
                 <div style={{textAlign: "right"}}>

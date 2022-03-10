@@ -48,7 +48,7 @@ class TR_5 extends React.Component{
 }
 
 function SetHyperParameters(param_names) {
-    var params_set = param_names.map((parameter) => (<TextInput key={parameter.name} parameter={parameter} props={{mt: 10}} />));
+    var params_set = param_names.map((parameter) => (<TextInput key={parameter.name} parameter={parameter} props={{mt: 10}} type={parameter.type}/>));
 
     var state = {
         hyper_params: params_set

@@ -16,6 +16,8 @@ class DatasetViewer(views.APIView):
             return Response(utils.ProcessConvertDataset(request.GET.get("path"), request.GET.get("convert_from"), request.GET.get("convert_to")))
         elif req == "GET_DATASET_SEPARATION_STATUS":
             return Response(utils.GetDatasetSeparationStatus(request.GET.get("pid")))
+        elif req == "GET_DATASET_CONVERSION_STATUS":
+            return Response(utils.GetDatasetConversionStatus(request.GET.get("pid")))
 
         res = {"code": 400, "message": "Unsupported GET request content"}
         return Response(data=json.dumps(res), status=status.HTTP_400_BAD_REQUEST)

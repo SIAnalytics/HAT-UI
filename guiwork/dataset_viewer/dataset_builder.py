@@ -168,7 +168,7 @@ class DatasetBuilder:
             frame = gpu_video[i].permute(2, 0, 1)
 
             # Check where the frame should be written
-            frame_out_path = os.path.join(self.args.output_path, part, "imgs", video_name, "{0:07d}.PNG".format(i + start_idx))
+            frame_out_path = os.path.join(self.args.output_path, part, "imgs", video_name, "{0:08d}.png".format(i + start_idx))
 
             # Apply augmentation to frame
             if aug_apply_flag == True:
@@ -203,7 +203,7 @@ class DatasetBuilder:
             height = video.get(cv2.CAP_PROP_FRAME_HEIGHT)
 
             # Open label files for train/val/test
-            label_path = os.path.join(self.args.output_path, part, "labels", f"{video_name}.TXT")
+            label_path = os.path.join(self.args.output_path, part, "labels", f"{video_name}.txt")
 
             label_file = open(label_path, "w")
             

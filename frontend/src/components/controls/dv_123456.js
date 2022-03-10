@@ -86,7 +86,7 @@ class DV_123456 extends React.Component {
                     name="열기" 
                 />
 
-                <div style={{height: 595, overflowY: "scroll", marginTop: 10}}>
+                <div style={{height: 632, overflowY: "scroll", marginTop: 10}}>
                     <TableComponent content={this.state.content} columns={columns} key_name = {key_name}/>
                 </div>
             </>

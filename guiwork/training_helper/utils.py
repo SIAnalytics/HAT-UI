@@ -108,6 +108,12 @@ class TrainingHelperUtils:
             ret_info["epoch_count"] = epoch_count
             print(p.pid)
 
+        elif model_name == "YOLOX":
+            return f"{model_name} not yet supported"
+        
+        elif model_name == "EfficientDet":
+            return f"{model_name} not yet supported"
+
         else:
             return "Unsupported model name"
 

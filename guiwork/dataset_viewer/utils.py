@@ -140,7 +140,7 @@ class DatasetViewerUtils:
         p = None
 
         try:
-            with open("/nas/workspace/igor/out_dataset", "wb") as out:
+            with open("/project/out_dataset", "wb") as out:
             #p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 p = subprocess.Popen(args, stdout=out, stderr=out)
                 print("PID = {}".format(p.pid))
@@ -161,8 +161,42 @@ class DatasetViewerUtils:
 
     @staticmethod
     def ProcessConvertDataset(path, convert_from, convert_to):
-        print("{} {} {}".format(path, convert_from, convert_to))
-        return "SUCCESS"
+        processing_exe = None
+
+        res = {
+            "status": "SUCCESS"
+        }
+
+        if convert_from == "MOT":
+            if convert_to == "FairMOT":
+                processing_exe = settings.CONVERSION_TOOLS["MOT_TO_FairMOT"]
+            elif convert_to == "YOLOX COCO":
+                processing_exe = settings.CONVERSION_TOOLS["MOT_TO_YOLOX_COCO"]
+            elif convert_to == "EfficientDet COCO":
+                processing_exe = settings.CONVERSION_TOOLS["MOT_TO_EfficientDET_COCO"]
+            else:
+                res["status"] = "FAIL. Unsupported conversion types"
+            
+            args = [settings.ANACONDA_PYTHON_EXE, processing_exe]
+
+            args.append("--data_root")
+            args.append(path)
+
+            if convert_to == "YOLOX COCO" or convert_to == "EfficientDet COCO":
+                args.append("--num_classes")
+                args.append(str(settings.DEFAULT_NUM_CLASSES))
+
+            p = None
+            try:
+                p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            except subprocess.CalledProcessError as e:
+                print("CAUGHT EXCEPTION")
+                print(e.output)
+                res["status"] = "FAIL"
+
+            res["pid"] = p.pid
+
+        return res
 
     @staticmethod
     def GetDatasetSeparationStatus(pid):
@@ -180,4 +214,19 @@ class DatasetViewerUtils:
 
         return ret
 
+    @staticmethod
+    def GetDatasetConversionStatus(pid):
+        monitoring_script = settings.SUBPROCESS_EXE["dataset_monitoring"]
+        progress_args = [settings.ANACONDA_PYTHON_EXE, monitoring_script]
+
+        progress_args.append("--pid")
+        progress_args.append(str(pid))
+
+        p = subprocess.Popen(progress_args, stdout = subprocess.PIPE)
+        out, err = p.communicate()
+
+        print("OUT = {}".format(out))
+        ret = json.loads(out)
+
+        return ret
         

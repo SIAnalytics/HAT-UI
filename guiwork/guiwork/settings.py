@@ -185,6 +185,14 @@ SUBPROCESS_EXE = {
     "dataset_monitoring": "/project/HAT-UI/guiwork/dataset_viewer/dataset_monitoring.py"
 }
 
+CONVERSION_TOOLS = {
+    "MOT_TO_YOLOX_COCO": "/nas/workspace/igor/HAT/models/YOLOX-BYTE/tools/convert_to_coco.py",
+    "MOT_TO_FairMOT": "/nas/workspace/igor/HAT/models/Tracker_FairMOT/src/gen_labels_fairmot.py",
+    "MOT_TO_EfficientDET_COCO": "/nas/workspace/igor/HAT/models/EfficientDet-SORT/tools/convert_to_coco.py"
+}
+
+DEFAULT_NUM_CLASSES = 6
+
 TRAINING_HELPER_DATA_CONFIG = "/nas/workspace/igor/HAT/Tracker_FairMOT/src/lib/cfg/mot16.json"
 
 LOGS_PATH_NAME = "logs_test"

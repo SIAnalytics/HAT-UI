@@ -3,42 +3,50 @@
 		{
 			"name": "Learning rate",
 			"value": 0.0001,
+			"type": "number",
 			"prop": "--lr"
 		}, 
 		{
 			"name": "Drop",
-			"value": 230,
+			"value": 20,
+			"type": "number",
 			"prop": "--lr_step"
 		},
 		{
 			"name": "Num workers",
 			"value": 8,
+			"type": "number",
 			"prop": "--num_workers"
 		},
 		{
 			"name": "Epochs",
 			"value": 250,
+			"type": "number",
 			"prop": "--num_epochs"
 		},
 		{
 			"name": "Batch size",
 			"value": 12,
+			"type": "number",
 			"prop": "--batch_size"
 		},
-        {
-            "name": "Master batch",
-            "value": 1,
-			"prop": "--master_batch_size"
-        },
+		{
+			"name": "Num classes",
+			"value": 12,
+			"type": "number",
+			"prop": "--num_classes"
+		},
+		{
+			"name": "Num GPUs",
+			"value": "0, 1",
+			"type": "text",
+			"prop": "--gpus"
+		},
         {
             "name": "Iterations",
             "value": -1,
+			"type": "number",
 			"prop": "--num_iters"
-        },
-        {
-            "name": "Validation intervals",
-            "value": 5,
-			"prop": "--val_intervals"
         }
 	],
 	"EfficientDet" : [
@@ -69,34 +77,40 @@
 	],
 	"YOLOX" : [
 		{
-			"name": "Batch size",
+			"name": "Learning rate",
 			"value": 64,
+			"type": "number",
 			"prop": "--batch-size"
 		},
 		{
-			"name": "Devices",
-			"value": 0,
-			"prop": "--devices"
-		}, 
+			"name": "Num workers",
+			"value": 64,
+			"type": "number",
+			"prop": "--batch-size"
+		},
 		{
-			"name": "Local rank",
-			"value": 0,
-			"prop": "--local_rank"
-		}, 
+			"name": "Epochs",
+			"value": 64,
+			"type": "number",
+			"prop": "--batch-size"
+		},
 		{
-			"name": "Start epoch",
-			"value": 0,
-			"prop": "--start-epoch"
-		}, 
+			"name": "Batch size",
+			"value": 64,
+			"type": "number",
+			"prop": "--batch-size"
+		},
 		{
-			"name": "Num of nodes",
+			"name": "Num classes",
+			"value": 64,
+			"type": "number",
+			"prop": "--batch-size"
+		},
+		{
+			"name": "Num GPUs",
 			"value": 1,
-			"prop": "--num_machines"
-		}, 
-		{
-			"name": "Node rank",
-			"value": 0,
-			"prop": "--machine_rank"
+			"type": "number",
+			"prop": "--devices"
 		}
 	]
 }

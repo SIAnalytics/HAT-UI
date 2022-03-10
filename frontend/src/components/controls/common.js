@@ -58,7 +58,7 @@ class TextInput extends React.Component{
                 <InputGroup style={{marginTop: this.mt}}>
                     <Form.Label className="w-50">{this.name}</Form.Label>
                     <Form.Control  
-                        type="number" 
+                        type={this.props.type} 
                         value={this.state.value} 
                         onChange={(event)=>this.InputChangedHandler(event)}
                     />
