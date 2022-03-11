@@ -86,17 +86,7 @@ class TrainingHelperUtils:
                     if parameter["prop"] == "--num_epochs":
                         epoch_count = parameter["value"]
 
-            # Run the training process
-            p = None
-
             print(args)
-
-            try:
-                p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            except subprocess.CalledProcessError as e:
-                print("CAUGHT EXCEPTION")
-                print(e.output)
-
             # Get path of logfile
             log_path = os.path.join(settings.MODELS_LOG_PATH[model_name], experiment_id, settings.LOGS_PATH_NAME)
 
@@ -125,15 +115,39 @@ class TrainingHelperUtils:
                     args.append(parameter["prop"])
                     args.append(str(parameter["value"]))
 
-            # Run the training process
-            p = None
-
             print(args)        
         elif model_name == "EfficientDet":
-            p = None
+            epoch_count = 100
+            experiment_id = "EfficientDet"
 
+            train_file_path = settings.MODELS_TRAIN_FILES["EfficientDet"]
+            args = [settings.ANACONDA_PYTHON_EXE, train_file_path]
+
+            args.append(f"dataloader.data_dir={dataset_path}")
+
+            args.append("--config-file")
+            args.append(settings.EFFICIENT_DET_CONFIG)
+
+            if hyper_default_flag == False:
+                for parameter in hyper_parameters:
+                    if parameter["prop"] == "train.output_dir":
+                        log_path = parameter["value"]
+                    
+                    if parameter["prop"].find("--") == 0:
+                        args.append(parameter["prop"])
+                        args.append(parameter["value"])
+                    else:
+                        args.append(f"{parameter['prop']}={parameter['value']}")
+
+            print(args) 
         else:
             return "Unsupported model name"
+
+        try:
+            p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        except subprocess.CalledProcessError as e:
+            print("CAUGHT EXCEPTION")
+            print(e.output)
 
         ret_info["log_path"] = log_path
         ret_info["experiment_id"] = experiment_id

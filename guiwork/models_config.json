@@ -58,7 +58,7 @@
 		}, 
 		{
 			"name": "Iterations",
-			"value": 150,
+			"value": 302512,
 			"type": "number",
 			"prop": "train.max_iter"
 		}, 

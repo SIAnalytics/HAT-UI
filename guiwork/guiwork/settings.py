@@ -193,6 +193,8 @@ CONVERSION_TOOLS = {
     "MOT_TO_EfficientDET_COCO": "/nas/workspace/igor/HAT/models/EfficientDet-SORT/tools/convert_to_coco.py"
 }
 
+EFFICIENT_DET_CONFIG = "/nas/workspace/igor/HAT/models/EfficientDet-SORT/configs/efficientdet/efficientdet_D5_1x.py"
+
 DEFAULT_NUM_CLASSES = 6
 
 LOGS_PATH_NAME = "logs_test"
