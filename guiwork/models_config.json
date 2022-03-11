@@ -51,66 +51,78 @@
 	],
 	"EfficientDet" : [
 		{
-			"name": "Param 1",
-			"value": 10
-		},
+			"name": "Learning rate",
+			"value": 0.0001,
+			"type": "number",
+			"prop": "optimizer.lr"
+		}, 
 		{
-			"name": "Param 2",
-			"value": 0.1
-		},
+			"name": "Iterations",
+			"value": 150,
+			"type": "number",
+			"prop": "train.max_iter"
+		}, 
 		{
-			"name": "Param 3",
-			"value": 0.2
-		},
+			"name": "Batch size",
+			"value": 64,
+			"type": "number",
+			"prop": "dataloader.train.total_batch_size"
+		}, 
 		{
-			"name": "Param 4",
-			"value": 13
-		},
+			"name": "Num GPUs",
+			"value": 8,
+			"type": "number",
+			"prop": "--num-gpus"
+		}, 
 		{
-			"name": "Param 5",
-			"value": 10000
-		},
-		{
-			"name": "Param 6",
-			"value": 0.123
+			"name": "Output dir",
+			"value": "/project/models_output/EfficientDet",
+			"type": "text",
+			"prop": "train.output_dir"
 		}
 	],
 	"YOLOX" : [
 		{
 			"name": "Learning rate",
-			"value": 64,
+			"value": 0.0001,
 			"type": "number",
-			"prop": "--batch-size"
+			"prop": "warmup_lr"
 		},
 		{
 			"name": "Num workers",
-			"value": 64,
+			"value": 8,
 			"type": "number",
-			"prop": "--batch-size"
+			"prop": "data_num_workers"
 		},
 		{
 			"name": "Epochs",
-			"value": 64,
+			"value": 250,
 			"type": "number",
-			"prop": "--batch-size"
+			"prop": "max_epoch"
 		},
 		{
 			"name": "Batch size",
 			"value": 64,
 			"type": "number",
-			"prop": "--batch-size"
+			"prop": "-b"
 		},
 		{
 			"name": "Num classes",
-			"value": 64,
+			"value": 6,
 			"type": "number",
-			"prop": "--batch-size"
+			"prop": "num_classes"
 		},
 		{
 			"name": "Num GPUs",
-			"value": 1,
+			"value": 8,
 			"type": "number",
-			"prop": "--devices"
+			"prop": "-d"
+		},
+		{
+			"name": "Output path",
+			"value": "/project/models_output/YOLOX",
+			"type": "text",
+			"prop": "output_dir"
 		}
 	]
 }

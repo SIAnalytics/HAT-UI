@@ -43,30 +43,29 @@ class TrainingHelperUtils:
     @staticmethod
     def RunModelTraining(params):
         model_name = params.get("model_name")
-        experiment_id = "FairMOT-mot16"
+        dataset_path = params.get("dataset_path")
+        model_path = params.get("model_path")
+        hyper_parameters = json.loads(params.get("hyper_parameters"))
+
+        random_flag = json.loads(params.get("random_flag").lower())
+        hyper_default_flag = json.loads(params.get("hyper_default_flag").lower())
 
         ret_info = {}
+        log_path = ""
 
         # Default value
-        epoch_count = 250
-
         if model_name == "FairMOT":
+            epoch_count = 250
+            experiment_id = "FairMOT-mot16"
+
             # Remove tensorboard log file if exists (For progress testing ONLY)
             log_file_path = os.path.join(settings.MODELS_LOG_PATH[model_name], experiment_id)
             if os.path.exists(log_file_path):
                 shutil.rmtree(log_file_path)
             #------------------------------------------------------------
-            dataset_path = params.get("dataset_path")
-            model_path = params.get("model_path")
-            hyper_parameters = json.loads(params.get("hyper_parameters"))
-
-            random_flag = json.loads(params.get("random_flag").lower())
-            hyper_default_flag = json.loads(params.get("hyper_default_flag").lower())
-
             train_file_path = settings.MODELS_TRAIN_FILES["FairMOT"]
             
             args = [settings.ANACONDA_PYTHON_EXE, train_file_path]
-            args.append("mot")
 
             args.append("--exp_id")
             args.append(experiment_id)
@@ -74,9 +73,6 @@ class TrainingHelperUtils:
             if random_flag == False:
                 args.append("--load_model")
                 args.append(model_path)
-
-            args.append("--data_cfg")
-            args.append(settings.TRAINING_HELPER_DATA_CONFIG)
 
             args.append("--dataset")
             args.append(dataset_path)
@@ -93,6 +89,8 @@ class TrainingHelperUtils:
             # Run the training process
             p = None
 
+            print(args)
+
             try:
                 p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             except subprocess.CalledProcessError as e:
@@ -102,20 +100,46 @@ class TrainingHelperUtils:
             # Get path of logfile
             log_path = os.path.join(settings.MODELS_LOG_PATH[model_name], experiment_id, settings.LOGS_PATH_NAME)
 
-            ret_info["log_path"] = log_path
-            ret_info["experiment_id"] = experiment_id
-            ret_info["pid"] = p.pid
-            ret_info["epoch_count"] = epoch_count
-            print(p.pid)
-
         elif model_name == "YOLOX":
-            return f"{model_name} not yet supported"
-        
+            epoch_count = 300
+            experiment_id = "YOLOX"
+
+            train_file_path = settings.MODELS_TRAIN_FILES["YOLOX"]
+            args = [settings.ANACONDA_PYTHON_EXE, train_file_path]
+
+            if random_flag == False:
+                args.append("-c")
+                args.append(model_path)
+
+            args.append("data_dir")
+            args.append(dataset_path)
+
+            if hyper_default_flag == False:
+                for parameter in hyper_parameters:
+                    if parameter["prop"] == "max_epoch":
+                        epoch_count = parameter["value"]
+
+                    if parameter["prop"] == "output_dir":
+                        log_path = parameter["value"]
+                    
+                    args.append(parameter["prop"])
+                    args.append(str(parameter["value"]))
+
+            # Run the training process
+            p = None
+
+            print(args)        
         elif model_name == "EfficientDet":
-            return f"{model_name} not yet supported"
+            p = None
 
         else:
             return "Unsupported model name"
+
+        ret_info["log_path"] = log_path
+        ret_info["experiment_id"] = experiment_id
+        ret_info["pid"] = p.pid
+        ret_info["epoch_count"] = epoch_count
+        print(p.pid)
 
         return ret_info
 

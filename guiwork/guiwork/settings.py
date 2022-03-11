@@ -176,7 +176,9 @@ MODELS_TRAIN_FILES = {
 }
 
 MODELS_LOG_PATH = {
-    "FairMOT": "/nas/workspace/igor/HAT/Tracker_FairMOT/exp/mot/"
+    "FairMOT": "/nas/workspace/igor/HAT/models/Tracker_FairMOT/src/train.py",
+    "YOLOX": "/nas/workspace/igor/HAT/models/YOLOX-BYTE/tools/train.py",
+    "EfficientDet": "/nas/workspace/igor/HAT/models/EfficientDet-SORT/tools/lazyconfig_train_net.py"
 }
 
 SUBPROCESS_EXE = {
@@ -192,8 +194,6 @@ CONVERSION_TOOLS = {
 }
 
 DEFAULT_NUM_CLASSES = 6
-
-TRAINING_HELPER_DATA_CONFIG = "/nas/workspace/igor/HAT/Tracker_FairMOT/src/lib/cfg/mot16.json"
 
 LOGS_PATH_NAME = "logs_test"
 

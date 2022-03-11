@@ -167,6 +167,8 @@ class DatasetViewerUtils:
             "status": "SUCCESS"
         }
 
+        print("CONVERTING DATASET")
+
         if convert_from == "MOT":
             if convert_to == "FairMOT":
                 processing_exe = settings.CONVERSION_TOOLS["MOT_TO_FairMOT"]
@@ -186,6 +188,7 @@ class DatasetViewerUtils:
                 args.append("--num_classes")
                 args.append(str(settings.DEFAULT_NUM_CLASSES))
 
+            print(args)
             p = None
             try:
                 p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
