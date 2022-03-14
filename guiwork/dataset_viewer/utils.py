@@ -1,4 +1,5 @@
 import os
+import re
 import sys
 import json
 import cv2
@@ -12,7 +13,8 @@ class DatasetViewerUtils:
     def GetVideosFromPath(path):
         res = {}
         res["video_info"] = []
-        res["frame_info"] = {}
+        res["stat_info"] = {}
+
         class_ids = {}
         objects_count = 0
         object_ids = []
@@ -64,6 +66,27 @@ class DatasetViewerUtils:
                             else:
                                 class_ids[class_id] += 1
 
+                            # Count average width and height
+                            obj_outer = re.findall('\(([^)]+)', row[4])
+                            obj_x = int(round(float(obj_outer[0].split('/')[0])))
+                            obj_y = int(round(float(obj_outer[0].split('/')[1])))
+                            obj_w = int(round(float(obj_outer[1].split('/')[0]))) - obj_x
+                            obj_h = int(round(float(obj_outer[1].split('/')[1]))) - obj_y
+
+                            if class_id not in res["stat_info"].keys():
+                                res["stat_info"][class_id] = {
+                                    "height": obj_h,
+                                    "width": obj_w,
+                                    "count": 1,
+                                    "gsd_w": float(row[6].split("/")[0]),
+                                    "gsd_h": float(row[6].split("/")[1])
+                                }
+                            else:
+                                res["stat_info"][class_id]["height"] += obj_h
+                                res["stat_info"][class_id]["width"] += obj_w
+                                res["stat_info"][class_id]["count"] += 1
+
+
                     video_info = {
                         '파일 이름': f,
                         '객체 수': len(object_ids),
@@ -77,8 +100,10 @@ class DatasetViewerUtils:
         # MOT case
         else:
             res["class_info"] = {}
+            res["stat_info"] = {}
             for directory in directories_list:
                 class_ids = {}
+                res["stat_info"][directory] = {}
                 labels_path = os.path.join(path, directory, "labels")
 
                 if os.path.exists(labels_path):
@@ -102,6 +127,22 @@ class DatasetViewerUtils:
                                     class_ids[class_id] = 1
                                 else:
                                     class_ids[class_id] += 1
+
+                                # Count average width and height
+                                obj_w = float(row[4])
+                                obj_h = float(row[5])
+
+                                if class_id not in res["stat_info"][directory].keys():
+                                    res["stat_info"][directory][class_id] = {
+                                        "height": obj_h,
+                                        "width": obj_w,
+                                        "count": 1,
+                                    }
+                                else:
+                                    res["stat_info"][directory][class_id]["height"] += obj_h
+                                    res["stat_info"][directory][class_id]["width"] += obj_w
+                                    res["stat_info"][directory][class_id]["count"] += 1
+                                    
                 res["class_info"][directory] = class_ids
 
                                 

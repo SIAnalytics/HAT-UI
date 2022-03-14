@@ -48,6 +48,15 @@ code {
   box-shadow: 5px 5px 5px rgb(97, 97, 97);
 }
 
+.chart-style-large {
+  background-color: rgb(245, 245, 245);
+  border-radius: 5px;
+  padding: 5px;
+  margin: 5px;
+  height: 220px;
+  box-shadow: 5px 5px 5px rgb(97, 97, 97);
+}
+
 .ratio-settings {
   background-color:rgb(170, 170, 170);
 }

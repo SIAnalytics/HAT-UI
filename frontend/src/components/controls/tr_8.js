@@ -123,14 +123,14 @@ class TR_8 extends React.Component{
                 </InputGroup>
 
                 <Form className='d-flex'> 
-                    { this.state.show_graph_0 ? <LineChart  label="" graph_data={this.state.graph_setting_0} className="col-md-6"/> : null }                   
-                    { this.state.show_graph_1 ? <LineChart  label="" graph_data={this.state.graph_setting_1} className="col-md-6"/> : null }
+                    { this.state.show_graph_0 ? <LineChart  label="" graph_data={this.state.graph_setting_0} className="col-md-6" chart_type="chart-style"/> : null }                   
+                    { this.state.show_graph_1 ? <LineChart  label="" graph_data={this.state.graph_setting_1} className="col-md-6" chart_type="chart-style"/> : null }
 
-                    { this.state.show_graph_2 ? <LineChart  label="" graph_data={this.state.graph_setting_2} className="col-md-6"/> : null }                   
-                    { this.state.show_graph_3 ? <LineChart  label="" graph_data={this.state.graph_setting_3} className="col-md-6"/> : null }
+                    { this.state.show_graph_2 ? <LineChart  label="" graph_data={this.state.graph_setting_2} className="col-md-6" chart_type="chart-style"/> : null }                   
+                    { this.state.show_graph_3 ? <LineChart  label="" graph_data={this.state.graph_setting_3} className="col-md-6" chart_type="chart-style"/> : null }
 
-                    { this.state.show_graph_4 ? <LineChart  label="" graph_data={this.state.graph_setting_4} className="col-md-6"/> : null }                   
-                    { this.state.show_graph_5 ? <LineChart  label="" graph_data={this.state.graph_setting_5} className="col-md-6"/> : null }                   
+                    { this.state.show_graph_4 ? <LineChart  label="" graph_data={this.state.graph_setting_4} className="col-md-6" chart_type="chart-style"/> : null }                   
+                    { this.state.show_graph_5 ? <LineChart  label="" graph_data={this.state.graph_setting_5} className="col-md-6" chart_type="chart-style"/> : null }                   
                 </Form>
             </>
         );

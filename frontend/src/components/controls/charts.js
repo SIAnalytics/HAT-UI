@@ -23,7 +23,7 @@ class LineChart extends React.Component {
     return (
         <>
           <div className={this.className}>
-            <div className="chart-style">
+            <div className={this.props.chart_type}>
               <Line 
                 data={this.props.graph_data} 
                 options={{ maintainAspectRatio: true }}
@@ -39,20 +39,6 @@ class BarChart extends React.Component {
   constructor(props) {
     super(props);
 
-    this.data = {
-      labels: ["1", "2", "3",
-        "4", "5", "6"],
-      datasets: [
-        {
-          label: props["label"],
-          data: [0.2, 0.3, 0.4, 0.8, 0.6, 0.2, 0.3],
-          fill: true,
-          backgroundColor: "rgba(62, 139, 240, 0.8)",
-          borderColor: "#096beb",
-        }
-      ]
-    };
-
     this.className = props["className"]
   }
 
@@ -60,8 +46,8 @@ class BarChart extends React.Component {
     return (
       <>
         <div className={this.className}>
-          <div className="chart-style">
-            <Bar data={this.data} options={{ maintainAspectRatio: true }}/>
+          <div className={this.props.chart_type}>
+            <Bar data={this.props.graph_data} options={{ maintainAspectRatio: true }}/>
           </div>
         </div>
       </>
@@ -90,7 +76,7 @@ class PieChart extends React.Component {
     return (
       <>
         <div className={this.className}>
-          <div className="chart-style">
+          <div className={this.props.chart_type}>
             <Pie data={this.props.graph_data} options={this.options} />
           </div>
         </div>

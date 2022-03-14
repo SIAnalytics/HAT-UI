@@ -173,15 +173,10 @@ class DV_1112 extends React.Component{
                 <Form.Group style={{marginTop: 10}} className="w-100 d-flex">
                     <Form.Select className="w-50" onChange={this.FromFieldChange.bind(this)}>
                         <option value="">From</option>
-                        <option value="TOI">TOI</option>
                         <option value="MOT">MOT</option>
-                        <option value="FairMOT">FairMOT</option>
-                        <option value="COCO">COCO</option>
                     </Form.Select>
                     <Form.Select className="w-50" onChange={this.ToFieldChange.bind(this)}>
                         <option value="">To</option>
-                        <option value="TOI">TOI</option>
-                        <option value="MOT">MOT</option>
                         <option value="FairMOT">FairMOT</option>
                         <option value="YOLOX COCO">YOLOX COCO</option>
                         <option value="EfficientDet COCO">EfficientDet COCO</option>
