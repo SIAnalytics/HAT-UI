@@ -172,13 +172,21 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MODELS_CONFIG_FILE_PATH = "/project/HAT-UI/guiwork/models_config.json"
 MODELS_TRAIN_FILES = {
-    "FairMOT": "/nas/workspace/igor/HAT/Tracker_FairMOT/src/train.py"
-}
-
-MODELS_LOG_PATH = {
     "FairMOT": "/nas/workspace/igor/HAT/models/Tracker_FairMOT/src/train.py",
     "YOLOX": "/nas/workspace/igor/HAT/models/YOLOX-BYTE/tools/train.py",
     "EfficientDet": "/nas/workspace/igor/HAT/models/EfficientDet-SORT/tools/lazyconfig_train_net.py"
+}
+
+MODELS_HOME = {
+    "FairMOT": "/nas/workspace/igor/HAT/models/Tracker_FairMOT/",
+    "YOLOX": "/nas/workspace/igor/HAT/models/YOLOX-BYTE/",
+    "EfficientDet": "/nas/workspace/igor/HAT/models/EfficientDet-SORT/"
+}
+
+MODELS_LOG_PATH = {
+    "FairMOT": "/nas/workspace/igor/HAT/models/Tracker_FairMOT/exp/mot",
+    "YOLOX": "/nas/workspace/igor/HAT/models/YOLOX-BYTE",
+    "EfficientDet": "/nas/workspace/igor/HAT/models/EfficientDet-SORT/tools"
 }
 
 SUBPROCESS_EXE = {
@@ -196,8 +204,6 @@ CONVERSION_TOOLS = {
 EFFICIENT_DET_CONFIG = "/nas/workspace/igor/HAT/models/EfficientDet-SORT/configs/efficientdet/efficientdet_D5_1x.py"
 
 DEFAULT_NUM_CLASSES = 6
-
-LOGS_PATH_NAME = "logs_test"
 
 ANACONDA_PYTHON_EXE = "/root/anaconda3/bin/python3"
 

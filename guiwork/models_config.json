@@ -32,7 +32,7 @@
 		},
 		{
 			"name": "Num classes",
-			"value": 12,
+			"value": 6,
 			"type": "number",
 			"prop": "--num_classes"
 		},
@@ -76,7 +76,7 @@
 		}, 
 		{
 			"name": "Output dir",
-			"value": "/project/models_output/EfficientDet",
+			"value": "training_log",
 			"type": "text",
 			"prop": "train.output_dir"
 		}
@@ -120,7 +120,7 @@
 		},
 		{
 			"name": "Output path",
-			"value": "/project/models_output/YOLOX",
+			"value": "training_log",
 			"type": "text",
 			"prop": "output_dir"
 		}

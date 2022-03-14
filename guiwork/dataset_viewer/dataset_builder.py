@@ -176,6 +176,20 @@ class DatasetBuilder:
 
             cv2.imwrite(frame_out_path, frame)   
 
+    def ConvertClassIDToMOT(self, class_id):
+        if class_id == 10:
+            return 1
+        elif class_id == 20:
+            return 2
+        elif class_id == 30:
+            return 3
+        elif class_id == 40:
+            return 4
+        elif class_id == 50:
+            return 5
+        else:
+            return 0
+
     def ProcessFilesSet(self, part, files_list, my_device):
         print("Start working with files: {}".format(files_list))
 
@@ -246,7 +260,7 @@ class DatasetBuilder:
                 for j in label_data.axes[0]:
                     obj_id = label_data['ID'][j]
                     obj_outer = re.findall('\(([^)]+)', label_data['객체이미지바운더리영역'][j])
-                    class_id = label_data['분류정보'][j]
+                    class_id = self.ConvertClassIDToMOT(label_data['분류정보'][j])
                     obj_x = int(round(float(obj_outer[0].split('/')[0])))
                     obj_y = int(round(float(obj_outer[0].split('/')[1])))
                     obj_w = int(round(float(obj_outer[1].split('/')[0]))) - obj_x

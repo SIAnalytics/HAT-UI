@@ -5,6 +5,7 @@ import random
 import subprocess
 import shutil
 
+from datetime import datetime
 from django.conf import settings
 from django.core.files import File
 from django.http import HttpResponse
@@ -53,10 +54,13 @@ class TrainingHelperUtils:
         ret_info = {}
         log_path = ""
 
+        curr_time_str = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+
         # Default value
         if model_name == "FairMOT":
             epoch_count = 250
-            experiment_id = "FairMOT-mot16"
+            experiment_id = curr_time_str
+            model_home = settings.MODELS_HOME["FairMOT"]
 
             # Remove tensorboard log file if exists (For progress testing ONLY)
             log_file_path = os.path.join(settings.MODELS_LOG_PATH[model_name], experiment_id)
@@ -74,7 +78,7 @@ class TrainingHelperUtils:
                 args.append("--load_model")
                 args.append(model_path)
 
-            args.append("--dataset")
+            args.append("--data_dir")
             args.append(dataset_path)
 
             if hyper_default_flag == False:
@@ -88,11 +92,12 @@ class TrainingHelperUtils:
 
             print(args)
             # Get path of logfile
-            log_path = os.path.join(settings.MODELS_LOG_PATH[model_name], experiment_id, settings.LOGS_PATH_NAME)
+            log_path = os.path.join(settings.MODELS_LOG_PATH[model_name], curr_time_str)
 
         elif model_name == "YOLOX":
             epoch_count = 300
             experiment_id = "YOLOX"
+            model_home = settings.MODELS_HOME["YOLOX"]
 
             train_file_path = settings.MODELS_TRAIN_FILES["YOLOX"]
             args = [settings.ANACONDA_PYTHON_EXE, train_file_path]
@@ -110,15 +115,18 @@ class TrainingHelperUtils:
                         epoch_count = parameter["value"]
 
                     if parameter["prop"] == "output_dir":
-                        log_path = parameter["value"]
-                    
-                    args.append(parameter["prop"])
-                    args.append(str(parameter["value"]))
+                        log_path = os.path.join(settings.MODELS_LOG_PATH[model_name], parameter["value"], curr_time_str)
+                        args.append(parameter["prop"])
+                        args.append(str(parameter["value"] + "/" + curr_time_str))
+                    else:
+                        args.append(parameter["prop"])
+                        args.append(str(parameter["value"]))
 
             print(args)        
         elif model_name == "EfficientDet":
             epoch_count = 100
             experiment_id = "EfficientDet"
+            model_home = settings.MODELS_HOME["EfficientDet"]
 
             train_file_path = settings.MODELS_TRAIN_FILES["EfficientDet"]
             args = [settings.ANACONDA_PYTHON_EXE, train_file_path]
@@ -131,20 +139,23 @@ class TrainingHelperUtils:
             if hyper_default_flag == False:
                 for parameter in hyper_parameters:
                     if parameter["prop"] == "train.output_dir":
-                        log_path = parameter["value"]
-                    
-                    if parameter["prop"].find("--") == 0:
-                        args.append(parameter["prop"])
-                        args.append(parameter["value"])
+                        log_path = os.path.join(settings.MODELS_LOG_PATH[model_name], parameter["value"], curr_time_str)
+                        args.append(f"{parameter['prop']}={parameter['value'] + "/" + curr_time_str}")
                     else:
-                        args.append(f"{parameter['prop']}={parameter['value']}")
+                        if parameter["prop"].find("--") == 0:
+                            args.append(parameter["prop"])
+                            args.append(parameter["value"])
+                        else:
+                            args.append(f"{parameter['prop']}={parameter['value']}")
 
             print(args) 
         else:
             return "Unsupported model name"
 
         try:
-            p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            with open("/project/training_log", "wb") as out:
+                #p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                p = subprocess.Popen(args, stdout=out, stderr=out, cwd=model_home)
         except subprocess.CalledProcessError as e:
             print("CAUGHT EXCEPTION")
             print(e.output)

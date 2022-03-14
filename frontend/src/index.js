@@ -18,7 +18,6 @@ config.set(configuration);
 
 ReactDOM.render(
   <Router>
-    <Navigation />
     <Routes>
       <Route path="/trainer_helper" element={<TrainerHelper />}/>
       <Route path="/dataset_viewer" element={<DatasetViewer />}/>
