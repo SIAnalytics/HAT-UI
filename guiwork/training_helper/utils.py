@@ -130,21 +130,24 @@ class TrainingHelperUtils:
 
             train_file_path = settings.MODELS_TRAIN_FILES["EfficientDet"]
             args = [settings.ANACONDA_PYTHON_EXE, train_file_path]
-
-            args.append(f"dataloader.data_dir={dataset_path}")
-
             args.append("--config-file")
             args.append(settings.EFFICIENT_DET_CONFIG)
+
+            for parameter in hyper_parameters:
+                if parameter["prop"].find("--") == 0:
+                    args.append(parameter["prop"])
+                    args.append(parameter["value"])
+
+            args.append(f"dataloader.data_dir={dataset_path}")
 
             if hyper_default_flag == False:
                 for parameter in hyper_parameters:
                     if parameter["prop"] == "train.output_dir":
                         log_path = os.path.join(settings.MODELS_LOG_PATH[model_name], parameter["value"], curr_time_str)
-                        args.append(f"{parameter['prop']}={parameter['value'] + "/" + curr_time_str}")
+                        args.append(f"{parameter['prop']}={parameter['value'] + '/' + curr_time_str}")
                     else:
                         if parameter["prop"].find("--") == 0:
-                            args.append(parameter["prop"])
-                            args.append(parameter["value"])
+                            continue
                         else:
                             args.append(f"{parameter['prop']}={parameter['value']}")
 

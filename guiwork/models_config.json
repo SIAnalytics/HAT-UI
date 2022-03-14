@@ -51,6 +51,12 @@
 	],
 	"EfficientDet" : [
 		{
+			"name": "Num GPUs",
+			"value": 8,
+			"type": "number",
+			"prop": "--num-gpus"
+		}, 
+		{
 			"name": "Learning rate",
 			"value": 0.0001,
 			"type": "number",
@@ -67,12 +73,6 @@
 			"value": 64,
 			"type": "number",
 			"prop": "dataloader.train.total_batch_size"
-		}, 
-		{
-			"name": "Num GPUs",
-			"value": 8,
-			"type": "number",
-			"prop": "--num-gpus"
 		}, 
 		{
 			"name": "Output dir",
