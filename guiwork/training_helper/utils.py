@@ -134,7 +134,6 @@ class TrainingHelperUtils:
             args.append("data_dir")
             args.append(dataset_path)
 
-
             print(args)        
         elif model_name == "EfficientDet":
             epoch_count = 100
@@ -171,6 +170,7 @@ class TrainingHelperUtils:
                 args.append("train.max_iter")
                 args.append(epoch_count)
 
+            epoch_count = int(epoch_count) / 20
             print(args) 
         else:
             return "Unsupported model name"

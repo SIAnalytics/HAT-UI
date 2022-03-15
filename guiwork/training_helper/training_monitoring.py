@@ -48,7 +48,7 @@ def main(args):
         # Get current epoch
         for tag in tags:
             runtime_scalars = ea.Scalars(tag)
-            curr_epoch = max(curr_epoch, runtime_scalars[len(runtime_scalars) - 1].step)
+            curr_epoch = max(curr_epoch, len(runtime_scalars))
 
         if curr_epoch > last_epoch:
             for tag in tags:

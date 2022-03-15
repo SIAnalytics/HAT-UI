@@ -156,6 +156,10 @@ function SetGraphData(training_data) {
     //-----------------------------------------------------------
     var state = {};
     for (var i = 0; i < Object.keys(training_data).length; i++) {
+        if (i > 5) {
+            break;
+        }
+
         var key = Object.keys(training_data)[i];
 
         var curr_settings = {
