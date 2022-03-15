@@ -20,7 +20,7 @@
 		},
 		{
 			"name": "Epochs",
-			"value": 250,
+			"value": 15,
 			"type": "number",
 			"prop": "--num_epochs"
 		},
@@ -64,7 +64,7 @@
 		}, 
 		{
 			"name": "Iterations",
-			"value": 302512,
+			"value": 15,
 			"type": "number",
 			"prop": "train.max_iter"
 		}, 
@@ -83,6 +83,18 @@
 	],
 	"YOLOX" : [
 		{
+			"name": "Num GPUs",
+			"value": 8,
+			"type": "number",
+			"prop": "-d"
+		},
+		{
+			"name": "Batch size",
+			"value": 64,
+			"type": "number",
+			"prop": "-b"
+		},
+		{
 			"name": "Learning rate",
 			"value": 0.0001,
 			"type": "number",
@@ -96,27 +108,15 @@
 		},
 		{
 			"name": "Epochs",
-			"value": 250,
+			"value": 15,
 			"type": "number",
 			"prop": "max_epoch"
-		},
-		{
-			"name": "Batch size",
-			"value": 64,
-			"type": "number",
-			"prop": "-b"
 		},
 		{
 			"name": "Num classes",
 			"value": 6,
 			"type": "number",
 			"prop": "num_classes"
-		},
-		{
-			"name": "Num GPUs",
-			"value": 8,
-			"type": "number",
-			"prop": "-d"
 		},
 		{
 			"name": "Output path",

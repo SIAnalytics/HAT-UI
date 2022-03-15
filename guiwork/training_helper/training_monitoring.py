@@ -37,6 +37,8 @@ def main(args):
 
     curr_epoch = last_epoch
 
+    last_scalar_step = 0
+
     if log_file != "":
         # Get data from tensorflow
         ea = event_accumulator.EventAccumulator(log_file)
@@ -46,7 +48,7 @@ def main(args):
         # Get current epoch
         for tag in tags:
             runtime_scalars = ea.Scalars(tag)
-            curr_epoch = max(curr_epoch, len(runtime_scalars))
+            curr_epoch = max(curr_epoch, runtime_scalars[len(runtime_scalars) - 1].step)
 
         if curr_epoch > last_epoch:
             for tag in tags:
@@ -62,6 +64,7 @@ def main(args):
     ret["progress"] = int(curr_epoch * 100 / epoch_count)
     ret["last_epoch"] = curr_epoch
     ret["log_file"] = log_file
+    ret["log_path"] = args.log_path
 
     print(json.dumps(ret))
 

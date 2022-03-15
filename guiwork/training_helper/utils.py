@@ -53,12 +53,12 @@ class TrainingHelperUtils:
 
         ret_info = {}
         log_path = ""
+        epoch_count = 15
 
         curr_time_str = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
 
         # Default value
         if model_name == "FairMOT":
-            epoch_count = 250
             experiment_id = curr_time_str
             model_home = settings.MODELS_HOME["FairMOT"]
 
@@ -89,25 +89,27 @@ class TrainingHelperUtils:
 
                     if parameter["prop"] == "--num_epochs":
                         epoch_count = parameter["value"]
+            else:
+                args.append("--num_epochs")
+                args.append(epoch_count)
 
             print(args)
             # Get path of logfile
             log_path = os.path.join(settings.MODELS_LOG_PATH[model_name], curr_time_str)
 
         elif model_name == "YOLOX":
-            epoch_count = 300
             experiment_id = "YOLOX"
             model_home = settings.MODELS_HOME["YOLOX"]
 
             train_file_path = settings.MODELS_TRAIN_FILES["YOLOX"]
             args = [settings.ANACONDA_PYTHON_EXE, train_file_path]
 
+            args.append("-f")
+            args.append(settings.YOLOX_CONFIG)
+
             if random_flag == False:
                 args.append("-c")
                 args.append(model_path)
-
-            args.append("data_dir")
-            args.append(dataset_path)
 
             if hyper_default_flag == False:
                 for parameter in hyper_parameters:
@@ -116,11 +118,22 @@ class TrainingHelperUtils:
 
                     if parameter["prop"] == "output_dir":
                         log_path = os.path.join(settings.MODELS_LOG_PATH[model_name], parameter["value"], curr_time_str)
+                        
                         args.append(parameter["prop"])
-                        args.append(str(parameter["value"] + "/" + curr_time_str))
+                        args.append(log_path)
+
+                        log_path = os.path.join(log_path, settings.YOLOX_LOG_PATH_NAME)
                     else:
                         args.append(parameter["prop"])
                         args.append(str(parameter["value"]))
+
+            else:
+                args.append("max_epoch")
+                args.append(epoch_count)
+
+            args.append("data_dir")
+            args.append(dataset_path)
+
 
             print(args)        
         elif model_name == "EfficientDet":
@@ -137,6 +150,10 @@ class TrainingHelperUtils:
                 if parameter["prop"].find("--") == 0:
                     args.append(parameter["prop"])
                     args.append(parameter["value"])
+                if parameter["prop"] == "train.max_iter":
+                    epoch_count = parameter["value"]
+
+            args.append(f"train.init_checkpoint={model_path}")
 
             args.append(f"dataloader.data_dir={dataset_path}")
 
@@ -144,12 +161,15 @@ class TrainingHelperUtils:
                 for parameter in hyper_parameters:
                     if parameter["prop"] == "train.output_dir":
                         log_path = os.path.join(settings.MODELS_LOG_PATH[model_name], parameter["value"], curr_time_str)
-                        args.append(f"{parameter['prop']}={parameter['value'] + '/' + curr_time_str}")
+                        args.append(f"{parameter['prop']}={log_path}")
                     else:
                         if parameter["prop"].find("--") == 0:
                             continue
                         else:
                             args.append(f"{parameter['prop']}={parameter['value']}")
+            else:
+                args.append("train.max_iter")
+                args.append(epoch_count)
 
             print(args) 
         else:
@@ -158,7 +178,9 @@ class TrainingHelperUtils:
         try:
             with open("/project/training_log", "wb") as out:
                 #p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-                p = subprocess.Popen(args, stdout=out, stderr=out, cwd=model_home)
+                
+                print("SUBPROCESS WITH ARGS {}".format(args))
+                p = subprocess.Popen(args, stdout=out, stderr=out)
         except subprocess.CalledProcessError as e:
             print("CAUGHT EXCEPTION")
             print(e.output)
@@ -205,7 +227,7 @@ class TrainingHelperUtils:
         # Check if file exists
         print(path)
         if os.path.isdir(path):
-            return "[ERROR] Cannot download directory. Choose file"
+            return "[ERROR] Cannot download directory. Choose single file"
 
         f = open(path, 'rb')
         file_to_download = File(f)

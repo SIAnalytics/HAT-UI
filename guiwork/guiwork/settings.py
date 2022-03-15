@@ -202,6 +202,9 @@ CONVERSION_TOOLS = {
 }
 
 EFFICIENT_DET_CONFIG = "/nas/workspace/igor/HAT/models/EfficientDet-SORT/configs/efficientdet/efficientdet_D5_1x.py"
+EFFICIENT_DET_CHECKPOINT = "/nas/workspace/igor/HAT/models/EfficientDet-SORT/EfficientDet-SORT/pretrained/model_final.pth"
+YOLOX_CONFIG = "/nas/workspace/igor/HAT/models/YOLOX-BYTE/exps/example/mot/yolox_x_hat.py"
+YOLOX_LOG_PATH_NAME = "yolox_x_hat"
 
 DEFAULT_NUM_CLASSES = 6
 
