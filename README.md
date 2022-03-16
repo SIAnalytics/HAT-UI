@@ -5,13 +5,32 @@ TODO: Give a short introduction of your project. Let this section explain the ob
 TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
 1.	
 Container to use: 
-docker pull harbor.sia-service.kr/data/hat:v04
+docker pull harbor.sia-service.kr/data/hat:v05
 
 2.	Software dependencies
 2.1. Install CUDA from https://developer.nvidia.com/cuda-downloads
 Make sure to install only toolkits (Not drivers) if working in k8s cluster
 
 2.2. DCNv2 must be installed separately: https://github.com/jinfagang/DCNv2_latest
+
+2.3. Required packages to install:
+pip install av
+pip install loguru
+pip install thop
+pip install pycocotools
+pip install tabulate
+pip install filterpy
+pip install detectron2 -f https://dl.fbaipublicfiles.com/detectron2/wheels/cu113/torch1.10/index.html
+
+-- Comment line 433
+vi /root/anaconda3/lib/python3.9/site-packages/detectron2/modeling/meta_arch/retinanet.py 
+
+2.4. Install YOLOX (In YOLOX directory)
+python setup.py develop
+
+2.5. Install EfficientDet (In EfficientDet directory)
+python setup.py build develop
+
 
 3.	Latest releases
 4.	API references

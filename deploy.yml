@@ -24,6 +24,10 @@ spec:
         - name: hat-storage
           persistentVolumeClaim:
             claimName: django-r-hat20a
+        - name: shmdir
+          emptyDir:
+            medium: Memory
+            sizeLimit: 4Gi
       containers:
         - name: django-r-hat20a
           image: 'docker.siadev.kr/data/hat:v02'
@@ -36,6 +40,8 @@ spec:
               mountPath: /nas
             - name: hat-storage
               mountPath: /project
+            - name: shmdir
+              mountPath: /dev/shm
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
           imagePullPolicy: Always
