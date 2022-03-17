@@ -67,8 +67,9 @@ class DV_13 extends React.Component{
             class_ratio_settings: class_ratio_settings,
             avg_width: avg_width,
             avg_height: avg_height,
-            mot_flag: false,
+            mot_flag: true,
             show_mask: [true, false, false],
+            style_mask: ["outline-secondary", "outline-secondary", "outline-secondary"]
         }
 
         SetGraphData = SetGraphData.bind(this);
@@ -76,9 +77,12 @@ class DV_13 extends React.Component{
 
     ToggleVisibleCharts = (part) => {
         var show_mask = [false, false, false];
+        var style_mask= ["outline-secondary", "outline-secondary", "outline-secondary"];
         show_mask[part - 1] = true;
+        style_mask[part - 1] = "secondary"
         var state = {
-            show_mask: show_mask
+            show_mask: show_mask,
+            style_mask: style_mask
         };
 
         this.setState(state);
@@ -91,9 +95,9 @@ class DV_13 extends React.Component{
                     <h5 className="col-md-6"><b>데이터셋 통계</b></h5>
                     <div className="col-md-3"></div>
                     <ButtonGroup className="col-md-3">
-                        <Button disabled={!this.state.mot_flag} onClick={() => { this.ToggleVisibleCharts(1) }} variant="outline-secondary">TRN</Button>
-                        <Button disabled={!this.state.mot_flag} onClick={() => { this.ToggleVisibleCharts(2) }} variant="outline-secondary">VAL</Button>
-                        <Button disabled={!this.state.mot_flag} onClick={() => { this.ToggleVisibleCharts(3) }} variant="outline-secondary">TST</Button>
+                        <Button disabled={!this.state.mot_flag} onClick={() => { this.ToggleVisibleCharts(1) }} variant={this.state.style_mask[0]}>TRN</Button>
+                        <Button disabled={!this.state.mot_flag} onClick={() => { this.ToggleVisibleCharts(2) }} variant={this.state.style_mask[1]}>VAL</Button>
+                        <Button disabled={!this.state.mot_flag} onClick={() => { this.ToggleVisibleCharts(3) }} variant={this.state.style_mask[2]}>TST</Button>
                     </ButtonGroup>
                 </InputGroup>
                 
@@ -260,6 +264,7 @@ function SetGraphData(data) {
         state.avg_width.push(width);
         state.avg_height.push(height);
         state.show_mask = [true, false, false];
+        state.style_mask = ["outline-secondary", "outline-secondary", "outline-secondary"];
         state.mot_flag = false;
 
         this.setState(state);
@@ -363,6 +368,7 @@ function SetGraphData(data) {
         });
         
         state.mot_flag = true;
+        state.style_mask = ["secondary", "outline-secondary", "outline-secondary"];
         this.setState(state);
     }
 }
