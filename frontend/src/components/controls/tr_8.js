@@ -75,6 +75,11 @@ class TR_8 extends React.Component{
             show_graph_3: false,
             show_graph_4: false,
             show_graph_5: false,
+            button_variants: [
+                "secondary",
+                "outline-secondary",
+                "outline-secondary"
+            ]
         };
 
         SetGraphData = SetGraphData.bind(this);
@@ -95,8 +100,14 @@ class TR_8 extends React.Component{
         }
 
         var state = {
-
+            button_variants: [
+                "outline-secondary",
+                "outline-secondary",
+                "outline-secondary"
+            ]
         };
+
+        state.button_variants[n_1/2] = "secondary";
 
         for (var i = 0; i < 6; i++) {
             if (i == n_1 || i == n_2) {
@@ -116,9 +127,9 @@ class TR_8 extends React.Component{
                     <h5 className="col-md-6"><b>검증 성능 확인</b></h5>
                     <div className="col-md-3"></div>
                     <ButtonGroup className="col-md-3">
-                        <Button variant="outline-secondary" onClick={() => { this.ToggleVisibleCharts(0, 1) }} className="btn-sm">1</Button>
-                        <Button variant="outline-secondary" onClick={() => { this.ToggleVisibleCharts(2, 3) }} className="btn-sm">2</Button>
-                        <Button variant="outline-secondary" onClick={() => { this.ToggleVisibleCharts(4, 5) }} className="btn-sm">3</Button>
+                        <Button variant={this.state.button_variants[0]} onClick={() => { this.ToggleVisibleCharts(0, 1) }} className="btn-sm">1</Button>
+                        <Button variant={this.state.button_variants[1]} onClick={() => { this.ToggleVisibleCharts(2, 3) }} className="btn-sm">2</Button>
+                        <Button variant={this.state.button_variants[2]} onClick={() => { this.ToggleVisibleCharts(4, 5) }} className="btn-sm">3</Button>
                     </ButtonGroup>
                 </InputGroup>
 

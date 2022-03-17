@@ -7,7 +7,8 @@ import {
 } from "./common";
 
 import {
-    Form,
+    Spinner,
+    Overlay,
 } from 'react-bootstrap';
 
 import {
@@ -27,11 +28,17 @@ class DV_123456 extends React.Component {
     }
 
     state = {
-        content: []
+        content: [],
+        spinner_hidden: true
     }
 
     OnDirectoryChange = (val) => {
         this.context.DatasetState.video_path = val;
+
+        var state = {
+            spinner_hidden: false
+        }
+        this.setState(state);
 
         var url = config.get("django_url") + config.get("dataset_viewer_rest");
 
@@ -43,8 +50,9 @@ class DV_123456 extends React.Component {
                 }
             })
             .then((res) => {
-                var state = {
-                    content: res.data.video_info
+                state = {
+                    content: res.data.video_info,
+                    spinner_hidden: true
                 }
 
                 this.setState(state);
@@ -80,7 +88,7 @@ class DV_123456 extends React.Component {
 
         return (
             <>
-                <h5><b>영상 파일</b></h5>
+                <h5><b>영상 파일</b></h5>           
                 <DirectoryPicker 
                     onChange={this.OnDirectoryChange.bind(this)}
                     name="열기" 
@@ -88,7 +96,9 @@ class DV_123456 extends React.Component {
 
                 <div style={{height: 632, overflowY: "scroll", marginTop: 10}}>
                     <TableComponent content={this.state.content} columns={columns} key_name = {key_name}/>
+                    <Spinner hidden={this.state.spinner_hidden} className="load-spinner" animation="border" variant="primary" size="lg" />
                 </div>
+
             </>
         );
     }

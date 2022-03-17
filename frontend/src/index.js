@@ -22,7 +22,7 @@ ReactDOM.render(
       <Route path="/trainer_helper" element={<TrainerHelper />}/>
       <Route path="/dataset_viewer" element={<DatasetViewer />}/>
     </Routes>
-    <Footer />
+    <Footer className="footer"/>
   </Router>,
 
   document.getElementById('root')
