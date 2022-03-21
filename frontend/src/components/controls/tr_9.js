@@ -11,7 +11,7 @@ import {
     ConversionComponent
 } from "./common"
 
-class TR_9 extends React.Component{
+class TR_9 extends React.Component {
     constructor(props) {
         super(props);
     }
@@ -30,7 +30,7 @@ class TR_9 extends React.Component{
 
             }
         };
-        switch(type) {
+        switch (type) {
             case "process": {
                 state.download_progress = progress;
                 state.style.variant = "success";
@@ -94,12 +94,12 @@ class TR_9 extends React.Component{
         return (
             <>
                 <h5><b>파라미터 저장</b></h5>
-                <ConversionComponent style={{marginTop: 10}} ProcessSave={this.ProcessSave} buttonName="출력폴더" />
-                <ProgressBar 
-                    style={{marginTop: 10, height: "25px"}} 
-                    variant={this.state.style.variant} 
-                    animated={this.state.style.animated} 
-                    now={this.state.download_progress} 
+                <ConversionComponent style={{ marginTop: 10 }} ProcessSave={this.ProcessSave} buttonName="Weight파일" />
+                <ProgressBar
+                    style={{ marginTop: 10, height: "25px" }}
+                    variant={this.state.style.variant}
+                    animated={this.state.style.animated}
+                    now={this.state.download_progress}
                     label={`${this.state.download_progress}%`} />
             </>
         );

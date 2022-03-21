@@ -4,7 +4,7 @@ import {
     InputGroup,
     Form,
     ProgressBar,
-    Button, 
+    Button,
     Modal
 } from "react-bootstrap";
 
@@ -20,7 +20,7 @@ import cellEditFactory from 'react-bootstrap-table2-editor';
 
 import { TrainerContext } from '../TrainerContext';
 
-class TextInput extends React.Component{
+class TextInput extends React.Component {
     static contextType = TrainerContext;
 
     constructor(props) {
@@ -36,15 +36,15 @@ class TextInput extends React.Component{
 
     InputChangedHandler = (event) => {
         const new_value = event.target.value;
-        
+
         var state = {
             value: new_value
         }
-        
+
         this.setState(state);
 
         for (var i = 0; i < this.context.TrainerState.hyper_parameters.length; i++) {
-            
+
             if (this.context.TrainerState.hyper_parameters[i].name == this.name) {
                 this.context.TrainerState.hyper_parameters[i].value = new_value;
                 break;
@@ -55,12 +55,12 @@ class TextInput extends React.Component{
     render() {
         return (
             <>
-                <InputGroup style={{marginTop: this.mt}}>
+                <InputGroup style={{ marginTop: this.mt }}>
                     <Form.Label className="w-50">{this.name}</Form.Label>
-                    <Form.Control  
-                        type={this.props.type} 
-                        value={this.state.value} 
-                        onChange={(event)=>this.InputChangedHandler(event)}
+                    <Form.Control
+                        type={this.props.type}
+                        value={this.state.value}
+                        onChange={(event) => this.InputChangedHandler(event)}
                     />
                     <Form.Control className="invisible w-15" type="text" />
                 </InputGroup>
@@ -69,7 +69,7 @@ class TextInput extends React.Component{
     }
 }
 
-class TrainingProgress extends React.Component{
+class TrainingProgress extends React.Component {
     constructor(props) {
         super(props);
         this.className = props.className;
@@ -83,19 +83,19 @@ class TrainingProgress extends React.Component{
     render() {
         return (
             <>
-                <ProgressBar 
-                    variant={this.props.variant} 
-                    className={this.className} 
-                    style={this.style} 
-                    animated={this.props.animated} 
-                    now={this.props.now} 
+                <ProgressBar
+                    variant={this.props.variant}
+                    className={this.className}
+                    style={this.style}
+                    animated={this.props.animated}
+                    now={this.props.now}
                     label={`${this.props.progress_label}`} />
             </>
         );
     }
 }
 
-class DirectoryPicker extends React.Component{
+class DirectoryPicker extends React.Component {
     constructor(props) {
         super(props);
         this.name = props["name"];
@@ -124,7 +124,7 @@ class DirectoryPicker extends React.Component{
     // Function is called from DirectoryPickerDialog
     setPath = (new_path) => {
         if (this.state.to_save == true) {
-            this.setState({val: new_path});
+            this.setState({ val: new_path });
             this.props.onChange(new_path);
         }
     }
@@ -137,34 +137,34 @@ class DirectoryPicker extends React.Component{
         let button;
 
         if (this.addIcon == "true") {
-            button = <Button className="btn btn-primary btn-sm w-25" onClick={this.openModal}><FontAwesomeIcon icon={faFolder} /> {this.name}</Button>     
+            button = <Button className="btn btn-primary btn-sm w-25" onClick={this.openModal}><FontAwesomeIcon icon={faFolder} /> {this.name}</Button>
         } else {
-            button = <Button className="btn btn-primary btn-sm w-25" disabled={this.props.input_disabled} onClick={this.openModal}>{this.name}</Button>     
+            button = <Button className="btn btn-primary btn-sm w-25" disabled={this.props.input_disabled} onClick={this.openModal}>{this.name}</Button>
         }
-    
+
         return (
             <>
                 <InputGroup style={this.style}>
                     {button}
-                    <Form.Control type="text"  
+                    <Form.Control type="text"
                         value={this.state.val}
                         disabled
                         onChange={e => this.setState({ val: e.target.value })}
                     />
                 </InputGroup>
 
-                <Modal 
-                    show={this.state.isOpen} 
+                <Modal
+                    show={this.state.isOpen}
                     onHide={this.closeModal}
                     aria-labelledby="contained-modal-title-vcenter"
                     size="lg"
                     centered>
-                    
+
                     <Modal.Header closeButton>
                         <Modal.Title>경로를 선택</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <DirectoryPickerDialog setPath={this.setPath}/>
+                        <DirectoryPickerDialog setPath={this.setPath} />
                     </Modal.Body>
                     <Modal.Footer>
                         <Button variant="primary" onClick={this.saveAndClose}>
@@ -180,7 +180,7 @@ class DirectoryPicker extends React.Component{
     }
 }
 
-class TableComponent extends React.Component{
+class TableComponent extends React.Component {
     constructor(props) {
         super(props);
         this.columns = props["columns"];
@@ -193,16 +193,16 @@ class TableComponent extends React.Component{
         if (this.editable == true) {
             return (
                 <>
-                    <BootstrapTable 
-                        keyField={this.key_name} 
-                        data={this.props.content} 
-                        columns={this.props.columns} 
+                    <BootstrapTable
+                        keyField={this.key_name}
+                        data={this.props.content}
+                        columns={this.props.columns}
                         hover
                         striped
                         condensed
                         className="table-component"
-                        cellEdit={ 
-                            cellEditFactory({ 
+                        cellEdit={
+                            cellEditFactory({
                                 mode: 'click',
                                 blurToSave: true
                             })
@@ -213,10 +213,10 @@ class TableComponent extends React.Component{
         } else {
             return (
                 <>
-                    <BootstrapTable 
-                        keyField={this.key_name} 
-                        data={this.props.content} 
-                        columns={this.columns} 
+                    <BootstrapTable
+                        keyField={this.key_name}
+                        data={this.props.content}
+                        columns={this.columns}
                         hover
                         striped
                         condensed
@@ -229,7 +229,7 @@ class TableComponent extends React.Component{
 }
 
 
-class ConversionComponent extends React.Component{
+class ConversionComponent extends React.Component {
     constructor(props) {
         super(props);
         this.buttonName = props["buttonName"];
@@ -257,7 +257,7 @@ class ConversionComponent extends React.Component{
     // Function is called from DirectoryPickerDialog
     setPath = (new_path) => {
         if (this.state.to_save == true) {
-            this.setState({val: new_path});
+            this.setState({ val: new_path });
         }
     }
 
@@ -265,27 +265,27 @@ class ConversionComponent extends React.Component{
         return (
             <>
                 <InputGroup style={this.style}>
-                    <Button className="btn btn-primary btn-sm w-15" onClick={this.openModal}><FontAwesomeIcon icon={faFolder} /> {this.buttonName}</Button>                    
-                    <Form.Control type="text" 
-                        style={{marginLeft: 5}} 
+                    <Button className="btn btn-primary btn-sm w-20" onClick={this.openModal}><FontAwesomeIcon icon={faFolder} /> {this.buttonName}</Button>
+                    <Form.Control type="text"
+                        style={{ marginLeft: 5 }}
                         value={this.state.val}
                         onChange={e => this.setState({ val: e.target.value })}
-                        />
-                    <Button className="btn-sm w-13" variant="outline-primary" onClick={() => { this.props.ProcessSave(this.state.val) }} style={{marginLeft: 5}}>저장</Button>
-                </InputGroup>                
+                    />
+                    <Button className="btn-sm w-13" variant="outline-primary" onClick={() => { this.props.ProcessSave(this.state.val) }} style={{ marginLeft: 5 }}>저장</Button>
+                </InputGroup>
 
-                <Modal 
-                    show={this.state.isOpen} 
+                <Modal
+                    show={this.state.isOpen}
                     onHide={this.closeModal}
                     aria-labelledby="contained-modal-title-vcenter"
                     size="lg"
                     centered>
-                    
+
                     <Modal.Header closeButton>
                         <Modal.Title>Pick the directory</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <DirectoryPickerDialog setPath={this.setPath}/>
+                        <DirectoryPickerDialog setPath={this.setPath} />
                     </Modal.Body>
                     <Modal.Footer>
                         <Button variant="primary" onClick={this.saveAndClose}>
