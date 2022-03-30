@@ -10,6 +10,8 @@ from django.conf import settings
 from django.core.files import File
 from django.http import HttpResponse
 
+os.environ['MKL_THREADING_LAYER'] = 'GNU'
+
 class TrainingHelperUtils:
     @staticmethod
     def GetModelsList():
@@ -176,7 +178,7 @@ class TrainingHelperUtils:
             return "Unsupported model name"
 
         try:
-            with open("/project/training_log", "wb") as out:
+            with open("/workspace/Log/training_log", "wb") as out:
                 #p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 
                 print("SUBPROCESS WITH ARGS {}".format(args))

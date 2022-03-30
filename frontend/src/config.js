@@ -1,5 +1,5 @@
 const configuration = {
-    django_url: 'http://dev-cluster.sia-service.kr:31001',
+    django_url: 'http://10.10.100.121:8000',
     training_helper_rest: '/training_helper/rest',
     dataset_viewer_rest: '/dataset_viewer/rest'
 }

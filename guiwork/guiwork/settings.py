@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-=wnaf35=wp*lnj++e4&8=+%zpw$zb1*9k#gx-b*zlo7+nitt&k'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['di.siadev.kr', 'dev-cluster.sia-service.kr']
+ALLOWED_HOSTS = ['localhost', '10.10.100.121']
 
 
 # Application definition
@@ -69,7 +69,7 @@ LOGGING = {
         'default': {
             'level':'DEBUG',
             'class':'logging.handlers.RotatingFileHandler',
-            'filename': '/project/DjangoLog/django-log.log',
+            'filename': '/workspace/Log/django.log',
             'maxBytes': 1024*1024*5, # 5 MB
             'backupCount': 5,
             'formatter':'standard',
@@ -77,7 +77,7 @@ LOGGING = {
         'request_handler': {
             'level':'DEBUG',
             'class':'logging.handlers.RotatingFileHandler',
-            'filename': '/project/DjangoLog/django-log.log',
+            'filename': '/workspace/Log/django.log',
             'maxBytes': 1024*1024*5, # 5 MB
             'backupCount': 5,
             'formatter':'standard',
@@ -145,7 +145,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-ROOT_STORAGE_PATH = "/nas"
+ROOT_STORAGE_PATH = "/workspace"
 
 
 # Internationalization
@@ -153,7 +153,7 @@ ROOT_STORAGE_PATH = "/nas"
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Seoul'
 
 USE_I18N = True
 
@@ -170,45 +170,48 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-MODELS_CONFIG_FILE_PATH = "/project/HAT-UI/guiwork/models_config.json"
+MODELS_CONFIG_FILE_PATH = "/workspace/GUIs/HAT-UI/guiwork/models_config.json"
+MODELS_ROOT = "/workspace/Models"
+GUIWORK_ROOT = "/workspace/GUIs/HAT-UI/guiwork"
+
 MODELS_TRAIN_FILES = {
-    "FairMOT": "/nas/workspace/igor/HAT/models/Tracker_FairMOT/src/train.py",
-    "YOLOX": "/nas/workspace/igor/HAT/models/YOLOX-BYTE/tools/train.py",
-    "EfficientDet": "/nas/workspace/igor/HAT/models/EfficientDet-SORT/tools/lazyconfig_train_net.py"
+    "FairMOT": os.path.join(MODELS_ROOT, "Tracker_FairMOT/src/train.py"),
+    "YOLOX": os.path.join(MODELS_ROOT, "YOLOX-BYTE/tools/train.py"),
+    "EfficientDet": os.path.join(MODELS_ROOT, "EfficientDet-SORT/tools/lazyconfig_train_net.py")
 }
 
 MODELS_HOME = {
-    "FairMOT": "/nas/workspace/igor/HAT/models/Tracker_FairMOT/",
-    "YOLOX": "/nas/workspace/igor/HAT/models/YOLOX-BYTE/",
-    "EfficientDet": "/nas/workspace/igor/HAT/models/EfficientDet-SORT/"
+    "FairMOT": os.path.join(MODELS_ROOT, "Tracker_FairMOT/"),
+    "YOLOX": os.path.join(MODELS_ROOT, "YOLOX-BYTE/"),
+    "EfficientDet": os.path.join(MODELS_ROOT, "EfficientDet-SORT/")
 }
 
 MODELS_LOG_PATH = {
-    "FairMOT": "/nas/workspace/igor/HAT/models/Tracker_FairMOT/exp/mot",
-    "YOLOX": "/nas/workspace/igor/HAT/models/YOLOX-BYTE",
-    "EfficientDet": "/nas/workspace/igor/HAT/models/EfficientDet-SORT/tools"
+    "FairMOT": os.path.join(MODELS_ROOT, "Tracker_FairMOT/exp/mot"),
+    "YOLOX": os.path.join(MODELS_ROOT, "YOLOX-BYTE"),
+    "EfficientDet": os.path.join(MODELS_ROOT, "EfficientDet-SORT/tools")
 }
 
 SUBPROCESS_EXE = {
-    "training_monitoring": "/project/HAT-UI/guiwork/training_helper/training_monitoring.py",
-    "dataset_building": "/project/HAT-UI/guiwork/dataset_viewer/dataset_builder.py",
-    "dataset_monitoring": "/project/HAT-UI/guiwork/dataset_viewer/dataset_monitoring.py"
+    "training_monitoring": os.path.join(GUIWORK_ROOT, "training_helper/training_monitoring.py"),
+    "dataset_building": os.path.join(GUIWORK_ROOT, "dataset_viewer/dataset_builder.py"),
+    "dataset_monitoring": os.path.join(GUIWORK_ROOT, "dataset_viewer/dataset_monitoring.py")
 }
 
 CONVERSION_TOOLS = {
-    "MOT_TO_YOLOX_COCO": "/nas/workspace/igor/HAT/models/YOLOX-BYTE/tools/convert_to_coco.py",
-    "MOT_TO_FairMOT": "/nas/workspace/igor/HAT/models/Tracker_FairMOT/src/gen_labels_fairmot.py",
-    "MOT_TO_EfficientDET_COCO": "/nas/workspace/igor/HAT/models/EfficientDet-SORT/tools/convert_to_coco.py"
+    "MOT_TO_YOLOX_COCO": os.path.join(MODELS_ROOT, "YOLOX-BYTE/tools/convert_to_coco.py"),
+    "MOT_TO_FairMOT": os.path.join(MODELS_ROOT, "Tracker_FairMOT/src/gen_labels_fairmot.py"),
+    "MOT_TO_EfficientDET_COCO": os.path.join(MODELS_ROOT, "EfficientDet-SORT/tools/convert_to_coco.py")
 }
 
-EFFICIENT_DET_CONFIG = "/nas/workspace/igor/HAT/models/EfficientDet-SORT/configs/efficientdet/efficientdet_D5_1x.py"
-EFFICIENT_DET_CHECKPOINT = "/nas/workspace/igor/HAT/models/EfficientDet-SORT/EfficientDet-SORT/pretrained/model_final.pth"
-YOLOX_CONFIG = "/nas/workspace/igor/HAT/models/YOLOX-BYTE/exps/example/mot/yolox_x_hat.py"
+EFFICIENT_DET_CONFIG = os.path.join(MODELS_ROOT, "EfficientDet-SORT/configs/efficientdet/efficientdet_D5_1x.py")
+EFFICIENT_DET_CHECKPOINT = os.path.join(MODELS_ROOT, "EfficientDet-SORT/EfficientDet-SORT/pretrained/model_final.pth")
+YOLOX_CONFIG = os.path.join(MODELS_ROOT, "YOLOX-BYTE/exps/example/mot/yolox_x_hat.py")
 YOLOX_LOG_PATH_NAME = "yolox_x_hat"
 
 DEFAULT_NUM_CLASSES = 6
 
-ANACONDA_PYTHON_EXE = "/root/anaconda3/bin/python3"
+ANACONDA_PYTHON_EXE = "/opt/conda/bin/python3"
 
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = False

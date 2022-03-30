@@ -1,17 +1,15 @@
-FROM harbor.sia-service.kr/research/hat:latest
+FROM python:3
 ENV PYTHONUNBUFFERED 1
 
 # Install required packages
-RUN /bin/bash -c "source /opt/conda/bin/activate"
 RUN apt update
 RUN apt install -y vim
 RUN apt install -y npm
 RUN apt install -y psmisc
 RUN apt install -y openssh-server 
-RUN apt install -y curl
 
-# Deal with supervisor configuration
-RUN apt install -y supervisor
+# Deal with supervisor
+RUN apt install supervisor
 RUN mkdir -p /var/log/supervisor
 
 # Install requirements
@@ -20,9 +18,10 @@ RUN pip install -r requirements.txt
 
 # Install REACT
 RUN curl -fsSL https://deb.nodesource.com/setup_current.x | bash -
-RUN apt install -y nodejs
+RUN apt-get install -y nodejs
+RUN npx -y create-react-app dummy_app
+RUN rm -r dummy_app
 
-# Install and configure supervisor
 COPY supervisord.conf /etc/supervisor/conf.d/supervisor.conf
 EXPOSE 8000 3000 22
 CMD ["/usr/bin/supervisord"] 

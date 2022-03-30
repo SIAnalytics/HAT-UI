@@ -27,7 +27,6 @@ parser.add_argument("--output_path", required = True)
 parser.add_argument("--augmentation", required = True)
 
 VIDEO_PREFIX = "Video_file_"
-MAX_PROC_COUNT = 12
 
 # Class for building dataset
 class DatasetBuilder:
@@ -233,7 +232,7 @@ class DatasetBuilder:
 
             print("Writing files to disk {}".format(video_name))
 
-            proc_count = 8
+            proc_count = 4
             frames_per_proc = int(gpu_video.shape[0] / proc_count)
 
             processes = []

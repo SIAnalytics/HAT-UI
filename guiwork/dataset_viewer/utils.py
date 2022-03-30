@@ -181,7 +181,7 @@ class DatasetViewerUtils:
         p = None
 
         try:
-            with open("/project/out_dataset", "wb") as out:
+            with open("/workspace/Log/dataset_log", "wb") as out:
             #p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 p = subprocess.Popen(args, stdout=out, stderr=out)
                 print("PID = {}".format(p.pid))
