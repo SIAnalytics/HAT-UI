@@ -40,7 +40,7 @@ var GraphStyles = [
     },
 ]
 
-class TR_8 extends React.Component{
+class TR_8 extends React.Component {
     constructor(props) {
         super(props);
 
@@ -69,55 +69,9 @@ class TR_8 extends React.Component{
             graph_setting_3: this.graph_data[3],
             graph_setting_4: this.graph_data[4],
             graph_setting_5: this.graph_data[5],
-            show_graph_0: true,
-            show_graph_1: true,
-            show_graph_2: false,
-            show_graph_3: false,
-            show_graph_4: false,
-            show_graph_5: false,
-            button_variants: [
-                "secondary",
-                "outline-secondary",
-                "outline-secondary"
-            ]
         };
 
         SetGraphData = SetGraphData.bind(this);
-    }
-
-    /*state = {
-        graph_setting_1: this.graph_data[0]
-    };*/
-
-    ToggleVisibleCharts(n_1, n_2) {
-        var key_map = {
-            0: "show_graph_0",
-            1: "show_graph_1",
-            2: "show_graph_2",
-            3: "show_graph_3",
-            4: "show_graph_4",
-            5: "show_graph_5"
-        }
-
-        var state = {
-            button_variants: [
-                "outline-secondary",
-                "outline-secondary",
-                "outline-secondary"
-            ]
-        };
-
-        state.button_variants[n_1/2] = "secondary";
-
-        for (var i = 0; i < 6; i++) {
-            if (i == n_1 || i == n_2) {
-                state[key_map[i]] = true;
-            } else {
-                state[key_map[i]] = false;
-            }
-        }
-
-        this.setState(state);
     }
 
     render() {
@@ -126,22 +80,17 @@ class TR_8 extends React.Component{
                 <InputGroup>
                     <h5 className="col-md-6"><b>검증 성능 확인</b></h5>
                     <div className="col-md-3"></div>
-                    <ButtonGroup className="col-md-3">
-                        <Button variant={this.state.button_variants[0]} onClick={() => { this.ToggleVisibleCharts(0, 1) }} className="btn-sm">1</Button>
-                        <Button variant={this.state.button_variants[1]} onClick={() => { this.ToggleVisibleCharts(2, 3) }} className="btn-sm">2</Button>
-                        <Button variant={this.state.button_variants[2]} onClick={() => { this.ToggleVisibleCharts(4, 5) }} className="btn-sm">3</Button>
-                    </ButtonGroup>
                 </InputGroup>
 
-                <Form className='d-flex'> 
-                    { this.state.show_graph_0 ? <LineChart  label="" graph_data={this.state.graph_setting_0} className="col-md-6" chart_type="chart-style"/> : null }                   
-                    { this.state.show_graph_1 ? <LineChart  label="" graph_data={this.state.graph_setting_1} className="col-md-6" chart_type="chart-style"/> : null }
-
-                    { this.state.show_graph_2 ? <LineChart  label="" graph_data={this.state.graph_setting_2} className="col-md-6" chart_type="chart-style"/> : null }                   
-                    { this.state.show_graph_3 ? <LineChart  label="" graph_data={this.state.graph_setting_3} className="col-md-6" chart_type="chart-style"/> : null }
-
-                    { this.state.show_graph_4 ? <LineChart  label="" graph_data={this.state.graph_setting_4} className="col-md-6" chart_type="chart-style"/> : null }                   
-                    { this.state.show_graph_5 ? <LineChart  label="" graph_data={this.state.graph_setting_5} className="col-md-6" chart_type="chart-style"/> : null }                   
+                <Form className='d-flex'>
+                    <LineChart label="" graph_data={this.state.graph_setting_0} className="col-md-4" chart_type="chart-style" />
+                    <LineChart label="" graph_data={this.state.graph_setting_1} className="col-md-4" chart_type="chart-style" />
+                    <LineChart label="" graph_data={this.state.graph_setting_2} className="col-md-4" chart_type="chart-style" />
+                </Form>
+                <Form className='d-flex'>
+                    <LineChart label="" graph_data={this.state.graph_setting_3} className="col-md-4" chart_type="chart-style" />
+                    <LineChart label="" graph_data={this.state.graph_setting_4} className="col-md-4" chart_type="chart-style" />
+                    <LineChart label="" graph_data={this.state.graph_setting_5} className="col-md-4" chart_type="chart-style" />
                 </Form>
             </>
         );
@@ -150,7 +99,7 @@ class TR_8 extends React.Component{
 
 function SetGraphData(training_data) {
     // 1. Generate data for graph 1
-    
+
     var graph_setting_0 = {
         labels: [],
         datasets: [
@@ -163,7 +112,7 @@ function SetGraphData(training_data) {
             }
         ]
     };
-    
+
     //-----------------------------------------------------------
     var state = {};
     for (var i = 0; i < Object.keys(training_data).length; i++) {
@@ -192,7 +141,7 @@ function SetGraphData(training_data) {
             curr_settings.labels.push(key);
             curr_settings.datasets[0].data.push(graph_data[key]);
         }
-        
+
         switch (i) {
             case 0: {
                 state.graph_setting_0 = curr_settings;
@@ -218,7 +167,7 @@ function SetGraphData(training_data) {
                 state.graph_setting_5 = curr_settings;
                 break;
             }
-            default: 
+            default:
                 break;
         }
     }

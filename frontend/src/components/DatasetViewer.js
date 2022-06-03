@@ -1,6 +1,6 @@
 import React from "react";
 import {
-    Container, 
+    Container,
     Row,
 } from "react-bootstrap";
 
@@ -32,14 +32,14 @@ function DatasetViewer() {
             vertical_flipping: 0,
             brightness: 0,
             contrast: 0,
-            resize: 0,
+            scale: 0,
             brightness_factor: 0,
             contrast_factor: 0,
-            resize_factor: 0
+            scale_factor: 0
         }
     };
 
-    return(
+    return (
         <Container>
             <DatasetProvider value={{ DatasetState }}>
                 <Row>

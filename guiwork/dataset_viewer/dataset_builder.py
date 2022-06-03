@@ -95,10 +95,10 @@ class DatasetBuilder:
             "vertical_flipping": -1,
             "brightness": -1,
             "contrast": -1,
-            "resize": -1,
+            "scale": -1,
             "contrast_factor": float(aug_settings["contrast_factor"]),
             "brightness_factor": float(aug_settings["brightness_factor"]),
-            "resize_factor": float(aug_settings["resize_factor"])
+            "scale_factor": float(aug_settings["scale_factor"])
         }
         apply_flag = False
 
@@ -118,8 +118,8 @@ class DatasetBuilder:
             params["contrast"] = int(100 / aug_settings["contrast"])
             apply_flag = True
 
-        if aug_settings["resize"] > 0:
-            params["resize"] = int(100 / aug_settings["resize"])
+        if aug_settings["scale"] > 0:
+            params["scale"] = int(100 / aug_settings["scale"])
             apply_flag = True
 
         return params, apply_flag
@@ -137,9 +137,9 @@ class DatasetBuilder:
         if aug_params["vertical_flipping"] > 0 and frame_no % aug_params["vertical_flipping"] == 0:
             frame = augmentation.VerticalFlip(frame)
         
-        if aug_params["resize"] > 0 and frame_no % aug_params["resize"] == 0:
-            new_size = [int(aug_params["resize_factor"] * frame.size(dim = 1)), int(aug_params["resize_factor"] * frame.size(dim = 2))]
-            frame = augmentation.Resize(frame, new_size)
+        if aug_params["scale"] > 0 and frame_no % aug_params["scale"] == 0:
+            new_size = [int(aug_params["scale_factor"] * frame.size(dim = 1)), int(aug_params["scale_factor"] * frame.size(dim = 2))]
+            frame = augmentation.Scale(frame, new_size)
         
         frame_bgr = augmentation.TensorRGBToFrameBGR(frame.cpu())
         return frame_bgr
@@ -151,11 +151,11 @@ class DatasetBuilder:
         if aug_params["vertical_flipping"] > 0 and frame_no % aug_params["vertical_flipping"] == 0:
             obj_y = height - obj_y
 
-        if aug_params["resize"] > 0 and frame_no % aug_params["resize"] == 0:
-            obj_x = obj_x * aug_params["resize_factor"]
-            obj_y = obj_y * aug_params["resize_factor"]
-            obj_w = obj_w * aug_params["resize_factor"]
-            obj_h = obj_h * aug_params["resize_factor"]            
+        if aug_params["scale"] > 0 and frame_no % aug_params["scale"] == 0:
+            obj_x = obj_x * aug_params["scale_factor"]
+            obj_y = obj_y * aug_params["scale_factor"]
+            obj_w = obj_w * aug_params["scale_factor"]
+            obj_h = obj_h * aug_params["scale_factor"]            
 
         return obj_x, obj_y, obj_w, obj_h
 

@@ -36,6 +36,10 @@ code {
   width: 13%;
 }
 
+.w-30 {
+  width: 33%;
+}
+
 .invisible {
   display: none;
 }
@@ -45,7 +49,7 @@ code {
   border-radius: 5px;
   padding: 5px;
   margin: 5px;
-  height: 160px;
+  height: 220px;
   box-shadow: 5px 5px 5px rgb(97, 97, 97);
 }
 
@@ -59,16 +63,17 @@ code {
 }
 
 .ratio-settings {
-  background-color:rgb(170, 170, 170);
+  background-color: rgb(170, 170, 170);
 }
 
 .table-striped>tbody>tr {
-    background-color: white; /* Choose your own color here */
-    border: solid 2px rgb(163, 163, 163);
+  background-color: white;
+  /* Choose your own color here */
+  border: solid 2px rgb(163, 163, 163);
 }
 
 .table-striped>thead>tr {
-  background-color: rgb(163, 163, 163); 
+  background-color: rgb(163, 163, 163);
   border: solid 2px grey;
 }
 
@@ -77,12 +82,12 @@ code {
   overflow-y: auto;
 }
 
-input[type=number]::-webkit-inner-spin-button, 
-input[type=number]::-webkit-outer-spin-button { 
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  margin: 0; 
+  margin: 0;
 }
 
 table thead .caret {
@@ -96,8 +101,9 @@ table thead .caret {
   border-right: 4px solid transparent;
   border-left: 4px solid transparent;
 }
-  
-  table thead .dropup .caret, table thead .navbar-fixed-bottom .dropdown .caret {
+
+table thead .dropup .caret,
+table thead .navbar-fixed-bottom .dropdown .caret {
   border-top: 0;
   border-bottom: 4px dashed;
   border-bottom: 4px solid \9;
@@ -107,5 +113,5 @@ table thead .caret {
 .load-spinner {
   position: sticky;
   top: 50%;
-  left: 50%;  
+  left: 50%;
 }

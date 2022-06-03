@@ -98,9 +98,9 @@ class TrainingProgress extends React.Component {
 class DirectoryPicker extends React.Component {
     constructor(props) {
         super(props);
-        this.name = props["name"];
-        this.style = props["style"];
-        this.addIcon = props["addIcon"];
+        this.name = props.name;
+        this.style = props.style;
+        this.addIcon = props.addIcon;
     }
 
     state = {
@@ -167,6 +167,11 @@ class DirectoryPicker extends React.Component {
                         <DirectoryPickerDialog setPath={this.setPath} />
                     </Modal.Body>
                     <Modal.Footer>
+                        {this.props.canCreateDirectory &&
+                            <Button variant="warning">
+                                {"새 폴더"}
+                            </Button>
+                        }
                         <Button variant="primary" onClick={this.saveAndClose}>
                             선택
                         </Button>
@@ -285,7 +290,7 @@ class ConversionComponent extends React.Component {
                         <Modal.Title>Pick the directory</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <DirectoryPickerDialog setPath={this.setPath} />
+                        <DirectoryPickerDialog canCreateDirectory={true} setPath={this.setPath} />
                     </Modal.Body>
                     <Modal.Footer>
                         <Button variant="primary" onClick={this.saveAndClose}>

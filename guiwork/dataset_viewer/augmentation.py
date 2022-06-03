@@ -51,7 +51,7 @@ def VerticalFlip(img: Tensor):
 
     return F_t.vflip(img)
 
-def Resize(img: Tensor, 
+def Scale(img: Tensor, 
             size: List[int],
             interpolation: InterpolationMode = InterpolationMode.BILINEAR,
             max_size: Optional[int] = None, 

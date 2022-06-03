@@ -23,7 +23,7 @@ import {
 
 import { Type } from 'react-bootstrap-table2-editor';
 
-class DV_78910 extends React.Component{
+class DV_78910 extends React.Component {
     static contextType = DatasetContext;
 
     constructor(props) {
@@ -115,17 +115,17 @@ class DV_78910 extends React.Component{
 
         val = parseFloat(this.state.content[4]["적용률"]);
         if (val < 0 || val > 100) {
-            alert("[ERROR] Resize must be in range [0, 100]");
+            alert("[ERROR] Scale factor must be in range [0, 100]");
             return false;
         }
-        this.context.DatasetState.augmentation.resize = val;
+        this.context.DatasetState.augmentation.scale = val;
 
         val = parseFloat(this.state.content[4]["비율"]);
         if (val < 0 || val > 10) {
-            alert("[ERROR] Resize factor must be in range (0, 10]");
+            alert("[ERROR] Scale factor must be in range (0, 10]");
             return false;
         }
-        this.context.DatasetState.augmentation.resize_factor = val;
+        this.context.DatasetState.augmentation.scale_factor = val;
 
         data.append("augmentation", JSON.stringify(this.context.DatasetState.augmentation));
 
@@ -133,14 +133,14 @@ class DV_78910 extends React.Component{
     }
 
     timeout(delay) {
-        return new Promise( res => setTimeout(res, delay) );
+        return new Promise(res => setTimeout(res, delay));
     }
 
     UpdateProgressBar = (type) => {
         var state = {
         }
 
-        switch(type) {
+        switch (type) {
             case "processing": {
                 state.progress_variant = "success";
                 state.run_button_disabled = true;
@@ -259,17 +259,17 @@ class DV_78910 extends React.Component{
                 "비율": "-"
             },
             {
-                "함수": "Brightness",
+                "함수": "Brightness(jittering)",
                 "적용률": 0,
                 "비율": "1"
             },
             {
-                "함수": "Contrast",
+                "함수": "Contrast(jittering)",
                 "적용률": 0,
                 "비율": "1"
             },
             {
-                "함수": "Resize",
+                "함수": "Scale",
                 "적용률": 0,
                 "비율": "1"
             }
@@ -299,30 +299,40 @@ class DV_78910 extends React.Component{
         return (
             <>
                 <h5><b>데이터셋 분리</b></h5>
-                <InputGroup className="ratio-settings w-75 p-2">
-                    <Form.Label>학습 : 검증 : 테스트</Form.Label>
-                    <Form.Control 
-                        style={{marginRight: 5, marginLeft: 5}} 
-                        size="sm" 
-                        type="number"  
-                        onChange={(event)=>this.RatioChangedHandler(event, "train")}
-                    />: 
-                    <Form.Control 
-                        style={{marginLeft: 5, marginRight: 5}} 
-                        size="sm" 
-                        type="number"  
-                        onChange={(event)=>this.RatioChangedHandler(event, "validation")}
-                    />: 
-                    <Form.Control 
-                        style={{marginLeft: 5}} 
-                        size="sm" 
-                        type="number"  
-                        onChange={(event)=>this.RatioChangedHandler(event, "test")}
+                <InputGroup className="ratio-settings w-75 p-2 pb-0">
+                    <Form.Label className="w-30" style={{ marginLeft: 5 }}>
+                        학습:
+                    </Form.Label>
+                    <Form.Label className="w-30" style={{ marginLeft: 5 }}>
+                        검증:
+                    </Form.Label>
+                    <Form.Label className="w-33" style={{ marginLeft: 5 }}>
+                        테스트:
+                    </Form.Label>
+                </InputGroup>
+                <InputGroup className="ratio-settings w-75 p-2 pt-0">
+                    <Form.Control
+                        style={{ marginRight: 5, marginLeft: 5 }}
+                        size="sm"
+                        type="number"
+                        onChange={(event) => this.RatioChangedHandler(event, "train")}
+                    />
+                    <Form.Control
+                        style={{ marginLeft: 5, marginRight: 5 }}
+                        size="sm"
+                        type="number"
+                        onChange={(event) => this.RatioChangedHandler(event, "validation")}
+                    />
+                    <Form.Control
+                        style={{ marginLeft: 5 }}
+                        size="sm"
+                        type="number"
+                        onChange={(event) => this.RatioChangedHandler(event, "test")}
                     />
                 </InputGroup>
                 <InputGroup className="ratio-settings w-75 p-2">
-                    <Form style={{marginTop: 10}}>
-                        <Form.Check 
+                    <Form style={{ marginTop: 10 }}>
+                        <Form.Check
                             type="switch"
                             id="custom-switch"
                             label="무작위 섞기"
@@ -331,31 +341,32 @@ class DV_78910 extends React.Component{
                     </Form>
                 </InputGroup>
 
-                <DirectoryPicker 
-                    style={{marginTop: 10, marginBottom: 10}} 
-                    name="출력 폴더" 
+                <DirectoryPicker
+                    style={{ marginTop: 10, marginBottom: 10 }}
+                    name="출력 폴더"
                     addIcon="true"
+                    canCreateDirectory={true}
                     onChange={this.HandleOutputDirectoryChange.bind(this)}
                 />
-                
+
                 <h6>증강함수 적용</h6>
-                <div style={{height: 213, overflowY: "scroll"}}>
-                    <TableComponent content={this.state.content} columns={this.state.columns} key_name = {key_name} editable={true}/>
+                <div style={{ height: 213, overflowY: "scroll" }}>
+                    <TableComponent content={this.state.content} columns={this.state.columns} key_name={key_name} editable={true} />
                 </div>
                 <ProgressBar
-                    style={{marginTop: 10, height: "25px"}}
+                    style={{ marginTop: 10, height: "25px" }}
                     now={100}
                     variant={this.state.progress_variant}
                     animated={this.state.animated}
                     striped={this.state.animated}
                     label={this.state.progress_label}
                 />
-                
-                <div style={{textAlign: "right"}}>
-                    <Button 
-                        style={{marginTop: 10}} 
-                        disabled={this.state.run_button_disabled} 
-                        variant="primary" 
+
+                <div style={{ textAlign: "right" }}>
+                    <Button
+                        style={{ marginTop: 10 }}
+                        disabled={this.state.run_button_disabled}
+                        variant="primary"
                         onClick={() => { this.RunDatasetSeparation() }}>실행</Button>
                 </div>
             </>

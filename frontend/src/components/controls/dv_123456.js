@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 
-import { 
+import {
     DirectoryPicker,
     TableComponent
 } from "./common";
@@ -22,8 +22,8 @@ import {
 
 class DV_123456 extends React.Component {
     static contextType = DatasetContext;
-    
-    constructor (props) {
+
+    constructor(props) {
         super(props);
     }
 
@@ -88,14 +88,14 @@ class DV_123456 extends React.Component {
 
         return (
             <>
-                <h5><b>영상 파일</b></h5>           
-                <DirectoryPicker 
+                <h5><b>영상 파일</b></h5>
+                <DirectoryPicker
                     onChange={this.OnDirectoryChange.bind(this)}
-                    name="열기" 
+                    name="열기"
                 />
 
-                <div style={{height: 632, overflowY: "scroll", marginTop: 10}}>
-                    <TableComponent content={this.state.content} columns={columns} key_name = {key_name}/>
+                <div style={{ height: 663, overflowY: "scroll", marginTop: 10 }}>
+                    <TableComponent content={this.state.content} columns={columns} key_name={key_name} />
                     <Spinner hidden={this.state.spinner_hidden} className="load-spinner" animation="border" variant="primary" size="lg" />
                 </div>
 
