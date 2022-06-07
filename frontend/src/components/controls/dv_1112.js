@@ -17,7 +17,7 @@ import {
 
 import config from 'react-global-configuration';
 
-class DV_1112 extends React.Component{
+class DV_1112 extends React.Component {
     static contextType = DatasetContext;
     constructor(props) {
         super(props);
@@ -33,7 +33,7 @@ class DV_1112 extends React.Component{
         var state = {
         }
 
-        switch(type) {
+        switch (type) {
             case "processing": {
                 state.progress_variant = "success";
                 state.animated = true;
@@ -75,7 +75,7 @@ class DV_1112 extends React.Component{
     }
 
     timeout(delay) {
-        return new Promise( res => setTimeout(res, delay) );
+        return new Promise(res => setTimeout(res, delay));
     }
 
     async MonitorDatasetConversion(pid) {
@@ -120,18 +120,12 @@ class DV_1112 extends React.Component{
             return;
         }
 
-        // Check to and from values
-        if (this.context.DatasetState.convert_from == "") {
-            alert("[ERROR] FROM field must be specified");
-            return;
-        }
-
         if (this.context.DatasetState.convert_to == "") {
             alert("[ERROR] TO field must be selected");
             return;
         }
 
-        if (this.CheckConversionSupported(this.context.DatasetState.convert_from, this.context.DatasetState.convert_to) == false) {
+        if (this.CheckConversionSupported("MOT", this.context.DatasetState.convert_to) == false) {
             alert("[ERROR] Selected conversion is not supported yet");
             return;
         }
@@ -142,7 +136,7 @@ class DV_1112 extends React.Component{
                 params: {
                     "req": "CONVERT_DATASET",
                     "path": val,
-                    "convert_from": this.context.DatasetState.convert_from,
+                    "convert_from": "MOT",
                     "convert_to": this.context.DatasetState.convert_to,
                 }
             })
@@ -158,10 +152,6 @@ class DV_1112 extends React.Component{
             })
     }
 
-    FromFieldChange = (e) => {
-        this.context.DatasetState.convert_from = e.target.value;
-    }
-
     ToFieldChange = (e) => {
         this.context.DatasetState.convert_to = e.target.value;
     }
@@ -170,21 +160,17 @@ class DV_1112 extends React.Component{
         return (
             <>
                 <h5><b>데이터셋 포맷 변환</b></h5>
-                <Form.Group style={{marginTop: 10}} className="w-100 d-flex">
-                    <Form.Select className="w-50" onChange={this.FromFieldChange.bind(this)}>
-                        <option value="">From</option>
-                        <option value="MOT">MOT</option>
-                    </Form.Select>
-                    <Form.Select className="w-50" onChange={this.ToFieldChange.bind(this)}>
+                <Form.Group style={{ marginTop: 10 }} className="w-100 d-flex">
+                    <Form.Select className="w-100" onChange={this.ToFieldChange.bind(this)}>
                         <option value="">To</option>
                         <option value="FairMOT">FairMOT</option>
                         <option value="YOLOX COCO">YOLOX COCO</option>
                         <option value="EfficientDet COCO">EfficientDet COCO</option>
                     </Form.Select>
                 </Form.Group>
-                <ConversionComponent style={{marginTop: 10}} ProcessSave={this.ProcessSave} buttonName="변환" />
+                <ConversionComponent style={{ marginTop: 10 }} ProcessSave={this.ProcessSave} buttonName="변환" />
                 <ProgressBar
-                    style={{marginTop: 10, height: "25px"}}
+                    style={{ marginTop: 10, height: "25px" }}
                     now={100}
                     variant={this.state.progress_variant}
                     animated={this.state.animated}

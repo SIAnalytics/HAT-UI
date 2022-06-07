@@ -12,13 +12,14 @@ import {
     PieChart
 } from "./charts"
 
-class DV_13 extends React.Component{
+class DV_13 extends React.Component {
     constructor(props) {
         super(props);
 
         var class_ratio_settings = [];
         var avg_width = [];
         var avg_height = [];
+        var avg_bbox = [];
         for (var i = 0; i < 3; i++) {
             var setting = {
                 labels: [],
@@ -45,6 +46,19 @@ class DV_13 extends React.Component{
                 ]
             }
 
+            var bbox = {
+                labels: [],
+                datasets: [
+                    {
+                        label: "Average bbox",
+                        data: [],
+                        fill: true,
+                        backgroundColor: "",
+                        borderColor: "",
+                    }
+                ]
+            }
+
             var height = {
                 labels: [],
                 datasets: [
@@ -60,12 +74,14 @@ class DV_13 extends React.Component{
 
             class_ratio_settings.push(setting);
             avg_width.push(width);
+            avg_bbox.push(bbox);
             avg_height.push(height);
         }
 
         this.state = {
             class_ratio_settings: class_ratio_settings,
             avg_width: avg_width,
+            avg_bbox: avg_bbox,
             avg_height: avg_height,
             mot_flag: true,
             show_mask: [true, false, false],
@@ -77,7 +93,7 @@ class DV_13 extends React.Component{
 
     ToggleVisibleCharts = (part) => {
         var show_mask = [false, false, false];
-        var style_mask= ["outline-secondary", "outline-secondary", "outline-secondary"];
+        var style_mask = ["outline-secondary", "outline-secondary", "outline-secondary"];
         show_mask[part - 1] = true;
         style_mask[part - 1] = "secondary"
         var state = {
@@ -100,19 +116,16 @@ class DV_13 extends React.Component{
                         <Button disabled={!this.state.mot_flag} onClick={() => { this.ToggleVisibleCharts(3) }} variant={this.state.style_mask[2]}>TST</Button>
                     </ButtonGroup>
                 </InputGroup>
-                
+
                 <Form className='d-flex'>
-                    {this.state.show_mask[0] ? <PieChart label="클래스 분포" graph_data={this.state.class_ratio_settings[0]} chart_type="chart-style-large" className="col-md-4"/> : null}
-                    {this.state.show_mask[0] ? <BarChart label="영상 별 객체수" graph_data={this.state.avg_width[0]} className="col-md-4" chart_type="chart-style-large"/> : null}
-                    {this.state.show_mask[0] ? <BarChart label="영상 별 객체수" graph_data={this.state.avg_height[0]} className="col-md-4" chart_type="chart-style-large"/> : null}
-              
-                    {this.state.show_mask[1] ? <PieChart label="클래스 분포" graph_data={this.state.class_ratio_settings[1]} chart_type="chart-style-large" className="col-md-4"/> : null}
-                    {this.state.show_mask[1] ? <BarChart label="영상 별 객체수" graph_data={this.state.avg_width[1]} className="col-md-4" chart_type="chart-style-large"/> : null}
-                    {this.state.show_mask[1] ? <BarChart label="영상 별 객체수" graph_data={this.state.avg_height[1]} className="col-md-4" chart_type="chart-style-large"/> : null}
-              
-                    {this.state.show_mask[2] ? <PieChart label="클래스 분포" graph_data={this.state.class_ratio_settings[2]} className="col-md-4" chart_type="chart-style-large"/> : null}
-                    {this.state.show_mask[2] ? <BarChart label="영상 별 객체수" graph_data={this.state.avg_width[2]} className="col-md-4" chart_type="chart-style-large"/> : null}
-                    {this.state.show_mask[2] ? <BarChart label="영상 별 객체수" graph_data={this.state.avg_height[2]} className="col-md-4" chart_type="chart-style-large"/> : null}
+                    {this.state.show_mask[0] ? <PieChart label="클래스 분포" graph_data={this.state.class_ratio_settings[0]} chart_type="chart-style-large" className="col-md-4" /> : null}
+                    {this.state.show_mask[0] ? <BarChart label="영상 별 객체수" graph_data={this.state.avg_bbox[0]} className="col-md-4" chart_type="chart-style-large" /> : null}
+
+                    {this.state.show_mask[1] ? <PieChart label="클래스 분포" graph_data={this.state.class_ratio_settings[1]} chart_type="chart-style-large" className="col-md-4" /> : null}
+                    {this.state.show_mask[1] ? <BarChart label="영상 별 객체수" graph_data={this.state.avg_bbox[1]} className="col-md-4" chart_type="chart-style-large" /> : null}
+
+                    {this.state.show_mask[2] ? <PieChart label="클래스 분포" graph_data={this.state.class_ratio_settings[2]} className="col-md-4" chart_type="chart-style-large" /> : null}
+                    {this.state.show_mask[2] ? <BarChart label="영상 별 객체수" graph_data={this.state.avg_bbox[2]} className="col-md-4" chart_type="chart-style-large" /> : null}
                 </Form>
             </>
         );
@@ -233,6 +246,19 @@ function SetGraphData(data) {
             ]
         };
 
+        var bbox = {
+            labels: [],
+            datasets: [
+                {
+                    label: "Average bbox",
+                    data: [],
+                    fill: true,
+                    backgroundColor: GraphStyles[3].backgroundColor,
+                    borderColor: GraphStyles[3].hoverBackgroundColor
+                }
+            ]
+        };
+
         var entry_count = 0;
         Object.entries(dataset_data).forEach(([key, value]) => {
             class_ratio_settings.labels.push(KeyToClassName(key));
@@ -247,10 +273,16 @@ function SetGraphData(data) {
             height.labels.push(KeyToClassName(key));
             width.datasets[0].data.push(value.width / value.count);
             height.datasets[0].data.push(value.height / value.count);
+
+            bbox.labels.push(KeyToClassName(key));
+            bbox.datasets[0].data.push((value.width / value.count) * (value.height / value.count))
         });
 
         var state = {
             class_ratio_settings: [
+
+            ],
+            avg_bbox: [
 
             ],
             avg_width: [
@@ -263,6 +295,7 @@ function SetGraphData(data) {
         state.class_ratio_settings.push(class_ratio_settings);
         state.avg_width.push(width);
         state.avg_height.push(height);
+        state.avg_bbox.push(bbox);
         state.show_mask = [true, false, false];
         state.style_mask = ["outline-secondary", "outline-secondary", "outline-secondary"];
         state.mot_flag = false;
@@ -272,6 +305,7 @@ function SetGraphData(data) {
         var state = {};
         state.class_ratio_settings = [];
         state.avg_width = [];
+        state.avg_bbox = [];
         state.avg_height = [];
 
         Object.entries(dataset_data).forEach(([subset, subset_data]) => {
@@ -288,7 +322,7 @@ function SetGraphData(data) {
             };
 
             var setting_no = 0;
-            switch(subset) {
+            switch (subset) {
                 case "val": {
                     setting_no = 1;
                     break;
@@ -303,7 +337,7 @@ function SetGraphData(data) {
             }
 
             var entry_count = 0;
-           
+
             Object.entries(subset_data).forEach(([key, value]) => {
                 class_ratio_settings.labels.push(KeyToClassName(key));
                 class_ratio_settings.datasets[0].data.push(value);
@@ -342,7 +376,7 @@ function SetGraphData(data) {
             };
 
             var setting_no = 0;
-            switch(subset) {
+            switch (subset) {
                 case "val": {
                     setting_no = 1;
                     break;
@@ -363,10 +397,11 @@ function SetGraphData(data) {
                 height.datasets[0].data.push(value.height / value.count);
             });
 
+            state.avg_bbox[settings_no] = width * height;
             state.avg_width[setting_no] = width;
             state.avg_height[setting_no] = height;
         });
-        
+
         state.mot_flag = true;
         state.style_mask = ["secondary", "outline-secondary", "outline-secondary"];
         this.setState(state);
