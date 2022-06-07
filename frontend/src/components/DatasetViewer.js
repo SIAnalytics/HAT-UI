@@ -24,7 +24,6 @@ function DatasetViewer() {
         shuffle: false,
         output_path: "",
         convert_path: "",
-        convert_from: "",
         convert_to: "",
         augmentation: {
             horizontal_flipping: 0,

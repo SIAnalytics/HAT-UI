@@ -17,9 +17,8 @@ class DV_13 extends React.Component {
         super(props);
 
         var class_ratio_settings = [];
-        var avg_width = [];
-        var avg_height = [];
         var avg_bbox = [];
+
         for (var i = 0; i < 3; i++) {
             var setting = {
                 labels: [],
@@ -73,16 +72,12 @@ class DV_13 extends React.Component {
             }
 
             class_ratio_settings.push(setting);
-            avg_width.push(width);
             avg_bbox.push(bbox);
-            avg_height.push(height);
         }
 
         this.state = {
             class_ratio_settings: class_ratio_settings,
-            avg_width: avg_width,
             avg_bbox: avg_bbox,
-            avg_height: avg_height,
             mot_flag: true,
             show_mask: [true, false, false],
             style_mask: ["outline-secondary", "outline-secondary", "outline-secondary"]
@@ -221,30 +216,6 @@ function SetGraphData(data) {
                 }
             ]
         };
-        var width = {
-            labels: [],
-            datasets: [
-                {
-                    label: "Average width, px",
-                    data: [],
-                    fill: true,
-                    backgroundColor: GraphStyles[2].backgroundColor,
-                    borderColor: GraphStyles[2].hoverBackgroundColor,
-                }
-            ]
-        }
-        var height = {
-            labels: [],
-            datasets: [
-                {
-                    label: "Average height, px",
-                    data: [],
-                    fill: true,
-                    backgroundColor: GraphStyles[3].backgroundColor,
-                    borderColor: GraphStyles[3].hoverBackgroundColor
-                }
-            ]
-        };
 
         var bbox = {
             labels: [],
@@ -269,11 +240,6 @@ function SetGraphData(data) {
         });
 
         Object.entries(stat_info).forEach(([key, value]) => {
-            width.labels.push(KeyToClassName(key));
-            height.labels.push(KeyToClassName(key));
-            width.datasets[0].data.push(value.width / value.count);
-            height.datasets[0].data.push(value.height / value.count);
-
             bbox.labels.push(KeyToClassName(key));
             bbox.datasets[0].data.push((value.width / value.count) * (value.height / value.count))
         });
@@ -285,16 +251,8 @@ function SetGraphData(data) {
             avg_bbox: [
 
             ],
-            avg_width: [
-
-            ],
-            avg_height: [
-
-            ]
         };
         state.class_ratio_settings.push(class_ratio_settings);
-        state.avg_width.push(width);
-        state.avg_height.push(height);
         state.avg_bbox.push(bbox);
         state.show_mask = [true, false, false];
         state.style_mask = ["outline-secondary", "outline-secondary", "outline-secondary"];
@@ -304,9 +262,7 @@ function SetGraphData(data) {
     } else {
         var state = {};
         state.class_ratio_settings = [];
-        state.avg_width = [];
         state.avg_bbox = [];
-        state.avg_height = [];
 
         Object.entries(dataset_data).forEach(([subset, subset_data]) => {
             var class_ratio_settings = {
@@ -350,23 +306,11 @@ function SetGraphData(data) {
         });
 
         Object.entries(stat_info).forEach(([subset, subset_data]) => {
-            var width = {
+            var bbox = {
                 labels: [],
                 datasets: [
                     {
-                        label: "Average width, px",
-                        data: [],
-                        fill: true,
-                        backgroundColor: GraphStyles[2].backgroundColor,
-                        borderColor: GraphStyles[2].hoverBackgroundColor,
-                    }
-                ]
-            };
-            var height = {
-                labels: [],
-                datasets: [
-                    {
-                        label: "Average height, px",
+                        label: "Average bbox",
                         data: [],
                         fill: true,
                         backgroundColor: GraphStyles[3].backgroundColor,
@@ -391,15 +335,11 @@ function SetGraphData(data) {
             }
 
             Object.entries(subset_data).forEach(([key, value]) => {
-                width.labels.push(KeyToClassName(key));
-                height.labels.push(KeyToClassName(key));
-                width.datasets[0].data.push(value.width / value.count);
-                height.datasets[0].data.push(value.height / value.count);
+                bbox.labels.push(KeyToClassName(key));
+                bbox.datasets[0].data.push((value.width / value.count) * (value.height / value.count));
             });
 
-            state.avg_bbox[settings_no] = width * height;
-            state.avg_width[setting_no] = width;
-            state.avg_height[setting_no] = height;
+            state.avg_bbox[settings_no] = bbox;
         });
 
         state.mot_flag = true;
