@@ -33,7 +33,7 @@ class DV_123456 extends React.Component {
     }
 
     OnDirectoryChange = (val) => {
-        this.context.DatasetState.video_path = val;
+        this.props.setVideoPath(val)
 
         var state = {
             spinner_hidden: false
@@ -56,6 +56,7 @@ class DV_123456 extends React.Component {
                 }
 
                 this.setState(state);
+                this.props.setVideoCount(res.data.video_info.length)
 
                 SetGraphData(res.data);
             })

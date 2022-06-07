@@ -31,11 +31,12 @@ class DV_78910 extends React.Component {
     }
 
     SetDatasetSeparationParameters(data) {
-        if (this.context.DatasetState.video_path == "") {
+        console.log(this.props.videoPath)
+        if (this.props.videoPath == "") {
             alert("Video path must be specified");
             return false;
         }
-        data.append("video_path", this.context.DatasetState.video_path);
+        data.append("video_path", this.props.videoPath);
 
         // Check split rate correctness
         let train_rate = parseInt(this.context.DatasetState.train_rate);
@@ -54,6 +55,11 @@ class DV_78910 extends React.Component {
 
         if (test_rate < 0) {
             alert("[ERROR] Test rate must be more or equal to zero");
+            return false;
+        }
+
+        if (train_rate + val_rate + test_rate != this.props.videoCount) {
+            alert("[ERROR] train + validation + test rates must be equal to total video count");
             return false;
         }
 
@@ -272,6 +278,11 @@ class DV_78910 extends React.Component {
                 "함수": "Scale",
                 "적용률": 0,
                 "비율": "1"
+            },
+            {
+                "함수": "Rotate",
+                "적용률": 0,
+                "비율": "1"
             }
         ],
         columns: [
@@ -298,7 +309,7 @@ class DV_78910 extends React.Component {
         let key_name = '함수';
         return (
             <>
-                <h5><b>데이터셋 분리</b></h5>
+                <h5><b>{`데이터셋 분리: ${this.props.videoCount}개`}</b></h5>
                 <InputGroup className="ratio-settings w-75 p-2 pb-0">
                     <Form.Label className="w-30" style={{ marginLeft: 5 }}>
                         학습:

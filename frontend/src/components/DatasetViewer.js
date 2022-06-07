@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react"
 import {
     Container,
     Row,
@@ -18,7 +18,6 @@ import {
 
 function DatasetViewer() {
     const DatasetState = {
-        video_path: "",
         train_rate: 0,
         validation_rate: 0,
         test_rate: 0,
@@ -39,18 +38,27 @@ function DatasetViewer() {
         }
     };
 
+    const [videoCount, setVideoCount] = useState(0)
+    const [videoPath, setVideoPath] = useState(0)
+
     return (
         <Container>
             <DatasetProvider value={{ DatasetState }}>
                 <Row>
                     <div className="col-md-6">
                         <div className="options-content">
-                            <DV_123456 />
+                            <DV_123456
+                                setVideoCount={setVideoCount}
+                                setVideoPath={setVideoPath}
+                            />
                         </div>
                     </div>
                     <div className="col-md-6">
                         <div className="options-content">
-                            <DV_78910 />
+                            <DV_78910
+                                videoCount={videoCount}
+                                videoPath={videoPath}
+                            />
                         </div>
                         <br></br>
                         <div className="options-content">
