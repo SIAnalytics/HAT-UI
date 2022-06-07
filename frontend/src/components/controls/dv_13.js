@@ -18,6 +18,7 @@ class DV_13 extends React.Component {
 
         var class_ratio_settings = [];
         var avg_bbox = [];
+        var bar_class_ratio = [];
 
         for (var i = 0; i < 3; i++) {
             var setting = {
@@ -32,11 +33,11 @@ class DV_13 extends React.Component {
                 ]
             }
 
-            var width = {
+            var bar_class_data = {
                 labels: [],
                 datasets: [
                     {
-                        label: "Average width, px",
+                        label: "Class ratio",
                         data: [],
                         fill: true,
                         backgroundColor: "",
@@ -58,26 +59,16 @@ class DV_13 extends React.Component {
                 ]
             }
 
-            var height = {
-                labels: [],
-                datasets: [
-                    {
-                        label: "Average height, px",
-                        data: [],
-                        fill: true,
-                        backgroundColor: "",
-                        borderColor: "",
-                    }
-                ]
-            }
-
             class_ratio_settings.push(setting);
             avg_bbox.push(bbox);
+            bar_class_ratio.push(bar_class_data);
+
         }
 
         this.state = {
             class_ratio_settings: class_ratio_settings,
             avg_bbox: avg_bbox,
+            bar_class_ratio: bar_class_ratio,
             mot_flag: true,
             show_mask: [true, false, false],
             style_mask: ["outline-secondary", "outline-secondary", "outline-secondary"]
@@ -114,12 +105,15 @@ class DV_13 extends React.Component {
 
                 <Form className='d-flex'>
                     {this.state.show_mask[0] ? <PieChart label="클래스 분포" graph_data={this.state.class_ratio_settings[0]} chart_type="chart-style-large" className="col-md-4" /> : null}
+                    {this.state.show_mask[0] ? <BarChart label="클래스 분포" graph_data={this.state.bar_class_ratio[0]} className="col-md-4" chart_type="chart-style-large" /> : null}
                     {this.state.show_mask[0] ? <BarChart label="영상 별 객체수" graph_data={this.state.avg_bbox[0]} className="col-md-4" chart_type="chart-style-large" /> : null}
 
                     {this.state.show_mask[1] ? <PieChart label="클래스 분포" graph_data={this.state.class_ratio_settings[1]} chart_type="chart-style-large" className="col-md-4" /> : null}
+                    {this.state.show_mask[1] ? <BarChart label="클래스 분포" graph_data={this.state.bar_class_ratio[1]} className="col-md-4" chart_type="chart-style-large" /> : null}
                     {this.state.show_mask[1] ? <BarChart label="영상 별 객체수" graph_data={this.state.avg_bbox[1]} className="col-md-4" chart_type="chart-style-large" /> : null}
 
                     {this.state.show_mask[2] ? <PieChart label="클래스 분포" graph_data={this.state.class_ratio_settings[2]} className="col-md-4" chart_type="chart-style-large" /> : null}
+                    {this.state.show_mask[2] ? <BarChart label="클래스 분포" graph_data={this.state.bar_class_ratio[2]} className="col-md-4" chart_type="chart-style-large" /> : null}
                     {this.state.show_mask[2] ? <BarChart label="영상 별 객체수" graph_data={this.state.avg_bbox[2]} className="col-md-4" chart_type="chart-style-large" /> : null}
                 </Form>
             </>
@@ -230,12 +224,30 @@ function SetGraphData(data) {
             ]
         };
 
+        var bar_class_data = {
+            labels: [],
+            datasets: [
+                {
+                    label: "Class ratio",
+                    data: [],
+                    fill: true,
+                    backgroundColor: [],
+                    borderColor: []
+                }
+            ]
+        };
+
         var entry_count = 0;
         Object.entries(dataset_data).forEach(([key, value]) => {
             class_ratio_settings.labels.push(KeyToClassName(key));
             class_ratio_settings.datasets[0].data.push(value);
             class_ratio_settings.datasets[0].backgroundColor.push(GraphStyles[entry_count % GraphStyles.length].backgroundColor);
             class_ratio_settings.datasets[0].hoverBackgroundColor.push(GraphStyles[entry_count % GraphStyles.length].hoverBackgroundColor);
+
+
+            bar_class_data.labels.push(KeyToClassName(key));
+            bar_class_data.datasets[0].data.push(value);
+            bar_class_data.datasets[0].backgroundColor.push(GraphStyles[4].backgroundColor);
             entry_count += 1;
         });
 
@@ -248,12 +260,16 @@ function SetGraphData(data) {
             class_ratio_settings: [
 
             ],
+            bar_class_ratio: [
+
+            ],
             avg_bbox: [
 
             ],
         };
         state.class_ratio_settings.push(class_ratio_settings);
         state.avg_bbox.push(bbox);
+        state.bar_class_ratio.push(bar_class_data);
         state.show_mask = [true, false, false];
         state.style_mask = ["outline-secondary", "outline-secondary", "outline-secondary"];
         state.mot_flag = false;
@@ -273,6 +289,19 @@ function SetGraphData(data) {
                         backgroundColor: [],
                         hoverBackgroundColor: [],
                         label: ""
+                    }
+                ]
+            };
+
+            var bar_class_data = {
+                labels: [],
+                datasets: [
+                    {
+                        label: "Class ratio",
+                        data: [],
+                        fill: true,
+                        backgroundColor: [],
+                        borderColor: []
                     }
                 ]
             };
@@ -299,10 +328,15 @@ function SetGraphData(data) {
                 class_ratio_settings.datasets[0].data.push(value);
                 class_ratio_settings.datasets[0].backgroundColor.push(GraphStyles[entry_count % GraphStyles.length].backgroundColor);
                 class_ratio_settings.datasets[0].hoverBackgroundColor.push(GraphStyles[entry_count % GraphStyles.length].hoverBackgroundColor);
+
+                bar_class_data.labels.push(KeyToClassName(key));
+                bar_class_data.datasets[0].data.push(value);
+                bar_class_data.datasets[0].backgroundColor.push(GraphStyles[3].backgroundColor);
                 entry_count += 1;
             });
 
             state.class_ratio_settings[setting_no] = class_ratio_settings;
+            state.bar_class_ratio[setting_no] = bar_class_data;
         });
 
         Object.entries(stat_info).forEach(([subset, subset_data]) => {
