@@ -13,6 +13,8 @@ class Common(views.APIView):
             return Response(utils.GetRootContent())
         elif req == "GET_DIRECTORY_CONTENT":
             return Response(utils.GetDirectoryContent(request.GET.get("path"), int(request.GET.get("parent")), int(request.GET.get("next_id"))))
+        elif req == "GET_IMAGE_URL":
+            return Response(utils.GetImageURL(request.GET.get("path")))
         else:
             print("[ERROR] Unsupported request content {}".format(req))
 

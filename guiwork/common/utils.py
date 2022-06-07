@@ -84,3 +84,9 @@ class CommonUtils:
                 })
 
         return ret_content
+    
+    @staticmethod
+    def GetImageURL(path):
+        ret_content = {"url": path.replace(settings.MEDIA_ROOT, settings.MEDIA_URL)}
+
+        return ret_content

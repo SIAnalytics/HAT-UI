@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-=wnaf35=wp*lnj++e4&8=+%zpw$zb1*9k#gx-b*zlo7+nitt&k'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '10.10.100.121']
+ALLOWED_HOSTS = ['localhost', '10.10.100.121', 'dev-cluster.sia-service.kr']
 
 
 # Application definition
@@ -215,3 +215,6 @@ ANACONDA_PYTHON_EXE = "/opt/conda/bin/python3"
 
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = False
+
+MEDIA_ROOT = ROOT_STORAGE_PATH
+MEDIA_URL = '/static_data_access/'
