@@ -1,4 +1,5 @@
 from rest_framework import views
+from rest_framework import status
 from rest_framework.response import Response
 from .utils import CommonUtils as utils
 import json
@@ -22,10 +23,11 @@ class Common(views.APIView):
 
     #POST
     def post(self, request):
-        content = {
-            "type": "POST",
-            "purpose": "REST API POST"
-        }
+        req = request.POST.get("req")
 
-        return Response(content)
+        if req == "CREATE_NEW_DIRECTORY":
+            return Response(utils.CreateNewDirectory(request.POST.get("path"), request.POST.get("new_folder")))
+
+        res = {"code:": 400, "message": "Unsupported POST request content"}
+        return Response(data=json.dumps(res), status=status.HTTP_400_BAD_REQUEST)
 

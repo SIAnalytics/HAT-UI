@@ -26,8 +26,6 @@ class DatasetViewer(views.APIView):
     def post(self, request):
         req = request.POST.get("req")
 
-        print(req)
-
         if req == "RUN_DATASET_SEPARATION":
             for key in request.POST.keys():
                 print("{} {}".format(key, request.POST.get(key)))

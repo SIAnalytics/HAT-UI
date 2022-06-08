@@ -84,6 +84,18 @@ class CommonUtils:
                 })
 
         return ret_content
+
+    @staticmethod
+    def CreateNewDirectory(path, new_folder):
+        if path == "":
+            path = settings.ROOT_STORAGE_PATH
+
+        path_to_create = os.path.join(path, new_folder)
+        if not os.path.exists(path_to_create):
+            os.makedirs(path_to_create)
+
+        ret_content = {}
+        return ret_content
     
     @staticmethod
     def GetImageURL(path):

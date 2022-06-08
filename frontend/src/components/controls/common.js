@@ -14,11 +14,17 @@ import {
 
 import BootstrapTable from 'react-bootstrap-table-next';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFolder } from "@fortawesome/free-regular-svg-icons";
+import {
+    faFolder,
+    faPlusSquare,
+    faSave
+} from "@fortawesome/free-regular-svg-icons";
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import cellEditFactory from 'react-bootstrap-table2-editor';
 
 import { TrainerContext } from '../TrainerContext';
+import config from 'react-global-configuration';
+import axios from "axios";
 
 class TextInput extends React.Component {
     static contextType = TrainerContext;
@@ -106,7 +112,12 @@ class DirectoryPicker extends React.Component {
     state = {
         isOpen: false,
         val: "",
-        to_save: false
+        to_save: false,
+        inputVisible: false,
+        newFolder: "",
+        createFolder: "",
+        currDir: "",
+        createBasePath: ""
     };
 
     openModal = () => this.setState({ isOpen: true });
@@ -121,6 +132,42 @@ class DirectoryPicker extends React.Component {
         this.setState({ isOpen: false });
     }
 
+    openAddDirectory = () => {
+        this.setState({ ...this.state, inputVisible: true })
+    }
+
+    closeAddDirectory = () => {
+        this.setState({ ...this.state, inputVisible: false, newFolder: "" })
+    }
+
+    handleNewFolderChange = (e) => {
+        this.setState({ ...this.state, newFolder: e.target.value })
+    }
+
+    createNewDirectory = () => {
+        var url = config.get("django_url") + "/common/rest";
+        let data = new FormData();
+
+        if (this.state.newFolder == "") {
+            alert("[ERROR] New directory name must be specified")
+            return
+        }
+
+        var _createFolder = this.state.newFolder
+        data.append("path", this.state.createBasePath);
+        data.append("new_folder", this.state.newFolder);
+        data.append("req", "CREATE_NEW_DIRECTORY");
+
+        axios
+            .post(url, data)
+            .then((res) => {
+                console.log(res)
+                this.setState({ ...this.state, createFolder: _createFolder })
+                this.setState({ ...this.state, inputVisible: false, newFolder: "" })
+            })
+            .catch((err => alert(err)));
+    }
+
     // Function is called from DirectoryPickerDialog
     setPath = (new_path) => {
         if (this.state.to_save == true) {
@@ -129,8 +176,8 @@ class DirectoryPicker extends React.Component {
         }
     }
 
-    getPath = () => {
-        return this.state.val;
+    setCreateBasePath = (new_path) => {
+        this.setState({ createBasePath: new_path });
     }
 
     render() {
@@ -164,14 +211,47 @@ class DirectoryPicker extends React.Component {
                         <Modal.Title>경로를 선택</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <DirectoryPickerDialog setPath={this.setPath} />
+                        <DirectoryPickerDialog
+                            setPath={this.setPath}
+                            setCreateBasePath={this.setCreateBasePath}
+                            createFolder={this.state.createFolder}
+                        />
+                        {this.props.canCreateDirectory &&
+                            <InputGroup className="w-50">
+                                <Button
+                                    variant="warning"
+                                    onClick={this.openAddDirectory}
+                                    title={"새 폴더"}
+                                >
+                                    <FontAwesomeIcon icon={faPlusSquare} />
+                                </Button>
+                                {this.state.inputVisible &&
+                                    <>
+                                        <Form.Control
+                                            type="text"
+                                            value={this.state.newFolder}
+                                            onChange={(event) => this.handleNewFolderChange(event)}
+                                        />
+                                        <Button
+                                            variant="success"
+                                            title={"저장"}
+                                            onClick={this.createNewDirectory}
+                                        >
+                                            <FontAwesomeIcon icon={faSave} />
+                                        </Button>
+                                        <Button
+                                            variant="danger"
+                                            onClick={this.closeAddDirectory}
+                                            title={"취소"}
+                                        >
+                                            {"X"}
+                                        </Button>
+                                    </>
+                                }
+                            </InputGroup>
+                        }
                     </Modal.Body>
                     <Modal.Footer>
-                        {this.props.canCreateDirectory &&
-                            <Button variant="warning">
-                                {"새 폴더"}
-                            </Button>
-                        }
                         <Button variant="primary" onClick={this.saveAndClose}>
                             선택
                         </Button>
