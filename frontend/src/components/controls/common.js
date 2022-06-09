@@ -176,7 +176,6 @@ class DirectoryPicker extends React.Component {
     }
 
     setCreateBasePath = (new_path) => {
-        //this.setState({ createBasePath: new_path });
         this.createBasePath = new_path
     }
 
