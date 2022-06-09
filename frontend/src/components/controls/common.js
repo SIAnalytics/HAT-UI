@@ -107,6 +107,7 @@ class DirectoryPicker extends React.Component {
         this.name = props.name;
         this.style = props.style;
         this.addIcon = props.addIcon;
+        this.createBasePath = "";
     }
 
     state = {
@@ -116,8 +117,7 @@ class DirectoryPicker extends React.Component {
         inputVisible: false,
         newFolder: "",
         createFolder: "",
-        currDir: "",
-        createBasePath: ""
+        currDir: ""
     };
 
     openModal = () => this.setState({ isOpen: true });
@@ -154,14 +154,13 @@ class DirectoryPicker extends React.Component {
         }
 
         var _createFolder = this.state.newFolder
-        data.append("path", this.state.createBasePath);
+        data.append("path", this.createBasePath);
         data.append("new_folder", this.state.newFolder);
         data.append("req", "CREATE_NEW_DIRECTORY");
 
         axios
             .post(url, data)
             .then((res) => {
-                console.log(res)
                 this.setState({ ...this.state, createFolder: _createFolder })
                 this.setState({ ...this.state, inputVisible: false, newFolder: "" })
             })
@@ -177,7 +176,8 @@ class DirectoryPicker extends React.Component {
     }
 
     setCreateBasePath = (new_path) => {
-        this.setState({ createBasePath: new_path });
+        //this.setState({ createBasePath: new_path });
+        this.createBasePath = new_path
     }
 
     render() {
