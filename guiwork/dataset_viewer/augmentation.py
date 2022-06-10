@@ -137,3 +137,59 @@ def Rotate(img: Tensor, angle: float, interpolation: InterpolationMode = Interpo
     matrix = _get_inverse_affine_matrix(center_f, -angle, [0.0, 0.0], 1.0, [0.0, 0.0])
 
     return F_t.rotate(img,  matrix=matrix, interpolation=interpolation.value, expand=True, fill=[0.0, 0.0, 0.0])
+
+def ApplyRotationToLabel(angle, obj_x, obj_y, obj_w, obj_h, width, height):
+    # 1. Get corners
+    obj_h2 = int(obj_h / 2)
+    obj_w2 = int(obj_w / 2)
+
+    x1 = obj_x - obj_w2
+    y1 = obj_y + obj_h2
+
+    x2 = obj_x + obj_w2
+    y2 = obj_y + obj_h2
+
+    x3 = obj_x + obj_w2
+    y3 = obj_x - obj_h2
+
+    x4 = obj_x - obj_w2
+    y4 = obj_y - obj_h2
+
+    corners = np.hstack((x1, y1, x2, y2, x3, y3, x4, y4))
+
+    # 2. Rotate bounding box
+    cx = int(width / 2)
+    cy = int(height / 2)
+
+    corners = corners.reshape(-1, 2)
+    corners = np.hstack((corners, np.ones((corners.shape[0],1), dtype = type(corners[0][0]))))
+
+    M = cv2.getRotationMatrix2D((cx, cy), angle, 1.0)
+
+    cos = np.abs(M[0, 0])
+    sin = np.abs(M[0, 1])
+
+    nW = int((height * sin) + (width * cos))
+    nH = int((height * cos) + (width * sin))
+
+    M[0, 2] += (nW / 2) - cx
+    M[1, 2] += (nH / 2) - cy
+
+    calculated = np.dot(M,corners.T).T
+    calculated = calculated.reshape(-1,8)
+
+    # 3. Get enclosing box
+    x_ = calculated[:, [0, 2, 4, 6]]
+    y_ = calculated[:, [1, 3, 5, 7]]
+
+    xmin = np.min(x_,1).reshape(-1,1)
+    ymin = np.min(y_,1).reshape(-1,1)
+    xmax = np.max(x_,1).reshape(-1,1)
+    ymax = np.max(y_,1).reshape(-1,1)
+
+    obj_x = int((xmin + xmax) / 2) 
+    obj_y = int((ymin + ymax) / 2)
+    obj_w = int(xmax - xmin)
+    obj_h = int(ymax - ymin)
+    
+    return obj_x, obj_y, obj_w, obj_h

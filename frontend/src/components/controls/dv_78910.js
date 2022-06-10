@@ -134,6 +134,16 @@ class DV_78910 extends React.Component {
         }
         this.context.DatasetState.augmentation.scale_factor = val;
 
+        val = parseFloat(this.state.content[5]["적용률"]);
+        if (val < 0 || val > 100) {
+            alert("[ERROR] Rotate factor must be in range [0, 100]");
+            return false;
+        }
+        this.context.DatasetState.augmentation.rotate = val;
+
+        val = parseFloat(this.state.content[5]["비율"]);
+        this.context.DatasetState.augmentation.rotate_factor = val;
+
         data.append("augmentation", JSON.stringify(this.context.DatasetState.augmentation));
 
         return true;
@@ -250,7 +260,6 @@ class DV_78910 extends React.Component {
     }
 
     HandleOutputDirectoryChange = (val) => {
-        console.log("DIRECTORY CHANGE")
         this.context.DatasetState.output_path = val;
     }
 

@@ -32,9 +32,11 @@ function DatasetViewer() {
             brightness: 0,
             contrast: 0,
             scale: 0,
+            rotate: 0,
             brightness_factor: 0,
             contrast_factor: 0,
-            scale_factor: 0
+            scale_factor: 0,
+            rotate_factor: 0,
         }
     };
 

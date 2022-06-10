@@ -166,6 +166,9 @@ class DatasetBuilder:
             obj_w = obj_w * aug_params["scale_factor"]
             obj_h = obj_h * aug_params["scale_factor"]            
 
+        if aug_params["rotate"] > 0 and frame_no % aug_params["rotate"] == 0:
+            obj_x, obj_y, obj_w, obj_h = augmentation.ApplyRotationToLabel(aug_params["rotate_factor"], obj_x, obj_y, obj_w, obj_h, width, height)
+
         return obj_x, obj_y, obj_w, obj_h
 
     def FlushFramesToDisk(self, gpu_video, start_idx, part, video_name, aug_apply_flag, aug_params):
@@ -263,6 +266,7 @@ class DatasetBuilder:
 
             print("Process label file...")
 
+            print("VIDEO SHAPE = {}".format(gpu_video.shape))
             for i in range(gpu_video.shape[0]):
                 # Write labels information
                 label_data = labels[labels['Frame'] == i]
