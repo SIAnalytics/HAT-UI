@@ -133,15 +133,15 @@ class DirectoryPicker extends React.Component {
     }
 
     openAddDirectory = () => {
-        this.setState({ ...this.state, inputVisible: true })
+        this.setState({ inputVisible: true })
     }
 
     closeAddDirectory = () => {
-        this.setState({ ...this.state, inputVisible: false, newFolder: "" })
+        this.setState({ inputVisible: false, newFolder: "" })
     }
 
     handleNewFolderChange = (e) => {
-        this.setState({ ...this.state, newFolder: e.target.value })
+        this.setState({ newFolder: e.target.value })
     }
 
     createNewDirectory = () => {
@@ -161,8 +161,8 @@ class DirectoryPicker extends React.Component {
         axios
             .post(url, data)
             .then((res) => {
-                this.setState({ ...this.state, createFolder: _createFolder })
-                this.setState({ ...this.state, inputVisible: false, newFolder: "" })
+                this.setState({ createFolder: _createFolder })
+                this.setState({ inputVisible: false, newFolder: "" })
             })
             .catch((err => alert(err)));
     }
@@ -345,6 +345,10 @@ class ConversionComponent extends React.Component {
         }
     }
 
+    setCreateBasePath = (new_path) => {
+
+    }
+
     render() {
         return (
             <>
@@ -369,7 +373,11 @@ class ConversionComponent extends React.Component {
                         <Modal.Title>Pick the directory</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <DirectoryPickerDialog canCreateDirectory={true} setPath={this.setPath} />
+                        <DirectoryPickerDialog
+                            canCreateDirectory={true}
+                            setPath={this.setPath}
+                            setCreateBasePath={this.setCreateBasePath}
+                        />
                     </Modal.Body>
                     <Modal.Footer>
                         <Button variant="primary" onClick={this.saveAndClose}>

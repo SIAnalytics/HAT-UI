@@ -20,6 +20,10 @@ import {
     SetGraphData
 } from "./dv_13"
 
+import {
+    SetVideoCount
+} from "./dv_78910"
+
 class DV_123456 extends React.Component {
     static contextType = DatasetContext;
 
@@ -33,7 +37,7 @@ class DV_123456 extends React.Component {
     }
 
     OnDirectoryChange = (val) => {
-        this.props.setVideoPath(val)
+        this.context.DatasetState.video_path = val;
 
         var state = {
             spinner_hidden: false
@@ -56,7 +60,8 @@ class DV_123456 extends React.Component {
                 }
 
                 this.setState(state);
-                this.props.setVideoCount(res.data.video_info.length)
+                SetVideoCount(res.data.video_info.length)
+                this.context.DatasetState.video_count = res.data.video_info.length;
 
                 SetGraphData(res.data);
             })

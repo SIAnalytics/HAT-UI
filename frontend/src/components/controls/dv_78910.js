@@ -28,15 +28,16 @@ class DV_78910 extends React.Component {
 
     constructor(props) {
         super(props);
+
+        SetVideoCount = SetVideoCount.bind(this);
     }
 
     SetDatasetSeparationParameters(data) {
-        console.log(this.props.videoPath)
-        if (this.props.videoPath == "") {
+        if (this.context.DatasetState.video_path == "") {
             alert("Video path must be specified");
             return false;
         }
-        data.append("video_path", this.props.videoPath);
+        data.append("video_path", this.context.DatasetState.video_path);
 
         // Check split rate correctness
         let train_rate = parseInt(this.context.DatasetState.train_rate);
@@ -58,7 +59,7 @@ class DV_78910 extends React.Component {
             return false;
         }
 
-        if (train_rate + val_rate + test_rate != this.props.videoCount) {
+        if (train_rate + val_rate + test_rate != this.context.DatasetState.video_count) {
             alert("[ERROR] train + validation + test rates must be equal to total video count");
             return false;
         }
@@ -249,6 +250,7 @@ class DV_78910 extends React.Component {
     }
 
     HandleOutputDirectoryChange = (val) => {
+        console.log("DIRECTORY CHANGE")
         this.context.DatasetState.output_path = val;
     }
 
@@ -302,14 +304,15 @@ class DV_78910 extends React.Component {
         progress_variant: "light",
         run_button_disabled: false,
         animated: false,
-        progress_label: ""
+        progress_label: "",
+        video_count: 0,
     }
 
     render() {
         let key_name = '함수';
         return (
             <>
-                <h5><b>{`데이터셋 분리: ${this.props.videoCount}개`}</b></h5>
+                <h5><b>{`데이터셋 분리: ${this.state.video_count}개`}</b></h5>
                 <InputGroup className="ratio-settings w-75 p-2 pb-0">
                     <Form.Label className="w-30" style={{ marginLeft: 5 }}>
                         학습:
@@ -385,4 +388,15 @@ class DV_78910 extends React.Component {
     }
 }
 
+function SetVideoCount(video_count) {
+    var state = {
+        video_count: video_count
+    }
+
+    this.setState(state);
+}
+
 export default DV_78910;
+export {
+    SetVideoCount,
+}
