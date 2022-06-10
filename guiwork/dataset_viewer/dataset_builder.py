@@ -96,9 +96,11 @@ class DatasetBuilder:
             "brightness": -1,
             "contrast": -1,
             "scale": -1,
+            "rotate": -1,
             "contrast_factor": float(aug_settings["contrast_factor"]),
             "brightness_factor": float(aug_settings["brightness_factor"]),
-            "scale_factor": float(aug_settings["scale_factor"])
+            "scale_factor": float(aug_settings["scale_factor"]),
+            "rotate_factor": float(aug_settings["rotate_factor"]),
         }
         apply_flag = False
 
@@ -122,6 +124,10 @@ class DatasetBuilder:
             params["scale"] = int(100 / aug_settings["scale"])
             apply_flag = True
 
+        if aug_settings["rotate"] > 0:
+            params["rotate"] = int(100 / aug_settings["rotate"])
+            apply_flag = True
+
         return params, apply_flag
 
     def ApplyAugmentationToFrame(self, frame, frame_no, aug_params):
@@ -140,7 +146,10 @@ class DatasetBuilder:
         if aug_params["scale"] > 0 and frame_no % aug_params["scale"] == 0:
             new_size = [int(aug_params["scale_factor"] * frame.size(dim = 1)), int(aug_params["scale_factor"] * frame.size(dim = 2))]
             frame = augmentation.Scale(frame, new_size)
-        
+
+        if aug_params["rotate"] > 0 and frame_no % aug_params["rotate"] == 0:
+            frame = augmentation.Rotate(frame, aug_params["rotate_factor"])
+
         frame_bgr = augmentation.TensorRGBToFrameBGR(frame.cpu())
         return frame_bgr
 
@@ -162,7 +171,7 @@ class DatasetBuilder:
     def FlushFramesToDisk(self, gpu_video, start_idx, part, video_name, aug_apply_flag, aug_params):
         print("Process start working from [{}] SHAPE = {}".format(start_idx, gpu_video.shape))
 
-        for i in range(gpu_video.shape[0]):
+        for i in range(50): #gpu_video.shape[0]):
           
             frame = gpu_video[i].permute(2, 0, 1)
 
@@ -172,6 +181,8 @@ class DatasetBuilder:
             # Apply augmentation to frame
             if aug_apply_flag == True:
                 frame = self.ApplyAugmentationToFrame(frame, i + start_idx, aug_params)
+            else:
+                frame = augmentation.TensorRGBToFrameBGR(frame.cpu())
 
             cv2.imwrite(frame_out_path, frame)   
 
@@ -293,19 +304,11 @@ class DatasetBuilder:
 
         # Split files by rate
         files_count = len(files_list)
-        total = int(self.args.train_rate) + int(self.args.validation_rate) + int(self.args.test_rate)
 
-        if int(self.args.validation_rate) == 0 and int(self.args.test_rate) == 0:
-            train_count = files_count
-        else:
-            train_count = math.ceil(files_count * int(self.args.train_rate) / total)
+        train_count = int(self.args.train_rate)
+        val_count = int(self.args.validation_rate)
+        test_count = int(self.args.test_rate)
 
-        if int(self.args.test_rate) == 0:
-            val_count = files_count - train_count
-        else:
-            val_count = math.floor(files_count * int(self.args.validation_rate) / total)
-
-        test_count = math.floor(files_count * int(self.args.test_rate) / total)
 
         print("Creating target directories...")
         self.CreateTargetDirectories()
@@ -325,10 +328,12 @@ class DatasetBuilder:
 
         # Process train set
         self.ProcessFilesSet("train", dict(list(files_list.items())[ : train_count]), my_device)
+        '''
         # Process validation set
         self.ProcessFilesSet("val", dict(list(files_list.items())[train_count : train_count + val_count]), my_device)
         # Process test set
         self.ProcessFilesSet("test", dict(list(files_list.items())[train_count + val_count : ]), my_device)
+        '''
 
 def main(args):
     builder = DatasetBuilder(args)

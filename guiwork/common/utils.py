@@ -91,6 +91,8 @@ class CommonUtils:
             path = settings.ROOT_STORAGE_PATH
 
         path_to_create = os.path.join(path, new_folder)
+
+        print(path_to_create)
         if not os.path.exists(path_to_create):
             os.makedirs(path_to_create)
 
