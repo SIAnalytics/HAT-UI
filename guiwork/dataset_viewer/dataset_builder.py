@@ -131,51 +131,63 @@ class DatasetBuilder:
         return params, apply_flag
 
     def ApplyAugmentationToFrame(self, frame, frame_no, aug_params):
+        is_augmented = False
         if aug_params["brightness"] > 0 and frame_no % aug_params["brightness"] == 0:
             frame = augmentation.AdjustBrightness(frame, aug_params["brightness_factor"])
+            is_augmented = True
 
         if aug_params["contrast"] > 0 and frame_no % aug_params["contrast"] == 0:
             frame = augmentation.AdjustContrast(frame, aug_params["contrast_factor"])
+            is_augmented = True
 
         if aug_params["horizontal_flipping"] > 0 and frame_no % aug_params["horizontal_flipping"] == 0:
             frame = augmentation.HorizontalFlip(frame)
+            is_augmented = True
         
         if aug_params["vertical_flipping"] > 0 and frame_no % aug_params["vertical_flipping"] == 0:
             frame = augmentation.VerticalFlip(frame)
+            is_augmented = True
         
         if aug_params["scale"] > 0 and frame_no % aug_params["scale"] == 0:
             new_size = [int(aug_params["scale_factor"] * frame.size(dim = 1)), int(aug_params["scale_factor"] * frame.size(dim = 2))]
             frame = augmentation.Scale(frame, new_size)
+            is_augmented = True
 
         if aug_params["rotate"] > 0 and frame_no % aug_params["rotate"] == 0:
             frame = augmentation.Rotate(frame, aug_params["rotate_factor"])
+            is_augmented = True
 
         frame_bgr = augmentation.TensorRGBToFrameBGR(frame.cpu())
-        return frame_bgr
+        return frame_bgr, is_augmented
 
     def ApplyAugmentationToLabel(self, frame_no, aug_params, obj_x, obj_y, obj_w, obj_h, width, height):
+        is_augmented = False
         if aug_params["horizontal_flipping"] > 0 and frame_no % aug_params["horizontal_flipping"] == 0:
             obj_x = width - obj_x
+            is_augmented = True
         
         if aug_params["vertical_flipping"] > 0 and frame_no % aug_params["vertical_flipping"] == 0:
             obj_y = height - obj_y
+            is_augmented = True
 
         if aug_params["scale"] > 0 and frame_no % aug_params["scale"] == 0:
             obj_x = obj_x * aug_params["scale_factor"]
             obj_y = obj_y * aug_params["scale_factor"]
             obj_w = obj_w * aug_params["scale_factor"]
             obj_h = obj_h * aug_params["scale_factor"]            
+            is_augmented = True
 
         if aug_params["rotate"] > 0 and frame_no % aug_params["rotate"] == 0:
             obj_x, obj_y, obj_w, obj_h = augmentation.ApplyRotationToLabel(aug_params["rotate_factor"], obj_x, obj_y, obj_w, obj_h, width, height)
+            is_augmented = True
 
-        return obj_x, obj_y, obj_w, obj_h
+        return obj_x, obj_y, obj_w, obj_h, is_augmented
 
     def FlushFramesToDisk(self, gpu_video, start_idx, part, video_name, aug_apply_flag, aug_params):
         print("Process start working from [{}] SHAPE = {}".format(start_idx, gpu_video.shape))
 
-        for i in range(50): #gpu_video.shape[0]):
-          
+        for i in range(gpu_video.shape[0]):
+            need_writing = False
             frame = gpu_video[i].permute(2, 0, 1)
 
             # Check where the frame should be written
@@ -183,11 +195,19 @@ class DatasetBuilder:
 
             # Apply augmentation to frame
             if aug_apply_flag == True:
-                frame = self.ApplyAugmentationToFrame(frame, i + start_idx, aug_params)
+                # Write original image
+                orig_frame = augmentation.TensorRGBToFrameBGR(frame.cpu())
+                cv2.imwrite(frame_out_path, orig_frame)
+
+                # Write augmented image
+                frame_out_path = os.path.join(self.args.output_path, part, "imgs", video_name, "{0:08d}_aug.png".format(i + start_idx))
+                frame, need_writing = self.ApplyAugmentationToFrame(frame, i + start_idx, aug_params)
             else:
                 frame = augmentation.TensorRGBToFrameBGR(frame.cpu())
+                need_writing = True
 
-            cv2.imwrite(frame_out_path, frame)   
+            if need_writing:
+                cv2.imwrite(frame_out_path, frame)   
 
     def ConvertClassIDToMOT(self, class_id):
         if class_id == 10:
@@ -266,7 +286,6 @@ class DatasetBuilder:
 
             print("Process label file...")
 
-            print("VIDEO SHAPE = {}".format(gpu_video.shape))
             for i in range(gpu_video.shape[0]):
                 # Write labels information
                 label_data = labels[labels['Frame'] == i]
@@ -281,9 +300,12 @@ class DatasetBuilder:
                     obj_h = int(round(float(obj_outer[1].split('/')[1]))) - obj_y
 
                     if aug_apply_flag == True:
-                        obj_x, obj_y, obj_w, obj_h = self.ApplyAugmentationToLabel(i, aug_params, obj_x, obj_y, obj_w, obj_h, width, height)
-
-                    label_file.write(f"{i}, {obj_id}, {obj_x}, {obj_y}, {obj_w}, {obj_h}, 1, {class_id}, 1, 1\n")
+                        label_file.write(f"{i}, {obj_id}, {obj_x}, {obj_y}, {obj_w}, {obj_h}, 1, {class_id}, 1, 1\n")
+                        obj_x, obj_y, obj_w, obj_h, need_to_write = self.ApplyAugmentationToLabel(i, aug_params, obj_x, obj_y, obj_w, obj_h, width, height)
+                        if need_to_write:
+                            label_file.write(f"{i}_aug, {obj_id}, {obj_x}, {obj_y}, {obj_w}, {obj_h}, 1, {class_id}, 1, 1\n")
+                    else:
+                        label_file.write(f"{i}, {obj_id}, {obj_x}, {obj_y}, {obj_w}, {obj_h}, 1, {class_id}, 1, 1\n")
             
             # Close label file
             label_file.close()
@@ -332,12 +354,10 @@ class DatasetBuilder:
 
         # Process train set
         self.ProcessFilesSet("train", dict(list(files_list.items())[ : train_count]), my_device)
-        '''
         # Process validation set
         self.ProcessFilesSet("val", dict(list(files_list.items())[train_count : train_count + val_count]), my_device)
         # Process test set
         self.ProcessFilesSet("test", dict(list(files_list.items())[train_count + val_count : ]), my_device)
-        '''
 
 def main(args):
     builder = DatasetBuilder(args)
