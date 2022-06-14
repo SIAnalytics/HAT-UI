@@ -211,7 +211,7 @@ YOLOX_LOG_PATH_NAME = "yolox_x_hat"
 
 DEFAULT_NUM_CLASSES = 6
 
-ANACONDA_PYTHON_EXE = "/opt/conda/bin/python3"
+ANACONDA_PYTHON_EXE = "/root/anaconda3/bin/python3"
 
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = False

@@ -54,6 +54,7 @@ class DirectoryPickerDialog extends React.Component {
                             for (var i = 0; i < dirs.length; i++) {
                                 curr_data.push(dirs[i]);
                             }
+
                             curr_data[selectedNode[0]]["loaded"] = 1;
 
                             this.setState({ data: curr_data });

@@ -103,7 +103,7 @@ class DV_1112 extends React.Component {
                     if (res.data.alive == false) {
                         do_continue = false;
                         this.UpdateProgressBar("completed");
-                        alert("[INFO]: Dataset conversion completed");
+                        alert("데이터셋 변환 완료");
                     }
                 })
                 .catch((err) => {
@@ -116,17 +116,17 @@ class DV_1112 extends React.Component {
 
     ProcessSave = (val) => {
         if (val == "") {
-            alert("[ERROR] Path must be specified");
+            alert("경로를 지정해주세요");
             return;
         }
 
         if (this.context.DatasetState.convert_to == "") {
-            alert("[ERROR] TO field must be selected");
+            alert("TO 를 선택해 주세요");
             return;
         }
 
         if (this.CheckConversionSupported("MOT", this.context.DatasetState.convert_to) == false) {
-            alert("[ERROR] Selected conversion is not supported yet");
+            alert("지원하지 않는 설정입니다");
             return;
         }
 
@@ -144,7 +144,7 @@ class DV_1112 extends React.Component {
                 if (res.data.status == "SUCCESS") {
                     this.MonitorDatasetConversion(res.data.pid);
                 } else {
-                    alert("[ERROR] Process failed to run on the server");
+                    alert("프로세스가 서버에서 비정상 종료됨");
                 }
             })
             .catch((err) => {
@@ -164,8 +164,7 @@ class DV_1112 extends React.Component {
                     <Form.Select className="w-100" onChange={this.ToFieldChange.bind(this)}>
                         <option value="">To</option>
                         <option value="FairMOT">FairMOT</option>
-                        <option value="YOLOX COCO">YOLOX COCO</option>
-                        <option value="EfficientDet COCO">EfficientDet COCO</option>
+                        <option value="YOLOX COCO">COCO</option>
                     </Form.Select>
                 </Form.Group>
                 <ConversionComponent style={{ marginTop: 10 }} ProcessSave={this.ProcessSave} buttonName="변환" />

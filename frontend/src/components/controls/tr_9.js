@@ -54,7 +54,7 @@ class TR_9 extends React.Component {
     ProcessSave = (val) => {
         // Check the directory
         if (val == "") {
-            alert("[ERROR] Output directory must be specified");
+            alert("출력 폴더를 지정해 주세요");
             return;
         }
         var url = config.get("django_url") + config.get("training_helper_rest");
@@ -83,7 +83,7 @@ class TR_9 extends React.Component {
             })
             .then((res) => {
                 fileDownload(res.data, 'weights.pth');
-                alert("Request successfully processed");
+                alert("요청한 작업이 완료되었습니다");
             })
             .catch((err) => {
                 alert("[ERROR]" + err);

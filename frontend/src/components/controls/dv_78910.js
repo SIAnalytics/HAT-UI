@@ -34,7 +34,7 @@ class DV_78910 extends React.Component {
 
     SetDatasetSeparationParameters(data) {
         if (this.context.DatasetState.video_path == "") {
-            alert("Video path must be specified");
+            alert("비디오 경로를 지정해주세요");
             return false;
         }
         data.append("video_path", this.context.DatasetState.video_path);
@@ -45,22 +45,22 @@ class DV_78910 extends React.Component {
         let test_rate = parseInt(this.context.DatasetState.test_rate);
 
         if (train_rate <= 0) {
-            alert("[ERROR] Train rate must be more than zero");
+            alert("Train rate는 0 보다 커야합니다");
             return false;
         }
 
         if (val_rate < 0) {
-            alert("ERROR] Validation rate must more or equal to zero");
+            alert("Validation rate는 0 이상이어야 합니다");
             return false;
         }
 
         if (test_rate < 0) {
-            alert("[ERROR] Test rate must be more or equal to zero");
+            alert("Test rate 는 0 이상이어야 합니다");
             return false;
         }
 
         if (train_rate + val_rate + test_rate != this.context.DatasetState.video_count) {
-            alert("[ERROR] train + validation + test rates must be equal to total video count");
+            alert("Train + Validataion + Test 의 합은 비디오의 총 갯수와 같아야합니다");
             return false;
         }
 
@@ -72,7 +72,7 @@ class DV_78910 extends React.Component {
 
         // Check output path
         if (this.context.DatasetState.output_path == "") {
-            alert("[ERROR] Output path must be specified");
+            alert("출력 경로를 지정해주세요");
             return false;
         }
         data.append("output_path", this.context.DatasetState.output_path);
@@ -80,63 +80,63 @@ class DV_78910 extends React.Component {
         // Check correctness of augmentation parameters
         var val = parseFloat(this.state.content[0]["적용률"]);
         if (val < 0 || val > 100) {
-            alert("[ERROR] Horizontal flipping must be in range [0, 100]");
+            alert("좌우 반전 설정은 [0, 100] 사이로 해주세요");
             return false;
         }
         this.context.DatasetState.augmentation.horizontal_flipping = val;
 
         val = parseFloat(this.state.content[1]["적용률"]);
         if (val < 0 || val > 100) {
-            alert("[ERROR] Vertical flipping must be in range [0, 100]");
+            alert("상하 반전 설정은 [0, 100] 사이로 해주세요");
             return false;
         }
         this.context.DatasetState.augmentation.vertical_flipping = val;
 
         val = parseFloat(this.state.content[2]["적용률"]);
         if (val < 0 || val > 100) {
-            alert("[ERROR] Brigtness must be in range [0, 100]");
+            alert("밝기 설정은 [0, 100] 사이로 해주세요");
             return false;
         }
         this.context.DatasetState.augmentation.brightness = val;
 
         val = parseFloat(this.state.content[2]["비율"])
         if (val < 0) {
-            alert("[ERROR] Brightness factor must be more or equal to than zero");
+            alert("밝기 팩터는 0 이상이어야 합니다");
             return false;
         }
         this.context.DatasetState.augmentation.brightness_factor = val;
 
         val = parseFloat(this.state.content[3]["적용률"]);
         if (val < 0 || val > 100) {
-            alert("[ERROR] Contrast must be in range [0, 100]");
+            alert("콘트라스트 설정은 [0, 100] 사이로 해주세요");
             return false;
         }
         this.context.DatasetState.augmentation.contrast = val;
 
         val = parseFloat(this.state.content[3]["비율"]);
         if (val < 0) {
-            alert("[ERROR] Contrast factor must be more or equal to zero");
+            alert("콘트라스트 팩터는 0 이상이어야 합니다");
             return false;
         }
         this.context.DatasetState.augmentation.contrast_factor = val;
 
         val = parseFloat(this.state.content[4]["적용률"]);
         if (val < 0 || val > 100) {
-            alert("[ERROR] Scale factor must be in range [0, 100]");
+            alert("리사이즈 설정은 [0, 100] 사이로 해주세요");
             return false;
         }
         this.context.DatasetState.augmentation.scale = val;
 
         val = parseFloat(this.state.content[4]["비율"]);
         if (val < 0 || val > 10) {
-            alert("[ERROR] Scale factor must be in range (0, 10]");
+            alert("리사이즈 설정은 (0, 100] 사이로 해주세요");
             return false;
         }
         this.context.DatasetState.augmentation.scale_factor = val;
 
         val = parseFloat(this.state.content[5]["적용률"]);
         if (val < 0 || val > 100) {
-            alert("[ERROR] Rotate factor must be in range [0, 100]");
+            alert("로테이트 설정은 [0, 100] 사이로 해주세요");
             return false;
         }
         this.context.DatasetState.augmentation.rotate = val;
@@ -211,7 +211,7 @@ class DV_78910 extends React.Component {
                     if (res.data.alive == false) {
                         do_continue = false;
                         this.UpdateProgressBar("completed");
-                        alert("[INFO]: Dataset separation completed");
+                        alert("데이터셋 분리 완료");
                     }
                 })
                 .catch((err) => {
@@ -239,7 +239,7 @@ class DV_78910 extends React.Component {
                 if (res.data.status == "SUCCESS") {
                     this.MonitoringDatasetSeparation(res.data.pid);
                 } else {
-                    alert("[ERROR] Process failed to run on the server.");
+                    alert("프로세스가 서버에서 비정상 종료됨");
                 }
             })
             .catch((err) => alert(err))

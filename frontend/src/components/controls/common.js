@@ -149,7 +149,7 @@ class DirectoryPicker extends React.Component {
         let data = new FormData();
 
         if (this.state.newFolder == "") {
-            alert("[ERROR] New directory name must be specified")
+            alert("새로운 폴더 이름을 지정해주세요")
             return
         }
 

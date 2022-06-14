@@ -168,24 +168,24 @@ function KeyToClassName(key) {
     switch (key.toString()) {
         case "10":
         case "1":
-            return "Vehicle";
+            return "민간차량";
         case "20":
         case "2":
-            return "Military vehicle";
+            return "군용차량";
         case "30":
         case "3":
-            return "Military equipment";
+            return "군사장비";
         case "40":
         case "4":
-            return "Person";
+            return "사람";
         case "50":
         case "5":
-            return "Bicycle";
+            return "이륜차";
         case "70":
         case "0":
-            return "Undefined";
+            return "미식별";
         default:
-            return "Unknown";
+            return "오류";
     }
 }
 

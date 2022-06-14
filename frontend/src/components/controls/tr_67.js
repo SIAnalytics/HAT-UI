@@ -2,7 +2,7 @@ import React from "react";
 import {
     TrainingProgress,
 } from "./common";
-import { 
+import {
     Button,
     Form,
 } from 'react-bootstrap';
@@ -16,7 +16,7 @@ import {
     SetGraphData
 } from './tr_8';
 
-class TR_67 extends React.Component{
+class TR_67 extends React.Component {
     static contextType = TrainerContext;
 
     constructor(props) {
@@ -38,32 +38,32 @@ class TR_67 extends React.Component{
 
     SetTrainingParameters(data) {
         if (this.context.TrainerState.dataset_path == "") {
-            alert("Dataset path must be specified");
+            alert("데이터셋 경로를 지정해주세요");
             return false;
         }
         data.append("dataset_path", this.context.TrainerState.dataset_path);
 
         if (this.context.TrainerState.model_name == "") {
-            alert("Model must be selected");
+            alert("모델을 선택해주세요");
             return false;
         }
         data.append("model_name", this.context.TrainerState.model_name);
 
         if (this.context.TrainerState.model_path == "" && this.context.TrainerState.random_flag == false) {
-            alert("Model path must be specified");
+            alert("모델 경로를 선택해주세요");
             return false;
         }
         data.append("model_path", this.context.TrainerState.model_path)
 
         data.append("hyper_parameters", JSON.stringify(this.context.TrainerState.hyper_parameters));
-        data.append("random_flag", this.context.TrainerState.random_flag); 
+        data.append("random_flag", this.context.TrainerState.random_flag);
         data.append("hyper_default_flag", this.context.TrainerState.hyper_default_flag);
 
         return true;
     }
 
     timeout(delay) {
-        return new Promise( res => setTimeout(res, delay) );
+        return new Promise(res => setTimeout(res, delay));
     }
 
     UpdateProgressBar(type, progress) {
@@ -72,7 +72,7 @@ class TR_67 extends React.Component{
             }
         }
 
-        switch(type) {
+        switch (type) {
             case "processing": {
                 state.progress = progress;
                 state.progress_label = progress.toString() + " %";
@@ -142,7 +142,7 @@ class TR_67 extends React.Component{
             }
             // Get monitoring data from server
             var url = config.get("django_url") + config.get("training_helper_rest");
-            
+
             axios
                 .get(url, {
                     params: {
@@ -175,7 +175,7 @@ class TR_67 extends React.Component{
                     if (progress < 100 && res.data.alive == false) {
                         do_continue = false;
                         this.UpdateProgressBar("failed", progress);
-                        alert("[ERROR] Training completed abnormally. Monitoring will be stopped.");
+                        alert("학습이 비정상 종료되었습니다. 모니터링이 중지됩니다");
                     }
                 })
                 .catch((err) => {
@@ -207,27 +207,27 @@ class TR_67 extends React.Component{
                 console.log(res);
                 console.log(Object.keys(data));
                 if (Object.keys(data).length == 0) {
-                    alert("[ERROR] Failed to run trainig on server.");
+                    alert("학습 개시를 실패했습니다");
                     return;
                 }
 
                 if (!("experiment_id" in data)) {
-                    alert("[ERROR] Missing experiment_id from server");
+                    alert("Experiment_ID 를 상실했습니다");
                     return;
                 }
 
                 if (!("pid" in data)) {
-                    alert("[ERROR] Missing pid from server");
+                    alert("PID 를 상실했습니다");
                     return;
                 }
 
                 if (!("log_path" in data)) {
-                    alert("[ERROR] Missing tensorboard log path from server");
+                    alert("Tensorboard log 경로를 상실했습니다");
                     return;
                 }
 
                 if (!("log_path" in data)) {
-                    alert("[ERROR] Missing epoch_count from server");
+                    alert("Epoch_count 를 상실했습니다");
                     return;
                 }
 
@@ -241,7 +241,7 @@ class TR_67 extends React.Component{
             <>
                 <Form className='d-flex'>
                     <Button disabled={this.state.disabled} className="btn btn-primary btn-sm w-15" onClick={() => { this.RunTrainingProcess() }}>학습 개시</Button>
-                    <TrainingProgress className="w-85" style={{height: 30, marginLeft: 5}} now={this.state.progress} progress_label={this.state.progress_label} variant={this.state.style.variant} animated={this.state.style.animated} />
+                    <TrainingProgress className="w-85" style={{ height: 30, marginLeft: 5 }} now={this.state.progress} progress_label={this.state.progress_label} variant={this.state.style.variant} animated={this.state.style.animated} />
                 </Form>
             </>
         );
