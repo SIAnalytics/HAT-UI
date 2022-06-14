@@ -373,7 +373,7 @@ function SetGraphData(data) {
                 bbox.datasets[0].data.push((value.width / value.count) * (value.height / value.count));
             });
 
-            state.avg_bbox[settings_no] = bbox;
+            state.avg_bbox[setting_no] = bbox;
         });
 
         state.mot_flag = true;
