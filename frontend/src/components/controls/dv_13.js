@@ -278,6 +278,7 @@ function SetGraphData(data) {
     } else {
         var state = {};
         state.class_ratio_settings = [];
+        state.bar_class_ratio = [];
         state.avg_bbox = [];
 
         Object.entries(dataset_data).forEach(([subset, subset_data]) => {
