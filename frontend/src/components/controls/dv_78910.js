@@ -144,6 +144,13 @@ class DV_78910 extends React.Component {
         val = parseFloat(this.state.content[5]["비율"]);
         this.context.DatasetState.augmentation.rotate_factor = val;
 
+        val = parseFloat(this.state.content[6]["적용률"]);
+        if (val < 0 || val > 100) {
+            alert("Dehaze 설정은 [0, 100] 사이로 해주세요");
+            return false;
+        }
+        this.context.DatasetState.augmentation.dehaze = val;
+
         data.append("augmentation", JSON.stringify(this.context.DatasetState.augmentation));
 
         return true;
@@ -294,6 +301,11 @@ class DV_78910 extends React.Component {
                 "함수": "Rotate",
                 "적용률": 0,
                 "비율": "1"
+            },
+            {
+                "함수": "Dehaze",
+                "적용률": 0,
+                "비율": "-"
             }
         ],
         columns: [

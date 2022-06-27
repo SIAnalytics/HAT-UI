@@ -11,6 +11,10 @@ import pandas as pd
 import numpy as np
 import multiprocessing
 import torchvision
+import sys
+
+sys.path.append('/workspace/Models/Dehaze')
+from models import find_model_using_name
 
 from datetime import datetime
 from torch.multiprocessing import Pool, Process, set_start_method
@@ -97,6 +101,7 @@ class DatasetBuilder:
             "contrast": -1,
             "scale": -1,
             "rotate": -1,
+            "dehaze": -1,
             "contrast_factor": float(aug_settings["contrast_factor"]),
             "brightness_factor": float(aug_settings["brightness_factor"]),
             "scale_factor": float(aug_settings["scale_factor"]),
@@ -128,9 +133,13 @@ class DatasetBuilder:
             params["rotate"] = int(100 / aug_settings["rotate"])
             apply_flag = True
 
+        if aug_settings["dehaze"] > 0:
+            params["dehaze"] = int(100 / aug_settings["dehaze"])
+            apply_flag = True
+
         return params, apply_flag
 
-    def ApplyAugmentationToFrame(self, frame, frame_no, aug_params):
+    def ApplyAugmentationToFrame(self, frame, frame_no, aug_params, model):
         is_augmented = False
         if aug_params["brightness"] > 0 and frame_no % aug_params["brightness"] == 0:
             frame = augmentation.AdjustBrightness(frame, aug_params["brightness_factor"])
@@ -157,6 +166,11 @@ class DatasetBuilder:
             frame = augmentation.Rotate(frame, aug_params["rotate_factor"])
             is_augmented = True
 
+        if aug_params["dehaze"] > 0 and frame_no % aug_params["dehaze"] == 0:
+            frame = augmentation.Dehaze(frame, model)
+            is_augmented = True
+
+
         frame_bgr = augmentation.TensorRGBToFrameBGR(frame.cpu())
         return frame_bgr, is_augmented
 
@@ -181,9 +195,16 @@ class DatasetBuilder:
             obj_x, obj_y, obj_w, obj_h = augmentation.ApplyRotationToLabel(aug_params["rotate_factor"], obj_x, obj_y, obj_w, obj_h, width, height)
             is_augmented = True
 
+        if aug_params["contrast"] > 0 and frame_no % aug_params["contrast"] == 0:
+            is_augmented = True
+
+        if aug_params["dehaze"] > 0 and frame_no % aug_params["dehaze"] == 0:
+            is_augmented = True
+
+
         return obj_x, obj_y, obj_w, obj_h, is_augmented
 
-    def FlushFramesToDisk(self, gpu_video, start_idx, part, video_name, aug_apply_flag, aug_params):
+    def FlushFramesToDisk(self, gpu_video, start_idx, part, video_name, aug_apply_flag, aug_params, model):
         print("Process start working from [{}] SHAPE = {}".format(start_idx, gpu_video.shape))
 
         for i in range(gpu_video.shape[0]):
@@ -201,7 +222,7 @@ class DatasetBuilder:
 
                 # Write augmented image
                 frame_out_path = os.path.join(self.args.output_path, part, "imgs", video_name, "{0:08d}_aug.png".format(i + start_idx))
-                frame, need_writing = self.ApplyAugmentationToFrame(frame, i + start_idx, aug_params)
+                frame, need_writing = self.ApplyAugmentationToFrame(frame, i + start_idx, aug_params, model)
             else:
                 frame = augmentation.TensorRGBToFrameBGR(frame.cpu())
                 need_writing = True
@@ -266,8 +287,64 @@ class DatasetBuilder:
 
             print("Writing files to disk {}".format(video_name))
 
-            proc_count = 4
+            proc_count = 1
             frames_per_proc = int(gpu_video.shape[0] / proc_count)
+
+            # Setup model
+            #opt = TestOptions().parse()
+            opt = argparse.Namespace()
+            opt.dataroot = ''
+            opt.data_subdir = ''
+            opt.dataset_mode = 'single'
+            opt.name = 'refined_DCP_outdoor'
+            opt.model = 'refined_DCP'
+            opt.phase = 'test'
+            opt.preprocess = 'none'
+            opt.save_image = True
+            opt.method_name = 'refined_DCP_outdoor_ep_60'
+            opt.epoch = 60
+            opt.save_path = ''
+            opt.eval = True
+            opt.num_threads = 0
+            opt.batch_size = 1
+            opt.serial_batches = True
+            opt.no_flip = True
+            opt.gpu_ids = [0]
+            opt.isTrain = False
+            opt.checkpoints_dir = '/workspace/Models/Dehaze/checkpoints'
+            opt.input_nc = 3
+            opt.ntest = float("inf")
+            opt.output_nc = 3
+            opt.ngf = 64
+            opt.ndf = 64
+            opt.netD = 'basic'
+            opt.netG = 'resnet_9blocks'
+            opt.n_layers_D = 3
+            opt.norm = 'instance'
+            opt.init_type = 'normal'
+            opt.init_gain = 0.02
+            opt.no_dropout = True 
+            opt.direction = 'AtoB'         
+            opt.serial_batches = True
+            opt.aspect_ratio = 1.0
+            opt.load_size = 286
+            opt.crop_size = 256
+            opt.max_dataset_size = float("inf")
+            opt.display_winsize = 256
+            opt.netR_T = 'unet_trans_256'
+            opt.netR_J = 'resnet_9blocks'
+            opt.suffix = ''
+            opt.eval = True
+            opt.load_iter = 0
+            opt.use_tensorrt = False                       
+            opt.verbose = True
+
+            model = None
+            if aug_apply_flag == True:
+                cls = find_model_using_name(opt.model)
+                model = cls(opt)
+                model.setup(opt)
+                model.eval()
 
             processes = []
             for i in range(proc_count):
@@ -276,7 +353,7 @@ class DatasetBuilder:
                 else:
                     proc_frames_list = gpu_video[i * frames_per_proc : , :, :, :]
 
-                p = Process(target = self.FlushFramesToDisk, args = (proc_frames_list, i * frames_per_proc, part, video_name, aug_apply_flag, aug_params))
+                p = Process(target = self.FlushFramesToDisk, args = (proc_frames_list, i * frames_per_proc, part, video_name, aug_apply_flag, aug_params, model))
 
                 p.start()
                 processes.append(p)

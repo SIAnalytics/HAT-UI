@@ -33,6 +33,7 @@ function DatasetViewer() {
             contrast: 0,
             scale: 0,
             rotate: 0,
+            dehaze: 0,
             brightness_factor: 0,
             contrast_factor: 0,
             scale_factor: 0,

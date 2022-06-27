@@ -6,6 +6,7 @@ import numpy as np
 from torchvision.transforms.functional import F_pil
 from torchvision.transforms.functional import F_t
 import torchvision.transforms as transforms
+import torchvision.transforms as transform
 from torch import Tensor
 from typing import List
 from typing import Optional
@@ -69,6 +70,19 @@ def Scale(img: Tensor,
         return F_pil.resize(img, size=size, interpolation=pil_interpolation, max_size=max_size)
 
     return F_t.resize(img, size=size, interpolation=interpolation.value, max_size=max_size, antialias=antialias)
+
+def Dehaze(img: Tensor, model):
+    img2 = (img.type(torch.cuda.FloatTensor) - 0.5) / 0.5
+    
+    img_dict = {'haze':img2.unsqueeze(0), 'paths':['dumy']} # haze: 1 x C x H x W
+    model.set_input(img_dict)
+    model.test()
+
+    dehazed = model.get_current_visuals()['refine_J'].squeeze(0)
+    dehazed *= 255.0
+    dehazed = dehazed.round().clip(0, 255).type(torch.cuda.ByteTensor)
+
+    return dehazed
 
 def _get_inverse_affine_matrix(
     center: List[float], angle: float, translate: List[float], scale: float, shear: List[float], inverted: bool = True
