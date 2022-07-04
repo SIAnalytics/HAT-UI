@@ -72,14 +72,14 @@ def Scale(img: Tensor,
     return F_t.resize(img, size=size, interpolation=interpolation.value, max_size=max_size, antialias=antialias)
 
 def Dehaze(img: Tensor, model):
-    img2 = (img.type(torch.cuda.FloatTensor) - 0.5) / 0.5
+    img2 = (img.type(torch.cuda.FloatTensor) - 127.5) / 127.5
     
     img_dict = {'haze':img2.unsqueeze(0), 'paths':['dumy']} # haze: 1 x C x H x W
     model.set_input(img_dict)
     model.test()
 
     dehazed = model.get_current_visuals()['refine_J'].squeeze(0)
-    dehazed *= 255.0
+    dehazed = (dehazed + 1) / 2 * 255.0
     dehazed = dehazed.round().clip(0, 255).type(torch.cuda.ByteTensor)
 
     return dehazed
